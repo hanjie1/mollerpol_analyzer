@@ -19,6 +19,8 @@
 #include "MollerPolCalorimeter.h"
 #include "VarDef.h"
 #include "THaDetMap.h"
+#include "Fadc250Module.h"
+#include "Decoder.h"
 #include "TMath.h"
 #include "Helper.h"
 // Needed in CoarseProcess/FineProcess if implemented
@@ -257,56 +259,124 @@ void MollerPolCalorimeter::Clear( Option_t* opt )
 }
 
 //_____________________________________________________________________________
-//OptUInt_t MollerPolCalorimeter::LoadData( const THaEvData& evdata,
-//                                     const DigitizerHitInfo_t& hitinfo )
-//{
-//  // Callback from DDetectorBase::Decode().
-//  // Overwrite the THaDetectorBase::LoadData()
-//
-//  return evdata.GetData(kSampleADC, nhitinfo.crate, hitinfo.slot, hitinfo.chan, hitinfo.hit);
-//}
-
-//_____________________________________________________________________________
-Int_t MollerPolCalorimeter::StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t data )
+OptUInt_t MollerPolCalorimeter::LoadData( const THaEvData& evdata,
+                                     const DigitizerHitInfo_t& hitinfo )
 {
-  // Simple example method for storing decoded data.
-  // NB: All detectors use THaDetectorBase::Decode as the default Decode method.
-  //
-  // This is called from THaDetectorBase::Decode for every hit belonging to this
-  // detector in the current event. The THaDetectorBase::Decode method assumes
-  // single-hit hardware, i.e. only one hit per channel. If multiple hits per
-  // channel need to be analyzed, the detector class needs to override Decode.
-  //
-  // As an alternative to writing a StoreHit method, one can add DetectorData
-  // objects to the fDetectorData vector (which is provided in THaDetectorBase).
-  // This would be done during initialization, typically in ReadDatabase.
+  // Callback from Decode()
+  printf("-------------------- hit info ---------------------\n");
+  printf("evNo.  crate    slot    chan    nhit    hit   lchan\n");
+  printf("%d     %d       %d        %d      %d      %d    %d\n",hitinfo.ev, hitinfo.crate, hitinfo.slot, hitinfo.chan, hitinfo.nhit, hitinfo.hit, hitinfo.lchan);
 
-  // Use the logical detector channel to index the data. The logical channel
-  // is calculated in THaDetMap::Module::ConvertToLogicalChannel as
-  // d->first + hardware_channel - d->lo, where 'd' refers to the detector
-  // map "Module" (= line in the database) corresponding to the frontend
-  // where the hit was registered. It typically runs from 0 to nelem-1.
-  Int_t chan = hitinfo.lchan;
+  if( hitinfo.type == Decoder::ChannelType::kMultiFunctionADC ){
 
-  // Check if 'chan' is in range here as a bugcheck of the detector map logic.
-  // Like asserts, such bugchecks may be skipped for better performance when
-  // compiling production code with -DNDEBUG. Or you may keep them for more
-  // safety, especially when some value depends on unpredictable input data.
-#ifndef NDEBUG
-  if( chan < 0 || chan >= fNelem )
-    throw std::logic_error("MollerPolCalorimeter::StoreHit: invalid logical channel");
-#endif
+    auto* fadc = dynamic_cast <Decoder::Fadc250Module*> (hitinfo.module);
 
-  // Copy the data to its destination. Here, we use a custom data structure
-  // to store the logical channel number, raw data and calibrated data. This
-  // provides a variable size vector of data for each event, holding only
-  // the channels with data.
-  fEventData.emplace_back(chan, data, (data - fPed[chan]) * fGain[chan]);
+    if( !fadc )
+      throw logic_error("Bad module type (expected Fadc250Module). "
+                        "Should never happen. Call expert.");
 
-  // The return value is currently ignored by THeDetectorBase::Decode.
-  return 0;
+      return evdata.GetData(Decoder::kPulseIntegral, hitinfo.crate, hitinfo.slot, hitinfo.chan, hitinfo.hit);
+    }
+
+  // default LoadData in THaDetectorBase, this returns FADC pulse integral of the first hit
+  return evdata.GetData(hitinfo.crate, hitinfo.slot, hitinfo.chan, hitinfo.hit);
+
 }
 
+//_____________________________________________________________________________
+//Int_t MollerPolCalorimeter::StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t data )
+//{
+//  assert( hitinfo.nhit > 0 );
+//
+//  // Use the logical detector channel to index the data. The logical channel
+//  // is calculated in THaDetMap::Module::ConvertToLogicalChannel as
+//  // d->first + hardware_channel - d->lo, where 'd' refers to the detector
+//  // map "Module" (= line in the database) corresponding to the frontend
+//  // where the hit was registered. It typically runs from 0 to nelem-1.
+//
+//  Int_t chan = hitinfo.lchan;
+//
+//  // Check if 'chan' is in range here as a bugcheck of the detector map logic.
+//  // Like asserts, such bugchecks may be skipped for better performance when
+//  // compiling production code with -DNDEBUG. Or you may keep them for more
+//  // safety, especially when some value depends on unpredictable input data.
+//#ifndef NDEBUG
+//  if( chan < 0 || chan >= fNelem )
+//    throw std::logic_error("MollerPolCalorimeter::StoreHit: invalid logical channel");
+//#endif
+//
+//  ++fNHits;
+//
+//  auto* fadc = dynamic_cast<Fadc250Module*>(hitinfo.module);
+//  assert(fadc);  // should have been caught in LoadData
+//
+//  Data_t raw = data;
+//  Data_t cal = (data - fPed[chan]) * fGain[chan];
+//
+//  Data_t vpeak = fadc->GetData(kPulsePeak, hitinfo.chan, hitinfo.hit);
+//  Data_t ptime = fadc->GetData(GetPulseTimeData, hitinfo.chan, hitinfo.hit)*0.0625;  // ns/count
+//  UInt_t pOverflow = fadc->GetOverflowBit(hitinfo.chan, hitinfo.hit);
+//  UInt_t pUnderflow = fadc->GetUnderflowBit(hitinfo.chan, hitinfo.hit);
+//
+//  fHitData.emplace_back(raw, cal, vpeak, ptime, pOverflow, pUnderflow);
+//
+//  // The return value is currently ignored by THeDetectorBase::Decode.
+//  return 0;
+//}
+//
+//_____________________________________________________________________________
+//Int_t MollerPolCalorimeter::Decode( const THaEvData& evData )
+//{
+//  // Converts the raw data into hit information
+//  // Process multi-hits in the FADC event data
+//  // based on THaVDCPlane::Decode( const THaEvData& evData )
+//
+//  const char* const here = "Decode";
+//  bool has_warning = false;
+//
+////  fNextHit = 0;
+////  fMaxData = -1;
+//
+//  auto hitIter = fDetMap->MakeMultiHitIterator(evData);
+//  while( hitIter ) {
+//    const auto& hitinfo = *hitIter;
+//    printf("-------------------- hit info ---------------------\n");
+//    printf("evNo.  crate    slot    chan    nhit    hit   lchan\n");
+//    printf("%d     %d       %d        %d      %d      %d    %d\n",hitinfo.ev, hitinfo.crate, hitinfo.slot, hitinfo.chan, hitinfo.nhit, hitinfo.hit, hitinfo.lchan);
+//
+//    // Get the FADC data for this hit
+//    //OptUInt_t data = LoadData(kPulseIntegral, evData, hitinfo);
+//    OptUInt_t data = LoadData(evData, hitinfo);
+//    if( !data ) {
+//      // Data could not be retrieved (probably decoder bug)
+//      DataLoadWarning(hitinfo, here);
+//      has_warning = true;
+//      continue;
+//    }
+//
+//    // Store hit data in fHitData
+//    StoreHit(hitinfo, data.value());
+//
+//    // Next active hit or channel
+//    ++hitIter;
+//  }
+//
+// // Sort the hits in order of increasing wire number and (for the same wire
+//  // number) increasing time (NOT rawtime)
+////  fHits->Sort();
+//
+//  if( has_warning )
+//    ++fNEventsWithWarnings;
+//
+//#ifdef WITH_DEBUG
+//  if ( fDebug > 3 )
+//    PrintDecodedData(evData);
+//#endif
+//
+////  return GetNHits();
+//  return 1;
+//}
+//
 //_____________________________________________________________________________
 Int_t MollerPolCalorimeter::CoarseProcess( TClonesArray& /* tracks */ )
 {
@@ -351,10 +421,10 @@ void MollerPolCalorimeter::Print( Option_t* opt ) const
   cout << "nelem = " << fNelem << endl;
   cout << "pedestals = "; PrintArray( fPed );
   cout << "gains = ";     PrintArray( fGain );
-  cout << "nhits = " << fEventData.size() << endl;
-  PrintArrayField("channel", fEventData, fChannel)
-  PrintArrayField("rawadc", fEventData, fRawADC)
-  PrintArrayField("coradc", fEventData, fCalADC)
+//  cout << "nhits = " << fEventData.size() << endl;
+//  PrintArrayField("channel", fEventData, fChannel)
+//  PrintArrayField("rawadc", fEventData, fRawADC)
+//  PrintArrayField("coradc", fEventData, fCalADC)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

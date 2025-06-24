@@ -31,7 +31,6 @@ public:
   // Public base class functions that one typically overrides
   // (see comments in MollerPolCalorimeter.cxx for details)
   virtual void   Clear( Option_t* opt="" );
-  virtual Int_t  StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t data );
   virtual Int_t  CoarseProcess( TClonesArray& tracks );
   virtual Int_t  FineProcess( TClonesArray& tracks );
   virtual void   Print( Option_t* opt="" ) const;
@@ -45,6 +44,9 @@ protected:
   // Define "global variables" holding results from analyzing this detector
   virtual Int_t  DefineVariables( EMode mode );
 
+//  Int_t  StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t data );
+  OptUInt_t  LoadData( const THaEvData& evdata, const DigitizerHitInfo_t& hitinfo );
+  Int_t   Decode( const THaEvData& );
   //---- Data stored with this detector follow here ----
 
   typedef std::vector<Data_t> DataVec_t;
@@ -53,16 +55,40 @@ protected:
   DataVec_t fPed;       // ADC pedestals
   DataVec_t fGain;      // ADC gains
 
+  // FADC data per hit
+  class FADCData {
+  public:
+    Data_t  fRawADC;    // Pulse integral
+    Data_t  fCalADC;    // Pedestal-subtracted and gain-calibrated ADC data
+    Data_t  fPeak;      // ADC peak value
+    Data_t  fT;         // TDC time
+    UInt_t  fOverflow;  // FADC pulse overflow bit
+    UInt_t  fUnderflow; // FADC pulse underflow bit
+
+    // Define a constructor so we can fill all fields in one line
+    FADCData(Data_t raw, Data_t cal, Data_t vpeak, Data_t ptime, UInt_t pOverflow, UInt_t pUnderflow)
+      : fRawADC(raw), fCalADC(cal), fPeak(vpeak), fT(ptime), fOverflow(pOverflow), fUnderflow(pUnderflow) {}
+
+    void clear(){
+         fRawADC = fCalADC = fPeak = kBig;
+         fT = 0;
+         fOverflow = fUnderflow = 0;
+    }
+
+  };
+
   // Per-event data
   // Define a structure to hold the information of one hit
   class EventData {
   public:
+    Int_t   fNHits;     // Total number of hits for all channels
+
     Int_t   fChannel;   // Logical channel number
-    Data_t  fRawADC;    // Raw ADC data
-    Data_t  fCalADC;    // Pedestal-subtracted and gain-calibrated ADC data
-    // Define a constructor so we can fill all fields in one line
-    EventData(Int_t chan, Data_t raw, Data_t cal)
-      : fChannel(chan), fRawADC(raw), fCalADC(cal) {}
+    Data_t  fSamples[500]; // Raw adc samples (mode 10)
+    UInt_t  fPedq;      // FADC pedestal quality bit
+    Data_t  fPedestal;  // Extracted pedestal value
+
+    std::vector<FADCData> fHitData; // FADC pulse data per hit
   };
 
   // Vector with the hit information for the current event
