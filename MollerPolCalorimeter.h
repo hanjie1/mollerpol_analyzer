@@ -44,9 +44,8 @@ protected:
   // Define "global variables" holding results from analyzing this detector
   virtual Int_t  DefineVariables( EMode mode );
 
-//  Int_t  StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t data );
+  Int_t  StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t data );
   OptUInt_t  LoadData( const THaEvData& evdata, const DigitizerHitInfo_t& hitinfo );
-  Int_t   Decode( const THaEvData& );
   //---- Data stored with this detector follow here ----
 
   typedef std::vector<Data_t> DataVec_t;
@@ -58,6 +57,7 @@ protected:
   // FADC data per hit
   class FADCData {
   public:
+    Int_t   fChannel;   // Logical channel number
     Data_t  fRawADC;    // Pulse integral
     Data_t  fCalADC;    // Pedestal-subtracted and gain-calibrated ADC data
     Data_t  fPeak;      // ADC peak value
@@ -66,10 +66,11 @@ protected:
     UInt_t  fUnderflow; // FADC pulse underflow bit
 
     // Define a constructor so we can fill all fields in one line
-    FADCData(Data_t raw, Data_t cal, Data_t vpeak, Data_t ptime, UInt_t pOverflow, UInt_t pUnderflow)
-      : fRawADC(raw), fCalADC(cal), fPeak(vpeak), fT(ptime), fOverflow(pOverflow), fUnderflow(pUnderflow) {}
+    FADCData(Int_t chan, Data_t raw, Data_t cal, Data_t vpeak, Data_t ptime, UInt_t pOverflow, UInt_t pUnderflow)
+      : fChannel(chan), fRawADC(raw), fCalADC(cal), fPeak(vpeak), fT(ptime), fOverflow(pOverflow), fUnderflow(pUnderflow) {}
 
     void clear(){
+         fChannel=0;
          fRawADC = fCalADC = fPeak = kBig;
          fT = 0;
          fOverflow = fUnderflow = 0;
@@ -81,18 +82,23 @@ protected:
   // Define a structure to hold the information of one hit
   class EventData {
   public:
-    Int_t   fNHits;     // Total number of hits for all channels
-
     Int_t   fChannel;   // Logical channel number
+    Int_t   fNHits;     // Total number of hits for fChannel
     Data_t  fSamples[500]; // Raw adc samples (mode 10)
     UInt_t  fPedq;      // FADC pedestal quality bit
     Data_t  fPedestal;  // Extracted pedestal value
 
     std::vector<FADCData> fHitData; // FADC pulse data per hit
+
+    // Define a constructor so we can fill all fields in one line
+    EventData(Int_t chan, Data_t nhits, UInt_t pedq, Data_t ped, std::vector<FADCData> pulsedata)
+      : fChannel(chan), fNHits(nhits), fPedq(pedq), fPedestal(ped), fHitData(pulsedata) {}
+
   };
 
   // Vector with the hit information for the current event
   std::vector<EventData> fEventData;
+  std::vector<FADCData> fFadcData;
 
   ClassDef(MollerPolCalorimeter,0)   // Example detector
 };

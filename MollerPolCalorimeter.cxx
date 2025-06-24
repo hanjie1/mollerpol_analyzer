@@ -239,10 +239,17 @@ Int_t MollerPolCalorimeter::DefineVariables( EMode mode )
   // Define (or delete) global variables of this detector
 
   RVarDef vars[] = {
-    { "nhit",  "Number of hits",  "GetNhits()" },
-    { "chan",  "Channel number",  "fEventData.fChannel" },
-    { "adc",   "Raw ADC value",   "fEventData.fRawADC" },
-    { "adc_c", "Calibrated ADC",  "fEventData.fCalADC" },
+    { "chan",     "Channel number",             "fEventData.fChannel" },
+    { "nhit",     "Number of hits",             "fEventData.fNhits" },
+    { "ped",      "Pedestal",                   "fEventData.fPedestal" },
+    { "pedq",     "Pedestal Quality",           "fEventData.fPedq" },
+    { "adc_chan", "Hit Channel number",         "fEventData.fHitData.fChannel" },
+    { "adc",      "Pulse integral",             "fEventData.fHitData.fRawADC" },
+    { "adc_c",    "Calibrated Pulse integral",  "fEventData.fHitData.fCalADC" },
+    { "adc_p",    "Pulse peak",                 "fEventData.fHitData.fPeak" },
+    { "adc_t",    "Pulse time",                 "fEventData.fHitData.fT" },
+    { "adc_o",    "Pulse overflow bit",         "fEventData.fHitData.fOverflow" },
+    { "adc_u",    "Pulse underflow bit",        "fEventData.fHitData.fUnderflow" },
     { nullptr }
   };
   return DefineVarsFromList( vars, mode );
@@ -263,9 +270,6 @@ OptUInt_t MollerPolCalorimeter::LoadData( const THaEvData& evdata,
                                      const DigitizerHitInfo_t& hitinfo )
 {
   // Callback from Decode()
-  printf("-------------------- hit info ---------------------\n");
-  printf("evNo.  crate    slot    chan    nhit    hit   lchan\n");
-  printf("%d     %d       %d        %d      %d      %d    %d\n",hitinfo.ev, hitinfo.crate, hitinfo.slot, hitinfo.chan, hitinfo.nhit, hitinfo.hit, hitinfo.lchan);
 
   if( hitinfo.type == Decoder::ChannelType::kMultiFunctionADC ){
 
@@ -284,46 +288,52 @@ OptUInt_t MollerPolCalorimeter::LoadData( const THaEvData& evdata,
 }
 
 //_____________________________________________________________________________
-//Int_t MollerPolCalorimeter::StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t data )
-//{
-//  assert( hitinfo.nhit > 0 );
-//
-//  // Use the logical detector channel to index the data. The logical channel
-//  // is calculated in THaDetMap::Module::ConvertToLogicalChannel as
-//  // d->first + hardware_channel - d->lo, where 'd' refers to the detector
-//  // map "Module" (= line in the database) corresponding to the frontend
-//  // where the hit was registered. It typically runs from 0 to nelem-1.
-//
-//  Int_t chan = hitinfo.lchan;
-//
-//  // Check if 'chan' is in range here as a bugcheck of the detector map logic.
-//  // Like asserts, such bugchecks may be skipped for better performance when
-//  // compiling production code with -DNDEBUG. Or you may keep them for more
-//  // safety, especially when some value depends on unpredictable input data.
-//#ifndef NDEBUG
-//  if( chan < 0 || chan >= fNelem )
-//    throw std::logic_error("MollerPolCalorimeter::StoreHit: invalid logical channel");
-//#endif
-//
-//  ++fNHits;
-//
-//  auto* fadc = dynamic_cast<Fadc250Module*>(hitinfo.module);
-//  assert(fadc);  // should have been caught in LoadData
-//
-//  Data_t raw = data;
-//  Data_t cal = (data - fPed[chan]) * fGain[chan];
-//
-//  Data_t vpeak = fadc->GetData(kPulsePeak, hitinfo.chan, hitinfo.hit);
-//  Data_t ptime = fadc->GetData(GetPulseTimeData, hitinfo.chan, hitinfo.hit)*0.0625;  // ns/count
-//  UInt_t pOverflow = fadc->GetOverflowBit(hitinfo.chan, hitinfo.hit);
-//  UInt_t pUnderflow = fadc->GetUnderflowBit(hitinfo.chan, hitinfo.hit);
-//
-//  fHitData.emplace_back(raw, cal, vpeak, ptime, pOverflow, pUnderflow);
-//
-//  // The return value is currently ignored by THeDetectorBase::Decode.
-//  return 0;
-//}
-//
+Int_t MollerPolCalorimeter::StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t data )
+{
+  assert( hitinfo.nhit > 0 );
+
+  // Use the logical detector channel to index the data. The logical channel
+  // is calculated in THaDetMap::Module::ConvertToLogicalChannel as
+  // d->first + hardware_channel - d->lo, where 'd' refers to the detector
+  // map "Module" (= line in the database) corresponding to the frontend
+  // where the hit was registered. It typically runs from 0 to nelem-1.
+
+  Int_t chan = hitinfo.lchan;
+
+  // Check if 'chan' is in range here as a bugcheck of the detector map logic.
+  // Like asserts, such bugchecks may be skipped for better performance when
+  // compiling production code with -DNDEBUG. Or you may keep them for more
+  // safety, especially when some value depends on unpredictable input data.
+#ifndef NDEBUG
+  if( chan < 0 || chan >= fNelem )
+    throw std::logic_error("MollerPolCalorimeter::StoreHit: invalid logical channel");
+#endif
+
+  auto* fadc = dynamic_cast<Decoder::Fadc250Module*>(hitinfo.module);
+  assert(fadc);  // should have been caught in LoadData
+
+  UInt_t nhits = fadc->GetNumEvents(Decoder::kPulseIntegral,chan);
+  for( unsigned int ihit=0; ihit<nhits; ihit++){
+    Data_t raw = fadc->GetData(Decoder::kPulseIntegral, hitinfo.chan, ihit);
+    Data_t cal = (data - fPed[chan]) * fGain[chan];
+
+    Data_t vpeak = fadc->GetData(Decoder::kPulsePeak, hitinfo.chan, ihit);
+    Data_t ptime = fadc->GetData(Decoder::kPulseTime, hitinfo.chan, ihit)*0.0625;  // ns/count
+    UInt_t pOverflow = fadc->GetOverflowBit(hitinfo.chan, ihit);
+    UInt_t pUnderflow = fadc->GetUnderflowBit(hitinfo.chan, ihit);
+
+    fFadcData.emplace_back(chan, raw, cal, vpeak, ptime, pOverflow, pUnderflow);
+  }
+
+  UInt_t ped = fadc->GetPulsePedestalData(hitinfo.chan, 0);
+  UInt_t pedq = fadc->GetPedestalQuality(hitinfo.chan, 0);
+
+  fEventData.emplace_back(chan, nhits, pedq, ped, fFadcData);
+
+  // The return value is currently ignored by THeDetectorBase::Decode.
+  return 0;
+}
+
 //_____________________________________________________________________________
 //Int_t MollerPolCalorimeter::Decode( const THaEvData& evData )
 //{
