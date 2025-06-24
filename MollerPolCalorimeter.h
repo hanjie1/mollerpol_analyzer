@@ -84,13 +84,20 @@ protected:
   public:
     Int_t   fChannel;   // Logical channel number
     Int_t   fNHits;     // Total number of hits for fChannel
-    Data_t  fSamples[500]; // Raw adc samples (mode 10)
     UInt_t  fPedq;      // FADC pedestal quality bit
     Data_t  fPedestal;  // Extracted pedestal value
+    std::vector<uint32_t>  fSamples; // Raw adc samples (mode 10)
 
     // Define a constructor so we can fill all fields in one line
-    EventData(Int_t chan, Data_t nhits, UInt_t pedq, Data_t ped)
-      : fChannel(chan), fNHits(nhits), fPedq(pedq), fPedestal(ped) {}
+    EventData(Int_t chan, Data_t nhits, UInt_t pedq, Data_t ped, std::vector<uint32_t> rawsamples)
+      : fChannel(chan), fNHits(nhits), fPedq(pedq), fPedestal(ped), fSamples(rawsamples) {}
+
+    void clear(){
+         fChannel=fNHits=0;
+         fPedq = 0;
+         fPedestal = 0;
+         fSamples.clear();
+    }
 
   };
 

@@ -243,6 +243,7 @@ Int_t MollerPolCalorimeter::DefineVariables( EMode mode )
     { "nhit",     "Number of hits",             "fEventData.fNHits" },
     { "ped",      "Pedestal",                   "fEventData.fPedestal" },
     { "pedq",     "Pedestal Quality",           "fEventData.fPedq" },
+    { "samples",  "ADC raw samples",            "fEventData.fSamples" },
     { "adc_chan", "Hit Channel number",         "fFadcData.fChannel" },
     { "adc",      "Pulse integral",             "fFadcData.fRawADC" },
     { "adc_c",    "Calibrated Pulse integral",  "fFadcData.fCalADC" },
@@ -326,68 +327,20 @@ Int_t MollerPolCalorimeter::StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t 
     fFadcData.emplace_back(chan, raw, cal, vpeak, ptime, pOverflow, pUnderflow);
   }
 
+  std::vector<uint32_t> rawsamples;
+  if( fadc->GetNumEvents(Decoder::kSampleADC,chan)!=0 ){
+    rawsamples = fadc->GetPulseSamplesVector(hitinfo.chan);
+  }
+
   UInt_t ped = fadc->GetPulsePedestalData(hitinfo.chan, 0);
   UInt_t pedq = fadc->GetPedestalQuality(hitinfo.chan, 0);
 
-  fEventData.emplace_back(chan, nhits, pedq, ped);
+  fEventData.emplace_back(chan, nhits, pedq, ped,rawsamples);
 
   // The return value is currently ignored by THeDetectorBase::Decode.
   return 0;
 }
 
-//_____________________________________________________________________________
-//Int_t MollerPolCalorimeter::Decode( const THaEvData& evData )
-//{
-//  // Converts the raw data into hit information
-//  // Process multi-hits in the FADC event data
-//  // based on THaVDCPlane::Decode( const THaEvData& evData )
-//
-//  const char* const here = "Decode";
-//  bool has_warning = false;
-//
-////  fNextHit = 0;
-////  fMaxData = -1;
-//
-//  auto hitIter = fDetMap->MakeMultiHitIterator(evData);
-//  while( hitIter ) {
-//    const auto& hitinfo = *hitIter;
-//    printf("-------------------- hit info ---------------------\n");
-//    printf("evNo.  crate    slot    chan    nhit    hit   lchan\n");
-//    printf("%d     %d       %d        %d      %d      %d    %d\n",hitinfo.ev, hitinfo.crate, hitinfo.slot, hitinfo.chan, hitinfo.nhit, hitinfo.hit, hitinfo.lchan);
-//
-//    // Get the FADC data for this hit
-//    //OptUInt_t data = LoadData(kPulseIntegral, evData, hitinfo);
-//    OptUInt_t data = LoadData(evData, hitinfo);
-//    if( !data ) {
-//      // Data could not be retrieved (probably decoder bug)
-//      DataLoadWarning(hitinfo, here);
-//      has_warning = true;
-//      continue;
-//    }
-//
-//    // Store hit data in fHitData
-//    StoreHit(hitinfo, data.value());
-//
-//    // Next active hit or channel
-//    ++hitIter;
-//  }
-//
-// // Sort the hits in order of increasing wire number and (for the same wire
-//  // number) increasing time (NOT rawtime)
-////  fHits->Sort();
-//
-//  if( has_warning )
-//    ++fNEventsWithWarnings;
-//
-//#ifdef WITH_DEBUG
-//  if ( fDebug > 3 )
-//    PrintDecodedData(evData);
-//#endif
-//
-////  return GetNHits();
-//  return 1;
-//}
-//
 //_____________________________________________________________________________
 Int_t MollerPolCalorimeter::CoarseProcess( TClonesArray& /* tracks */ )
 {
