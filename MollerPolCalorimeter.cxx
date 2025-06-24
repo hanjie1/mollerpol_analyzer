@@ -240,16 +240,16 @@ Int_t MollerPolCalorimeter::DefineVariables( EMode mode )
 
   RVarDef vars[] = {
     { "chan",     "Channel number",             "fEventData.fChannel" },
-    { "nhit",     "Number of hits",             "fEventData.fNhits" },
+    { "nhit",     "Number of hits",             "fEventData.fNHits" },
     { "ped",      "Pedestal",                   "fEventData.fPedestal" },
     { "pedq",     "Pedestal Quality",           "fEventData.fPedq" },
-    { "adc_chan", "Hit Channel number",         "fEventData.fHitData.fChannel" },
-    { "adc",      "Pulse integral",             "fEventData.fHitData.fRawADC" },
-    { "adc_c",    "Calibrated Pulse integral",  "fEventData.fHitData.fCalADC" },
-    { "adc_p",    "Pulse peak",                 "fEventData.fHitData.fPeak" },
-    { "adc_t",    "Pulse time",                 "fEventData.fHitData.fT" },
-    { "adc_o",    "Pulse overflow bit",         "fEventData.fHitData.fOverflow" },
-    { "adc_u",    "Pulse underflow bit",        "fEventData.fHitData.fUnderflow" },
+    { "adc_chan", "Hit Channel number",         "fFadcData.fChannel" },
+    { "adc",      "Pulse integral",             "fFadcData.fRawADC" },
+    { "adc_c",    "Calibrated Pulse integral",  "fFadcData.fCalADC" },
+    { "adc_p",    "Pulse peak",                 "fFadcData.fPeak" },
+    { "adc_t",    "Pulse time",                 "fFadcData.fT" },
+    { "adc_o",    "Pulse overflow bit",         "fFadcData.fOverflow" },
+    { "adc_u",    "Pulse underflow bit",        "fFadcData.fUnderflow" },
     { nullptr }
   };
   return DefineVarsFromList( vars, mode );
@@ -263,6 +263,7 @@ void MollerPolCalorimeter::Clear( Option_t* opt )
 
   THaNonTrackingDetector::Clear(opt);
   fEventData.clear();
+  fFadcData.clear();
 }
 
 //_____________________________________________________________________________
@@ -328,7 +329,7 @@ Int_t MollerPolCalorimeter::StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t 
   UInt_t ped = fadc->GetPulsePedestalData(hitinfo.chan, 0);
   UInt_t pedq = fadc->GetPedestalQuality(hitinfo.chan, 0);
 
-  fEventData.emplace_back(chan, nhits, pedq, ped, fFadcData);
+  fEventData.emplace_back(chan, nhits, pedq, ped);
 
   // The return value is currently ignored by THeDetectorBase::Decode.
   return 0;

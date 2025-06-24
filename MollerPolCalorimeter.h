@@ -88,11 +88,9 @@ protected:
     UInt_t  fPedq;      // FADC pedestal quality bit
     Data_t  fPedestal;  // Extracted pedestal value
 
-    std::vector<FADCData> fHitData; // FADC pulse data per hit
-
     // Define a constructor so we can fill all fields in one line
-    EventData(Int_t chan, Data_t nhits, UInt_t pedq, Data_t ped, std::vector<FADCData> pulsedata)
-      : fChannel(chan), fNHits(nhits), fPedq(pedq), fPedestal(ped), fHitData(pulsedata) {}
+    EventData(Int_t chan, Data_t nhits, UInt_t pedq, Data_t ped)
+      : fChannel(chan), fNHits(nhits), fPedq(pedq), fPedestal(ped) {}
 
   };
 
