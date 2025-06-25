@@ -239,18 +239,20 @@ Int_t MollerPolCalorimeter::DefineVariables( EMode mode )
   // Define (or delete) global variables of this detector
 
   RVarDef vars[] = {
-    { "chan",     "Channel number",             "fEventData.fChannel" },
-    { "nhit",     "Number of hits",             "fEventData.fNHits" },
-    { "ped",      "Pedestal",                   "fEventData.fPedestal" },
-    { "pedq",     "Pedestal Quality",           "fEventData.fPedq" },
-    { "samples",  "ADC raw samples",            "fEventData.fSamples" },
-    { "adc_chan", "Hit Channel number",         "fFadcData.fChannel" },
-    { "adc",      "Pulse integral",             "fFadcData.fRawADC" },
-    { "adc_c",    "Calibrated Pulse integral",  "fFadcData.fCalADC" },
-    { "adc_p",    "Pulse peak",                 "fFadcData.fPeak" },
-    { "adc_t",    "Pulse time",                 "fFadcData.fT" },
-    { "adc_o",    "Pulse overflow bit",         "fFadcData.fOverflow" },
-    { "adc_u",    "Pulse underflow bit",        "fFadcData.fUnderflow" },
+    { "chan",     "Channel number",                 "fEventData.fChannel" },
+    { "nhit",     "Number of hits",                 "fEventData.fNHits" },
+    { "ped",      "Pedestal",                       "fEventData.fPedestal" },
+    { "pedq",     "Pedestal Quality",               "fEventData.fPedq" },
+    { "nsamples", "number of ADC raw samples",      "fNumSamples" },
+    { "samples_c","ADC raw samples channel number", "fSamples_c" },
+    { "samples",  "ADC raw samples",                "fSamples" },
+    { "adc_chan", "Hit channel number",             "fPulseData.fChannel" },
+    { "adc",      "Pulse integral",                 "fPulseData.fRawADC" },
+    { "adc_c",    "Calibrated Pulse integral",      "fPulseData.fCalADC" },
+    { "adc_p",    "Pulse peak",                     "fPulseData.fPeak" },
+    { "adc_t",    "Pulse time",                     "fPulseData.fT" },
+    { "adc_o",    "Pulse overflow bit",             "fPulseData.fOverflow" },
+    { "adc_u",    "Pulse underflow bit",            "fPulseData.fUnderflow" },
     { nullptr }
   };
   return DefineVarsFromList( vars, mode );
@@ -264,7 +266,10 @@ void MollerPolCalorimeter::Clear( Option_t* opt )
 
   THaNonTrackingDetector::Clear(opt);
   fEventData.clear();
-  fFadcData.clear();
+  fPulseData.clear();
+  fSamples.clear();
+  fNumSamples=0;
+  fSamples_c.clear();
 }
 
 //_____________________________________________________________________________
@@ -324,18 +329,21 @@ Int_t MollerPolCalorimeter::StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t 
     UInt_t pOverflow = fadc->GetOverflowBit(hitinfo.chan, ihit);
     UInt_t pUnderflow = fadc->GetUnderflowBit(hitinfo.chan, ihit);
 
-    fFadcData.emplace_back(chan, raw, cal, vpeak, ptime, pOverflow, pUnderflow);
-  }
-
-  std::vector<uint32_t> rawsamples;
-  if( fadc->GetNumEvents(Decoder::kSampleADC,chan)!=0 ){
-    rawsamples = fadc->GetPulseSamplesVector(hitinfo.chan);
+    fPulseData.emplace_back(chan, raw, cal, vpeak, ptime, pOverflow, pUnderflow);
   }
 
   UInt_t ped = fadc->GetPulsePedestalData(hitinfo.chan, 0);
   UInt_t pedq = fadc->GetPedestalQuality(hitinfo.chan, 0);
 
-  fEventData.emplace_back(chan, nhits, pedq, ped,rawsamples);
+  fEventData.emplace_back(chan, nhits, pedq, ped);
+
+  fNumSamples = fadc->GetNumEvents(Decoder::kSampleADC,chan);
+  if( fNumSamples!=0 ){
+    vector<uint32_t> tmp = fadc->GetPulseSamplesVector(hitinfo.chan);
+    fSamples.insert(std::end(fSamples), std::begin(tmp), std::end(tmp));
+    fSamples_c.insert(std::end(fSamples_c),tmp.size(), chan);
+  }
+
 
   // The return value is currently ignored by THeDetectorBase::Decode.
   return 0;

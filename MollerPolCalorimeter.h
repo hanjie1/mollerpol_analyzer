@@ -86,24 +86,25 @@ protected:
     Int_t   fNHits;     // Total number of hits for fChannel
     UInt_t  fPedq;      // FADC pedestal quality bit
     Data_t  fPedestal;  // Extracted pedestal value
-    std::vector<uint32_t>  fSamples; // Raw adc samples (mode 10)
 
     // Define a constructor so we can fill all fields in one line
-    EventData(Int_t chan, Data_t nhits, UInt_t pedq, Data_t ped, std::vector<uint32_t> rawsamples)
-      : fChannel(chan), fNHits(nhits), fPedq(pedq), fPedestal(ped), fSamples(rawsamples) {}
+    EventData(Int_t chan, Data_t nhits, UInt_t pedq, Data_t ped)
+      : fChannel(chan), fNHits(nhits), fPedq(pedq), fPedestal(ped) {}
 
     void clear(){
          fChannel=fNHits=0;
          fPedq = 0;
          fPedestal = 0;
-         fSamples.clear();
     }
 
   };
 
   // Vector with the hit information for the current event
   std::vector<EventData> fEventData;
-  std::vector<FADCData> fFadcData;
+  std::vector<FADCData> fPulseData;
+  UInt_t fNumSamples=0; // number of raw samples per FADC channel
+  std::vector<UInt_t> fSamples_c; // raw samples channel number
+  std::vector<UInt_t> fSamples;   // raw samples for all active channels
 
   ClassDef(MollerPolCalorimeter,0)   // Example detector
 };
