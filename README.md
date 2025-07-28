@@ -14,8 +14,8 @@ As usual, CMake expects code to be built out of source in a separate build direc
 
 ```shell
 cmake -B build -S . 
-run CMake again, pointing it to the build directory just created:
 ```
+run CMake again, pointing it to the build directory just created:
 
 ```shell
 cmake --build build [--clean-first] [-jN]
