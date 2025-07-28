@@ -23,5 +23,23 @@ cmake --build build [--clean-first] [-jN]
 where, as usual, you can add the optional ``-j`` argument for a parallel build
 on ``N`` CPUs. Cleaning the build directory with the ``--clean-first`` option
 should rarely be necessary.
-.
 
+Root Tree
+---------
+Here is a list of tree variables:
+```
+    { "chan",     "Channel number",                 "fEventData.fChannel" },
+    { "nhit",     "Number of hits",                 "fEventData.fNHits" },
+    { "ped",      "Pedestal",                       "fEventData.fPedestal" },
+    { "pedq",     "Pedestal Quality",               "fEventData.fPedq" },
+    { "nsamples", "number of ADC raw samples",      "fNumSamples" },
+    { "samples_c","ADC raw samples channel number", "fSamples_c" },
+    { "samples",  "ADC raw samples",                "fSamples" },
+    { "adc_chan", "Hit channel number",             "fPulseData.fChannel" },
+    { "adc",      "Pulse integral",                 "fPulseData.fRawADC" },
+    { "adc_c",    "Calibrated Pulse integral",      "fPulseData.fCalADC" },
+    { "adc_p",    "Pulse peak",                     "fPulseData.fPeak" },
+    { "adc_t",    "Pulse time",                     "fPulseData.fT" },
+    { "adc_o",    "Pulse overflow bit",             "fPulseData.fOverflow" },
+    { "adc_u",    "Pulse underflow bit",            "fPulseData.fUnderflow" },
+```
