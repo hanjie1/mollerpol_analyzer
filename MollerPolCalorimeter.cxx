@@ -333,8 +333,7 @@ Int_t MollerPolCalorimeter::StoreHit( const DigitizerHitInfo_t& hitinfo, UInt_t 
   }
 
   UInt_t ped = fadc->GetPulsePedestalData(hitinfo.chan, 0);
-  //UInt_t pedq = fadc->GetPedestalQuality(hitinfo.chan, 0);
-  UInt_t pedq=0;
+  UInt_t pedq = fadc->GetPedestalQuality(hitinfo.chan, 0);
 
   fEventData.emplace_back(chan, nhits, ped, pedq);
 
