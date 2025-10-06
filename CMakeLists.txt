@@ -18,6 +18,8 @@ set(PACKAGE MollerPol)
 set(src
   MollerPolCalorimeter.cxx
   MollerPolApparatus.cxx
+  Scaler9250.cxx
+  MollerPolScalerEvtHandler.cxx
   )
 
 # Headers.
