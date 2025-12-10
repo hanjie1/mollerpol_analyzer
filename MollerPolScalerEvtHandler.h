@@ -11,6 +11,7 @@
 
 #include "THaEvtTypeHandler.h"
 #include "Decoder.h"
+#include "CodaDecoder.h"
 #include "TString.h"
 #include <vector>
 #include <string>
@@ -50,7 +51,8 @@ public:
    virtual Int_t Analyze(THaEvData *evdata);
    virtual EStatus Init( const TDatime& run_time);
    virtual Int_t End( THaRunBase* r=nullptr );
-
+   static Int_t  imodel;
+   static UInt_t icrate;
 
 protected:
 
