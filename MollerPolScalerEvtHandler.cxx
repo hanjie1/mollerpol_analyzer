@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 //
 //   MollerPolScalerEvtHandler
 //
@@ -128,8 +128,35 @@ Int_t MollerPolScalerEvtHandler::Analyze(THaEvData *evdata)
   if (fDebugFile)
     *fDebugFile << endl << endl << "MollerPolScalerEvtHandler:: "
     << "Debugging event type " << dec << evdata->GetEvType() << endl << endl;
+  
+  const auto* evbuffer = evdata->GetRawDataBuffer();
 
-  const UInt_t *p = evdata->GetRawDataBuffer();
+  auto* codaevent = dynamic_cast<CodaDecoder*>(evdata);
+  if( !codaevent ){
+    cout << "codaevent error" << endl;
+    return -1;
+  } // Not a CodaDecoder?
+  const Decoder::CodaDecoder::BankDat_t bank = codaevent->FindBank(icrate , imodel);
+
+  if(fDebugFile){
+    *fDebugFile << endl << endl << "key : " << bank.key << endl << "pos : " << bank.pos << " len : " << bank.len << endl;
+  }
+  // Bank not found or error?
+  if( bank.pos == 0 ){
+    return -1;
+   }
+  // handle this case
+
+  // Now bank.pos and bank.len contain the position and length of
+  // the bank data in evbuffer. Decode the bank header:
+  //Decoder::CodaDecoder::BankInfo info = codaevent->GetBank(bank);
+
+  //if( !info )
+   
+  // Error decoding bank
+
+  // Pointer to start of bank data buffer (length = info.len_)
+  const UInt_t *p = evbuffer + bank.pos;
   const UInt_t *pstop = p+ndata;
   Bool_t ifound = false;
 
@@ -225,8 +252,9 @@ void MollerPolScalerEvtHandler::ParseVariable( const vector<string>& dbline )
 void MollerPolScalerEvtHandler::ParseMap( const char* cbuf, const vector<string>& dbline )
 {
   using ssiz_t = decltype(scalers)::size_type;
-  Int_t imodel = 0;
-  UInt_t icrate = 0, islot = 0, inorm = 0, header = 0, mask = 0;
+  //Int_t imodel = 0;
+  //UInt_t icrate = 0;
+  UInt_t islot = 0, inorm = 0, header = 0, mask = 0;
   char cdum[21];
   sscanf(cbuf, "%20s %d %u %u %x %x %u \n",
          cdum, &imodel, &icrate, &islot, &header, &mask, &inorm);
