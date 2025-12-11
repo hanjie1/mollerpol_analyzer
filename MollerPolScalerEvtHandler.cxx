@@ -54,8 +54,6 @@ using namespace std;
 using namespace Decoder;
 using THaString::CmpNoCase;
 using Podd::vsplit;
-Int_t  MollerPolScalerEvtHandler::imodel = 0;
-UInt_t MollerPolScalerEvtHandler::icrate = 0;
 
 MollerPolScalerEvtHandler::MollerPolScalerEvtHandler(const char *name, const char* description)
   : THaEvtTypeHandler(name, description)

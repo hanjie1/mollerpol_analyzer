@@ -51,8 +51,7 @@ public:
    virtual Int_t Analyze(THaEvData *evdata);
    virtual EStatus Init( const TDatime& run_time);
    virtual Int_t End( THaRunBase* r=nullptr );
-   static Int_t  imodel;
-   static UInt_t icrate;
+  
 
 protected:
 
@@ -64,6 +63,8 @@ protected:
    void VerifySlots();
    void SetIndices();
    void AssignNormScaler();
+   Int_t  imodel = 0;
+   UInt_t icrate = 0;
 
    std::vector<Decoder::GenScaler*> scalers;
    std::vector<ScalerLoc*> scalerloc;
