@@ -282,10 +282,10 @@ OptUInt_t MollerPolCalorimeter::LoadData( const THaEvData& evdata,
 
     auto* fadc = dynamic_cast <Decoder::Fadc250Module*> (hitinfo.module);
 
-    if( !fadc )
+    if( !fadc ){
       throw logic_error("Bad module type (expected Fadc250Module). "
                         "Should never happen. Call expert.");
-
+      }
       return evdata.GetData(Decoder::kPulseIntegral, hitinfo.crate, hitinfo.slot, hitinfo.chan, hitinfo.hit);
     }
 

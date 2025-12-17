@@ -20,6 +20,7 @@ set(src
   MollerPolApparatus.cxx
   Scaler9250.cxx
   MollerPolScalerEvtHandler.cxx
+  MollerPolHelicityDecoderBoard.cxx
   )
 
 # Headers.
