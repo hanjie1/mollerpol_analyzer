@@ -1,0 +1,15 @@
+==== 2026-01-27 16:18:44 -0500
+Started analysis, run 1857
+Reading from "file:///volatile/halla/moller12gev/asar/TestLab_Data/moller_ssp_1857.evio.0"
+Event limit reached.
+==== 2026-01-27 16:19:03 -0500
+Summary for run 1857
+Counter summary:
+2501  events read
+2501  events decoded
+2499  physics events
+   2  other event types
+2499  physics events analyzed
+2501  events accepted
+
+Total     : Real Time =  19.39 seconds Cpu Time =  18.97 seconds

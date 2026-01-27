@@ -66,8 +66,10 @@ MollerPolScalerEvtHandler::MollerPolScalerEvtHandler(const char *name, const cha
 
 MollerPolScalerEvtHandler::~MollerPolScalerEvtHandler()
 {
-  Podd::DeleteContainer(scalerloc);
-  Podd::DeleteContainer(scalers);
+  DeleteContainer(scalerloc);
+  DeleteContainer(scalers);
+//  Podd::DeleteContainer(scalerloc);
+//  Podd::DeleteContainer(scalers);
   delete [] dvars;
   delete fScalerTree;
 }

@@ -1,0 +1,144 @@
+#tree variables: 
+block moller.uvagem.track.*
+block moller.uvagem.hit.*
+block moller.uvagem.*
+variable moller.uvagem.nlayershit
+variable moller.uvagem.nlayershitu
+variable moller.uvagem.nlayershitv
+variable moller.uvagem.nlayershituv
+variable moller.uvagem.nstripsu_layer
+variable moller.uvagem.nstripsv_layer
+variable moller.uvagem.nclustu_layer
+variable moller.uvagem.nclustv_layer
+variable moller.uvagem.n2Dhit_layer
+#block moller.uvagem.*.time.T0_by_APV
+#block moller.uvagem.*.time.Tref_coarse
+#block moller.uvagem.*.time.Tcoarse_by_APV
+#block moller.uvagem.*.time.Tfine_by_APV
+#block moller.uvagem.*.time.EventCount_by_APV
+#block moller.uvagem.*.time.T_ns_by_APV
+
+#Cuts: 
+cut singletrack moller.uvagem.track.ntrack==1
+#cut anytrack moller.uvagem.track.ntrack>0
+
+# Histogram definitions: 
+# layers fired, strip and cluster multiplicities
+th1d hmoller_uvagem_Nlayers_hit ';Number of layers with fired strips (u/x OR v/y);' moller.uvagem.nlayershit 6 -0.5 5.5
+th1d hmoller_uvagem_Nlayers_hitu ';Number of layers with fired U/X strips;' moller.uvagem.nlayershitu 6 -0.5 5.5
+th1d hmoller_uvagem_Nlayers_hitv ';Number of layers with fired V/Y strips;' moller.uvagem.nlayershitv 6 -0.5 5.5
+th1d hmoller_uvagem_Nlayers_hituv ';Number of layers with 2D hits;' moller.uvagem.nlayershituv 6 -0.5 5.5
+
+th2d hmoller_uvagem_NstripsU_layer ';layer;Number of U/X strips fired' [I] moller.uvagem.nstripsu_layer[I] 5 -0.5 4.5 101 -0.5 100.5
+th2d hmoller_uvagem_NstripsV_layer ';layer;Number of V/Y strips fired' [I] moller.uvagem.nstripsv_layer[I] 5 -0.5 4.5 101 -0.5 100.5
+th2d hmoller_uvagem_NclustU_layer ';layer;Number of U/X clusters' [I] moller.uvagem.nclustu_layer[I] 5 -0.5 4.5 51 -0.5 50.5
+th2d hmoller_uvagem_NclustV_layer ';layer;Number of V/Y clusters' [I] moller.uvagem.nclustv_layer[I] 5 -0.5 4.5 51 -0.5 50.5
+th2d hmoller_uvagem_Nclust2D_layer ';layer;Number of 2D hits' [I] moller.uvagem.n2Dhit_layer[I] 5 -0.5 4.5 51 -0.5 50.5
+
+th1d hmoller_uvagem_clustwidthU 'U/X clusters on tracks; cluster size in strips' moller.uvagem.hit.nstripu 10 0.5 10.5 singletrack
+th1d hmoller_uvagem_clustwidthV 'V/Y clusters on tracks; cluster size in strips' moller.uvagem.hit.nstripv 10 0.5 10.5 singletrack
+th2d hmoller_uvagem_clustwidthVvsU '2D hits on tracks; U/X cluster size ; V/Y cluster size' moller.uvagem.hit.nstripu moller.uvagem.hit.nstripv 10 0.5 10.5 10 0.5 10.5 singletrack
+th2d hmoller_uvagem_clustwidthU_vs_module ';module;U/X cluster size' moller.uvagem.hit.module moller.uvagem.hit.nstripu 20 -0.5 19.5 10 0.5 10.5 singletrack
+th2d hmoller_uvagem_clustwidthV_vs_module ';module;V/Y cluster size' moller.uvagem.hit.module moller.uvagem.hit.nstripv 20 -0.5 19.5 10 0.5 10.5 singletrack
+th1d hmoller_uvagem_clust_Utime ';U/X cluster time (ns);' moller.uvagem.hit.Utime 150 0 150 singletrack
+th1d hmoller_uvagem_clust_Vtime ';V/Y cluster time (ns);' moller.uvagem.hit.Vtime 150 0 150 singletrack
+th2d hmoller_uvagem_clust_UVtime ';U/X cluster time (ns); V/Y cluster time (ns)' moller.uvagem.hit.Utime moller.uvagem.hit.Vtime 150 0 150 150 0 150 singletrack
+th1d hmoller_uvagem_clust_deltat ';t_{U/X} - t_{V/Y} (ns);' moller.uvagem.hit.deltat 200 -50 50 singletrack
+th2d hmoller_uvagem_clust_deltat_vs_tavg ';t_{avg} (ns); t_{diff} (ns)' moller.uvagem.hit.Tavg moller.uvagem.hit.deltat 150 0 150 200 -50 50 singletrack
+th1d hmoller_uvagem_iSampMaxU ';Peak time sample, U/X strips;' moller.uvagem.hit.isampmaxUclust 6 -0.5 5.5
+th1d hmoller_uvagem_iSampMaxV ';Peak time sample, V/Y strips;' moller.uvagem.hit.isampmaxVclust 6 -0.5 5.5
+th1d hmoller_uvagem_CorrCoeff_clust ';Corr. Coeff., cluster sums;' moller.uvagem.hit.ccor_clust 202 -1.01 1.01 singletrack
+th1d hmoller_uvagem_CorrCoeff_maxstrip ';Corr. Coeff., max strips;' moller.uvagem.hit.ccor_strip 202 -1.01 1.01 singletrack
+th1d hmoller_uvagem_ADCasym ';(ADCU-ADCV)/(ADCU+ADCV)' moller.uvagem.hit.ADCasym 202 -1.01 1.01 singletrack
+
+th1d hmoller_uvagem_ADCavg 'hits on tracks ;(ADCU+ADCV)/2;' moller.uvagem.hit.ADCavg 1500 0 30000 singletrack
+th2d hmoller_uvagem_ADCasym_vs_ADCavg ';ADC avg;ADC asym.' moller.uvagem.hit.ADCavg moller.uvagem.hit.ADCasym 250 0 25000 250 -1.01 1.01
+th1d hmoller_uvagem_ADCU_clust ';ADC cluster sum (U/X strips);' moller.uvagem.hit.ADCU 1500 0 30000 singletrack
+th1d hmoller_uvagem_ADCV_clust ';ADC cluster sum (V/Y strips);' moller.uvagem.hit.ADCV 1500 0 30000 singletrack
+th2d hmoller_uvagem_ADCVvsU_clust ';ADC cluster sum (U/X); ADC cluster sum (V/Y)' moller.uvagem.hit.ADCU moller.uvagem.hit.ADCV 200 0 30000 200 0 30000 singletrack
+th2d hmoller_uvagem_ADCavg_vs_module ';module; Cluster ADC avg' moller.uvagem.hit.module moller.uvagem.hit.ADCavg 20 -0.5 19.5 250 0 25000
+th1d hmoller_uvagem_ADCU_maxstrip ';Max strip ADC sum (U/X strips);' moller.uvagem.hit.ADCmaxstripU 1500 0 15000 singletrack
+th1d hmoller_uvagem_ADCV_maxstrip ';Max strip ADC sum (V/Y strips);' moller.uvagem.hit.ADCmaxstripV 1500 0 15000 singletrack
+th2d hmoller_uvagem_ADCVvsU_maxstrip ';Max strip ADC sum (U/X); Max strip ADC sum (V/Y)' moller.uvagem.hit.ADCmaxstripU moller.uvagem.hit.ADCmaxstripV 200 0 12000 200 0 12000 singletrack
+th1d hmoller_uvagem_ADCU_maxsample ';U/X max strip max sample;' moller.uvagem.hit.ADCmaxsampU 500 0 4000 singletrack
+th1d hmoller_uvagem_ADCV_maxsample ';V/Y max strip max sample;' moller.uvagem.hit.ADCmaxsampV 500 0 4000 singletrack
+th2d hmoller_uvagem_ADCVvsU_maxsample ';Max strip max sample (U/X);Max strip max sample (V/Y)' moller.uvagem.hit.ADCmaxsampU moller.uvagem.hit.ADCmaxsampV 200 0 4000 200 0 4000 singletrack
+th1d hmoller_uvagem_ADCU_maxclustsample ';Max cluster-summed U/X sample;' moller.uvagem.hit.ADCmaxsampUclust 500 0 8000 singletrack
+th1d hmoller_uvagem_ADCV_maxclustsample ';Max cluster-summed V/Y sample;' moller.uvagem.hit.ADCmaxsampVclust 500 0 8000 singletrack
+th2d hmoller_uvagem_ADCVvsU_maxclustsample ';Max cluster-summed sample (U/X);Max cluster-summed sample (V/Y)' moller.uvagem.hit.ADCmaxsampUclust moller.uvagem.hit.ADCmaxsampVclust 200 0 8000 200 0 8000 singletrack
+
+th1d hmoller_uvagem_Ntracks ';Number of tracks found;' moller.uvagem.track.ntrack 11 -0.5 10.5
+th1d hmoller_uvagem_TrackNhits ';Number of hits on first/best track;' moller.uvagem.track.nhits[I] 6 -0.5 5.5 singletrack
+th1d hmoller_uvagem_TrackX ';Best track X(z=0), m;' moller.uvagem.track.x[I] 200 -0.325 0.325 singletrack
+th1d hmoller_uvagem_TrackY ';Best track Y(z=0), m;' moller.uvagem.track.y[I] 200 -1.1 1.1 singletrack
+th1d hmoller_uvagem_TrackXp ';Best track dx/dz;' moller.uvagem.track.xp[I] 200 -0.6 0.6 singletrack
+th1d hmoller_uvagem_TrackYp ';Best track dy/dz;' moller.uvagem.track.yp[I] 200 -1.2 1.2 singletrack
+th2d hmoller_uvagem_TrackXY 'Best track; y(m); x(m)' moller.uvagem.track.y[I] moller.uvagem.track.x[I] 150 -1.1 1.1 150 -0.325 0.325 singletrack
+th2d hmoller_uvagem_TrackXpYp 'Best track ;dy/dz;dx/dz' moller.uvagem.track.yp[I] moller.uvagem.track.xp[I] 150 -1.2 1.2 150 -0.6 0.6 singletrack
+th1d hmoller_uvagem_TrackChi2NDF ';Best track chi2/ndf;' moller.uvagem.track.chi2ndf[I] 200 0 200 singletrack
+
+th1d hmoller_uvagem_residu_allhits 'All hits; Track u/x incl. residuals (m);' moller.uvagem.hit.residu 500 -0.0025 0.0025 singletrack
+th1d hmoller_uvagem_residv_allhits 'All hits; Track v/y incl. residuals (m);' moller.uvagem.hit.residv 500 -0.0025 0.0025 singletrack
+th1d hmoller_uvagem_eresidu_allhits 'All hits; Track u/x excl. residuals (m);' moller.uvagem.hit.eresidu 500 -0.0025 0.0025 singletrack
+th1d hmoller_uvagem_eresidv_allhits 'All hits; Track v/y excl. residuals (m);' moller.uvagem.hit.eresidv 500 -0.0025 0.0025 singletrack
+th2d hmoller_uvagem_residu_vs_layer ';layer; Track u/x incl. residuals (m)' moller.uvagem.hit.layer moller.uvagem.hit.residu 5 -0.5 4.5 250 -0.0025 0.0025 singletrack
+th2d hmoller_uvagem_residv_vs_layer ';layer; Track v/y incl. residuals (m)' moller.uvagem.hit.layer moller.uvagem.hit.residv 5 -0.5 4.5 250 -0.0025 0.0025 singletrack
+th2d hmoller_uvagem_residu_vs_module ';module; Track u/x incl. residuals (m)' moller.uvagem.hit.module moller.uvagem.hit.residu 20 -0.5 19.5 250 -0.0025 0.0025 singletrack
+th2d hmoller_uvagem_residv_vs_module ';module; Track v/y incl. residuals (m)' moller.uvagem.hit.module moller.uvagem.hit.residv 20 -0.5 19.5 250 -0.0025 0.0025 singletrack
+th2d hmoller_uvagem_eresidu_vs_layer ';layer; Track u/x excl. residuals (m)' moller.uvagem.hit.layer moller.uvagem.hit.eresidu 5 -0.5 4.5 250 -0.0025 0.0025 singletrack
+th2d hmoller_uvagem_eresidv_vs_layer ';layer; Track v/y excl. residuals (m)' moller.uvagem.hit.layer moller.uvagem.hit.eresidv 5 -0.5 4.5 250 -0.0025 0.0025 singletrack
+th2d hmoller_uvagem_eresidu_vs_module ';module; Track u/x excl. residuals (m)' moller.uvagem.hit.module moller.uvagem.hit.eresidu 20 -0.5 19.5 250 -0.0025 0.0025 singletrack
+th2d hmoller_uvagem_eresidv_vs_module ';module; Track v/y excl. residuals (m)' moller.uvagem.hit.module moller.uvagem.hit.eresidv 20 -0.5 19.5 250 -0.0025 0.0025 singletrack
+th2d hmoller_uvagem_hit_xglobal_vs_layer ';layer; Hit x global (m)' moller.uvagem.hit.layer moller.uvagem.hit.xglobal 5 -0.5 4.5 250 -0.325 0.325
+th2d hmoller_uvagem_hit_yglobal_vs_layer ';layer; Hit y global (m)' moller.uvagem.hit.layer moller.uvagem.hit.yglobal 5 -0.5 4.5 250 -1.1 1.1
+
+# Module-specific histograms: 
+# Module 0 strip histograms, all strips: 
+th1d hmoller_uvagem_m0_nstripstot_good 'moller.uvagem.m0; Num. fired strips (U/X) + (V/Y);' moller.uvagem.m0.strip.nstripsfired 101 -0.5 100.5 moller.uvagem.m0.ontrack
+th1d hmoller_uvagem_m0_nclustU_good 'moller.uvagem.m0; num. U clusters;' moller.uvagem.m0.clust.nclustu 51 -0.5 50.5 moller.uvagem.m0.ontrack
+th1d hmoller_uvagem_m0_nclustV_good 'moller.uvagem.m0; num. V clusters; ' moller.uvagem.m0.clust.nclustv 51 -0.5 50.5 moller.uvagem.m0.ontrack
+th1d hmoller_uvagem_m0_nstripstot_all 'moller.uvagem.m0; Num. fired strips (U/X) + (V/Y);' moller.uvagem.m0.strip.nstripsfired 101 -0.5 100.5
+th1d hmoller_uvagem_m0_nclustU_all 'moller.uvagem.m0; num. U clusters;' moller.uvagem.m0.clust.nclustu 51 -0.5 50.5
+th1d hmoller_uvagem_m0_nclustV_all 'moller.uvagem.m0; num. V clusters;' moller.uvagem.m0.clust.nclustv 51 -0.5 50.5
+th1d hmoller_uvagem_m0_stripU_all 'moller.uvagem.m0; U/X strip index; ' moller.uvagem.m0.strip.istrip[I] 1536 -0.5 1535.5 moller.uvagem.m0.strip.IsU[I]
+th1d hmoller_uvagem_m0_stripV_all 'moller.uvagem.m0; V/Y strip index; ' moller.uvagem.m0.strip.istrip[I] 1280 -0.5 1279.5 moller.uvagem.m0.strip.IsV[I]
+th1d hmoller_uvagem_m0_ADCsumU_all 'moller.uvagem.m0; Strip ADC sum, U/X strips;' moller.uvagem.m0.strip.ADCsum[I] 1000 0 15000 moller.uvagem.m0.strip.IsU[I]
+th1d hmoller_uvagem_m0_ADCsumV_all 'moller.uvagem.m0; Strip ADC sum, V/Y strips;' moller.uvagem.m0.strip.ADCsum[I] 1000 0 15000 moller.uvagem.m0.strip.IsV[I]
+th1d hmoller_uvagem_m0_ADCmaxU_all 'moller.uvagem.m0; Strip ADC max, U/X strips;' moller.uvagem.m0.strip.ADCmax[I] 500 0 4000 moller.uvagem.m0.strip.IsU[I]
+th1d hmoller_uvagem_m0_ADCmaxV_all 'moller.uvagem.m0; Strip ADC max, V/Y strips; ' moller.uvagem.m0.strip.ADCmax[I] 500 0 4000 moller.uvagem.m0.strip.IsV[I]
+th1d hmoller_uvagem_m0_TimeU_all 'moller.uvagem.m0; Strip Time, U/X strips;' moller.uvagem.m0.strip.Tmean[I] 150 0 150 moller.uvagem.m0.strip.IsU[I]
+th1d hmoller_uvagem_m0_TimeV_all 'moller.uvagem.m0; Strip Time, V/Y strips;' moller.uvagem.m0.strip.Tmean[I] 150 0 150 moller.uvagem.m0.strip.IsV[I]
+th1d hmoller_uvagem_m0_iSampMaxU_all 'moller.uvagem.m0; Peak time sample, U/X strips;' moller.uvagem.m0.strip.isampmax[I] 6 -0.5 5.5 moller.uvagem.m0.strip.IsU[I]
+th1d hmoller_uvagem_m0_iSampMaxV_all 'moller.uvagem.m0; Peak time sample, V/Y strips;' moller.uvagem.m0.strip.isampmax[I] 6 -0.5 5.5 moller.uvagem.m0.strip.IsV[I]
+th2d hmoller_uvagem_m0_ADCsum_vs_Ustrip_all 'moller.uvagem.m0; U strip ADC sum vs strip;' moller.uvagem.m0.strip.istrip[I] moller.uvagem.m0.strip.ADCsum[I] 1536 -0.5 1535.5 250 0 12000 moller.uvagem.m0.strip.IsU[I]
+th2d hmoller_uvagem_m0_ADCsum_vs_Vstrip_all 'moller.uvagem.m0; V strip ADC sum vs strip;' moller.uvagem.m0.strip.istrip[I] moller.uvagem.m0.strip.ADCsum[I] 1280 -0.5 1279.5 250 0 12000 moller.uvagem.m0.strip.IsV[I]
+th2d hmoller_uvagem_m0_ADCmax_vs_Ustrip_all 'moller.uvagem.m0; U strip ADC max vs strip;' moller.uvagem.m0.strip.istrip[I] moller.uvagem.m0.strip.ADCmax[I] 1536 -0.5 1535.5 250 0 4000 moller.uvagem.m0.strip.IsU[I]
+th2d hmoller_uvagem_m0_ADCmax_vs_Vstrip_all 'moller.uvagem.m0; V strip ADC max vs strip;' moller.uvagem.m0.strip.istrip[I] moller.uvagem.m0.strip.ADCmax[I] 1280 -0.5 1279.5 250 0 4000 moller.uvagem.m0.strip.IsV[I]
+
+# Module 0 strip histograms, strips on tracks: 
+th1d hmoller_uvagem_m0_stripU_good 'moller.uvagem.m0 (strips on tracks); U/X strip index;' moller.uvagem.m0.strip.istrip[I] 1536 -0.5 1535.5 moller.uvagem.m0.strip.ontrackU[I]
+th1d hmoller_uvagem_m0_stripV_good 'moller.uvagem.m0 (strips on tracks); V/Y strip index;' moller.uvagem.m0.strip.istrip[I] 1280 -0.5 1279.5 moller.uvagem.m0.strip.ontrackV[I]
+th1d hmoller_uvagem_m0_ADCsumU_good 'moller.uvagem.m0; Strip ADC sum, U/X strips;' moller.uvagem.m0.strip.ADCsum[I] 1000 0 15000 moller.uvagem.m0.strip.ontrackU[I]
+th1d hmoller_uvagem_m0_ADCsumV_good 'moller.uvagem.m0; Strip ADC sum, V/Y strips;' moller.uvagem.m0.strip.ADCsum[I] 1000 0 15000 moller.uvagem.m0.strip.ontrackV[I]
+th1d hmoller_uvagem_m0_ADCmaxU_good 'moller.uvagem.m0; Strip ADC max, U/X strips;' moller.uvagem.m0.strip.ADCmax[I] 500 0 4000 moller.uvagem.m0.strip.ontrackU[I]
+th1d hmoller_uvagem_m0_ADCmaxV_good 'moller.uvagem.m0; Strip ADC max, V/Y strips;' moller.uvagem.m0.strip.ADCmax[I] 500 0 4000 moller.uvagem.m0.strip.ontrackV[I]
+th1d hmoller_uvagem_m0_TimeU_good 'moller.uvagem.m0; Strip Time, U/X strips;' moller.uvagem.m0.strip.Tmean[I] 150 0 150 moller.uvagem.m0.strip.ontrackU[I]
+th1d hmoller_uvagem_m0_TimeV_good 'moller.uvagem.m0; Strip Time, V/Y strips;' moller.uvagem.m0.strip.Tmean[I] 150 0 150 moller.uvagem.m0.strip.ontrackV[I]
+th1d hmoller_uvagem_m0_iSampMaxU_good 'moller.uvagem.m0; Peak time sample, U/X strips;' moller.uvagem.m0.strip.isampmax[I] 6 -0.5 5.5 moller.uvagem.m0.strip.ontrackU[I]
+th1d hmoller_uvagem_m0_iSampMaxV_good 'moller.uvagem.m0; Peak time sample, V/Y strips;' moller.uvagem.m0.strip.isampmax[I] 6 -0.5 5.5 moller.uvagem.m0.strip.ontrackV[I]
+th2d hmoller_uvagem_m0_ADCsum_vs_Ustrip_good 'moller.uvagem.m0; U strip ADC sum vs strip;' moller.uvagem.m0.strip.istrip[I] moller.uvagem.m0.strip.ADCsum[I] 1536 -0.5 1535.5 250 0 12000 moller.uvagem.m0.strip.ontrackU[I]
+th2d hmoller_uvagem_m0_ADCsum_vs_Vstrip_good 'moller.uvagem.m0; V strip ADC sum vs strip;' moller.uvagem.m0.strip.istrip[I] moller.uvagem.m0.strip.ADCsum[I] 1280 -0.5 1279.5 250 0 12000 moller.uvagem.m0.strip.ontrackV[I]
+th2d hmoller_uvagem_m0_ADCmax_vs_Ustrip_good 'moller.uvagem.m0; U strip ADC max vs strip;' moller.uvagem.m0.strip.istrip[I] moller.uvagem.m0.strip.ADCmax[I] 1536 -0.5 1535.5 250 0 4000 moller.uvagem.m0.strip.ontrackU[I]
+th2d hmoller_uvagem_m0_ADCmax_vs_Vstrip_good 'moller.uvagem.m0; V strip ADC max vs strip;' moller.uvagem.m0.strip.istrip[I] moller.uvagem.m0.strip.ADCmax[I] 1280 -0.5 1279.5 250 0 4000 moller.uvagem.m0.strip.ontrackV[I]
+
+# Module 0 hit maps 
+#th1d hmoller_uvagem_m0_hit_xlocal 'Hit local X position (m), Module 0' moller.uvagem.m0.hit.hitx[I] 250 -0.3072 0.3072 moller.uvagem.m0.hit.ontrack[I]
+#th1d hmoller_uvagem_m0_hit_ylocal 'Hit local Y position (m), Module 0' moller.uvagem.m0.hit.hity[I] 250 -0.256 0.256 moller.uvagem.m0.hit.ontrack[I]
+#th2d hmoller_uvagem_m0_hit_xylocal 'Hit local X vs Y (m), Module 0' moller.uvagem.m0.hit.hity[I] moller.uvagem.m0.hit.hitx[I] 200 -0.256 0.256 200 -0.3072 0.3072 moller.uvagem.m0.hit.ontrack[I]
+
+th1d hmoller_uvagem_m0_ADCmax_good_CM 'moller.uvagem.m0; Strip ADC max; ' moller.uvagem.m0.strip.ADCmax[I] 500 0 4000 moller.uvagem.m0.strip.CM_GOOD[I]
+th1d hmoller_uvagem_m0_ADCsum_good_CM 'moller.uvagem.m0; Strip ADC sum; ' moller.uvagem.m0.strip.ADCsum[I] 1000 0 15000 moller.uvagem.m0.strip.CM_GOOD[I]
+th1d hmoller_uvagem_m0_iSampMax_good_CM 'moller.uvagem.m0; Strip max time sample;' moller.uvagem.m0.strip.isampmax[I] 6 -0.5 5.5 moller.uvagem.m0.strip.CM_GOOD[I]
+th1d hmoller_uvagem_m0_StripTime_good_CM 'moller.uvagem.m0; Strip Mean Time (ns);' moller.uvagem.m0.strip.Tmean[I] 150 0 150 moller.uvagem.m0.strip.CM_GOOD[I]
+th1d hmoller_uvagem_m0_StripTsigma_good_CM 'moller.uvagem.m0; Strip RMS Time (ns);' moller.uvagem.m0.strip.Tsigma[I] 150 0 150 moller.uvagem.m0.strip.CM_GOOD[I]
+

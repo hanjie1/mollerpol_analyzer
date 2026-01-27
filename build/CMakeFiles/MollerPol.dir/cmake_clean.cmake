@@ -1,0 +1,42 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/MollerPol.dir/MollerPolApparatus.cxx.o"
+  "CMakeFiles/MollerPol.dir/MollerPolApparatus.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/MollerPolCalorimeter.cxx.o"
+  "CMakeFiles/MollerPol.dir/MollerPolCalorimeter.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/MollerPolDict.cxx.o"
+  "CMakeFiles/MollerPol.dir/MollerPolDict.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/MollerPolHelicityDecoderBoard.cxx.o"
+  "CMakeFiles/MollerPol.dir/MollerPolHelicityDecoderBoard.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/MollerPolScalerEvtHandler.cxx.o"
+  "CMakeFiles/MollerPol.dir/MollerPolScalerEvtHandler.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/Scaler9250.cxx.o"
+  "CMakeFiles/MollerPol.dir/Scaler9250.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERData.cxx.o"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERData.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERElement.cxx.o"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERElement.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERGEMModule.cxx.o"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERGEMModule.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERGEMSpectrometerTracker.cxx.o"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERGEMSpectrometerTracker.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERGEMTrackerBase.cxx.o"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERGEMTrackerBase.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERGenericDetector.cxx.o"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERGenericDetector.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERManager.cxx.o"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERManager.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERSpectrometer.cxx.o"
+  "CMakeFiles/MollerPol.dir/gem/MOLLERSpectrometer.cxx.o.d"
+  "CMakeFiles/MollerPol.dir/gem/MPDModule.cxx.o"
+  "CMakeFiles/MollerPol.dir/gem/MPDModule.cxx.o.d"
+  "MollerPolDict.cxx"
+  "libMollerPol.pdb"
+  "libMollerPol.rootmap"
+  "libMollerPol.so"
+  "libMollerPol_rdict.pcm"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/MollerPol.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

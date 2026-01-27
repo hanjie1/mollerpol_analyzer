@@ -1,0 +1,33 @@
+{ decls }
+namespace Decoder {  }
+
+[ libMollerPol.so ]
+# List of selected classes
+class Decoder::MPDModule
+class Decoder::Scaler9250
+class MOLLERElement
+class MOLLERGEMModule
+class MOLLERGEMSpectrometerTracker
+class MOLLERGEMTrackerBase
+class MOLLERGenericDetector
+class MOLLERManager
+class MOLLERSpectrometer
+class MollerPolApparatus
+class MollerPolCalorimeter
+class MollerPolHelicityDecoderBoard
+class MollerPolScalerEvtHandler
+header MPDModule.h
+header Scaler9250.h
+header MOLLERElement.h
+header MOLLERGEMModule.h
+header MOLLERGEMSpectrometerTracker.h
+header MOLLERGEMTrackerBase.h
+header MOLLERGenericDetector.h
+header MOLLERManager.h
+header MOLLERSpectrometer.h
+header MollerPolApparatus.h
+header MollerPolCalorimeter.h
+header MollerPolHelicityDecoderBoard.h
+header MollerPolScalerEvtHandler.h
+# List of selected namespaces
+namespace MOLLERData

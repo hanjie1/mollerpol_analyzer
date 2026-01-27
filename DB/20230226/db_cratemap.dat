@@ -1,0 +1,13 @@
+# Date/Time = Fri July 26 17:50:14 2023
+## Crate map for decoding 1-layer UVA Moller cosmic-ray data from Dec 12, 2023 (from ./home/sbs-onl/cfg/crate_1/MPD_vmeSlot_13.cfg)
+# For this run, the MPD data is in CODA bank 10:
+# Module 3560 is the MPDv4 VME format decoder
+--------[ 2023-02-26 17:50:14 ]  #test run
+
+TSROC 21
+
+==== Crate 2 type vme
+13 3561 10
+
+#==== Crate 1 type vme
+#3  250   3

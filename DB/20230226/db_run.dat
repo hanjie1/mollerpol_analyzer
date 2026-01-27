@@ -1,0 +1,20 @@
+# Date/Time = Fri July 26 17:50:14 2023
+--------[ 2023-02-26 17:50:14 ] ##test run
+
+ebeam      = 1.
+moller.theta    = 32.0
+moller.pcentral = 11.0
+moller.phi = 0
+moller.colldist = 1.5
+moller.magdist = 2.25
+moller.off_x = 0
+moller.off_y = 0
+moller.off_z = 0
+
+bb.theta    = 33.0                                                              
+bb.pcentral = 2.0 
+bb.magdist = 1.55
+
+L.theta = 30.0
+L.pcentral = -1
+

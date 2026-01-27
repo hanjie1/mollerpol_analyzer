@@ -1,0 +1,378 @@
+# Date/Time = Fri July 26 17:50:14 2023 
+# database format: the tracker consists of a collection of modules: 
+# database properties will be organized by module, not by "plane" as in old moller-offline
+
+# Geometry and calibration/decode information:
+
+--------[ 2023-02-26 17:50:14 ]  #test run
+
+
+# module names
+moller.uvagem.modules = m0 m1 m2 m3
+
+# module layer indices:
+moller.uvagem.m0.layer = 0
+moller.uvagem.m1.layer = 1
+moller.uvagem.m2.layer = 2
+moller.uvagem.m3.layer = 3
+
+## APV mapping configurations: 0 = INFN, 1 = UVA X/Y, 2 = UVA U/V
+moller.uvagem.m0.apvmap = 0
+moller.uvagem.m1.apvmap = 0
+moller.uvagem.m2.apvmap = 1
+moller.uvagem.m3.apvmap = 3
+
+#basic flags for controlling decoding
+moller.uvagem.pedestalmode = 0
+moller.uvagem.commonmode_flag = 0
+moller.uvagem.commonmode_online_flag = 4
+moller.uvagem.commonmode_nstriplo = 28
+moller.uvagem.commonmode_nstriphi = 28
+moller.uvagem.commonmode_niter = 3
+moller.uvagem.commonmode_minstrips = 20
+moller.uvagem.plot_common_mode = 1
+moller.uvagem.pedsub_online = 0
+moller.uvagem.dump_geometry_info = 1
+
+moller.uvagem.do_efficiencies = 1
+moller.uvagem.efficiency_bin_width_1D = 0.05
+moller.uvagem.efficiency_bin_width_2D = 0.02
+moller.uvagem.commonmode_range_nsigma = 5.0
+
+
+# (online) Danning-method parameters:
+moller.uvagem.commonmode_danning_nsigma_cut = 3.0
+
+# histogramming-method parameters: 
+moller.uvagem.commonmode_binwidth_nsigma = 2.0
+moller.uvagem.commonmode_scanrange_nsigma = 5.0
+moller.uvagem.commonmode_stepsize_nsigma = 0.25
+
+moller.uvagem.correct_common_mode = 1
+moller.uvagem.correct_common_mode_minstrips = 15
+moller.uvagem.correct_common_mode_nsigma = 2.0
+
+moller.uvagem.use_commonmode_rolling_average = 1
+moller.uvagem.commonmode_nevents_lookback = 10
+
+# Module average gains relative to target ADC peak position of 4000
+moller.uvagem.m0.modulegain = 1.33663
+moller.uvagem.m1.modulegain = 1.34663
+moller.uvagem.m2.modulegain = 1.35663
+moller.uvagem.m3.modulegain = 1.36663
+#
+# u and v gain: vector with dimension equal to the number of APV cards: to equalize gain, DIVIDE ADCs by these relative gain coefficients.
+# Note one of the "U" APVs always has its gain fixed to 1 by definition and all the other APV gains are determined relative to that one:
+moller.uvagem.m0.ugain = 1  
+moller.uvagem.m1.ugain = 1  
+moller.uvagem.m2.ugain = 1  
+moller.uvagem.m3.ugain = 1  
+
+moller.uvagem.m0.vgain = 1  
+moller.uvagem.m1.vgain = 1  
+moller.uvagem.m2.vgain = 1  
+moller.uvagem.m3.vgain = 1  
+
+moller.uvagem.plot_event_info = 0
+
+# module positions (in meters) and angles (in degrees):
+moller.uvagem.m0.position =   -0.0005477629       -0.002633029      -0.03765768
+moller.uvagem.m0.angle =       0.2115523       -0.1050012         0.02454118
+moller.uvagem.m1.position =   0.03074553   -0.001298631     0.3585439    
+moller.uvagem.m1.angle =       0.1862485   -0.0110365  0.01730838
+moller.uvagem.m2.position = -0.0 -0.0 0.94 
+moller.uvagem.m2.angle =    0 0 0 
+moller.uvagem.m3.position = -0.0 -0.0 1.1 
+moller.uvagem.m3.angle =    0 0 0 
+#moller.uvagem.m0.position =               0               0               0
+#moller.uvagem.m0.angle =               0               0               0   
+#moller.uvagem.m1.position =       0.0120457   -0.0002655333       0.4112692
+#moller.uvagem.m1.angle =       0.2291396       -6.445803      -0.5011896
+#moller.uvagem.m2.position =     0.004599638   -0.0003558867       0.7884612
+#moller.uvagem.m2.angle =        1.633869       -21.53917        -1.65634
+#moller.uvagem.m3.position =               0               0               0
+#moller.uvagem.m3.angle =               0               0               0
+#moller.uvagem.m4.position =               0               0               0
+#moller.uvagem.m4.angle =               0               0               0
+#moller.uvagem.m0.position =               0               0               0
+#moller.uvagem.m0.angle =               0               0               0   
+#moller.uvagem.m1.position =     0.001998674   -0.0002505688       0.4199528
+#moller.uvagem.m1.angle =       -1.783285       -11.94452       0.3923171
+#moller.uvagem.m2.position =     0.004049985   -0.0009026416       0.8077879
+#moller.uvagem.m2.angle =        2.655148       -28.58798      -0.6241696
+#moller.uvagem.m3.position =               0               0               1.1
+#moller.uvagem.m3.angle =               0               0               0
+#moller.uvagem.m4.position =               0               0               0.94
+#moller.uvagem.m4.angle =               0               0               0
+bs.uvagem.m0.position =               0               0               0
+moller.uvagem.m0.angle =               0               0               0
+moller.uvagem.m1.position =      0.01459922     0.003085606       0.3584309
+moller.uvagem.m1.angle =       -1.094385       -2.775917      -0.5480223
+moller.uvagem.m2.position =    -0.004742134     0.006072654       0.94
+moller.uvagem.m2.angle =        1.478213        17.42175       -1.185544
+moller.uvagem.m3.position =     -0.02644117    -0.001683389        1.184826
+moller.uvagem.m3.angle =        1.913603        25.45876       -1.176165
+
+
+# active area size: Lx Ly Lz (not clear that Lz will be used for anything)
+# MOLLER GEM Dimension from MOLLER docDB 1054
+moller.uvagem.m0.size = 0.512  0.4096   0.001
+moller.uvagem.m1.size = 0.512  0.4096   0.001
+#moller.uvagem.m3.size = 0.512  0.512   0.001 
+#moller.uvagem.m4.size = 0.512  0.512   0.001 
+moller.uvagem.m2.size = 0.5068  0.4923   0.001 
+moller.uvagem.m3.size = 0.5068  0.4923   0.001 
+
+# number of U strips: note that these repeated entries could be replaced by a single entry like
+# moller.uvagem.nstripsu = 1536 that would be the default for all the subdetectors (modules) unless overridden by module-specific directives
+moller.uvagem.m0.nstripsu = 1280
+moller.uvagem.m1.nstripsu = 1280
+#moller.uvagem.m3.nstripsu = 640
+#moller.uvagem.m4.nstripsu = 640
+moller.uvagem.m2.nstripsu = 605
+moller.uvagem.m3.nstripsu = 605
+
+
+# number of V strips:
+moller.uvagem.m0.nstripsv = 1024
+moller.uvagem.m1.nstripsv = 1024
+#moller.uvagem.m3.nstripsv = 640
+#moller.uvagem.m4.nstripsv = 640
+moller.uvagem.m2.nstripsv = 605
+moller.uvagem.m3.nstripsv = 605
+
+# U strip angles (in degrees, wrt X direction):
+# 
+
+moller.uvagem.m0.uangle = 0.0 
+moller.uvagem.m0.vangle = 90.0
+
+moller.uvagem.m1.uangle = 0.0 
+moller.uvagem.m1.vangle = 90.0
+
+moller.uvagem.m2.uangle = 166.75
+moller.uvagem.m2.vangle = -166.75
+
+moller.uvagem.m3.uangle = 166.75
+moller.uvagem.m3.vangle = -166.75
+
+#Strip offsets
+#U offset
+moller.uvagem.m0.uoffset = 0
+moller.uvagem.m1.uoffset = 0
+moller.uvagem.m2.uoffset = -0.045
+moller.uvagem.m3.uoffset = -0.045
+#U offset
+moller.uvagem.m0.voffset = 0
+moller.uvagem.m1.voffset = 0
+moller.uvagem.m2.voffset = 0.045
+moller.uvagem.m3.voffset = 0.045
+
+
+# strip pitch along u (mm):
+#moller.uvagem.upitch = 0.0008
+moller.uvagem.m0.upitch = 0.0004
+moller.uvagem.m1.upitch = 0.0004
+moller.uvagem.m2.upitch = 0.0008
+moller.uvagem.m3.upitch = 0.0008
+
+# strip pitch along V (mm):
+#moller.uvagem.vpitch = 0.0008
+moller.uvagem.m0.vpitch = 0.0004
+moller.uvagem.m1.vpitch = 0.0004
+moller.uvagem.m2.vpitch = 0.0008
+moller.uvagem.m3.vpitch = 0.0008
+
+###########################Done upto here##################################
+#
+## if we call LoadDB with "search = 1", then these will get applied to all modules by default:
+#moller.uvagem.ped = 0.0
+#moller.uvagem.rms = 10.0
+#
+moller.uvagem.threshold_sample = 50.0
+moller.uvagem.threshold_stripsum = 150.0
+moller.uvagem.threshold_clustersum = 150.0
+#
+##
+#moller.uvagem.ADCasym_cut = 0.3
+## time difference cut in nanoseconds
+moller.uvagem.deltat_cut = 30.0
+moller.uvagem.corrcoeff_cut = 0.5
+moller.uvagem.filterflag1D = -1 # -1 = no filtering: don't require 1D hits to pass any cuts other than basic zero suppression
+moller.uvagem.filterflag2D = -1 # 1 = "hard" filtering: require 2D hits to pass all cuts
+#
+## peak prominence cuts for splitting clusters when overlapping peaks are detected:
+moller.uvagem.peakprominence_minsigma = 2.5
+moller.uvagem.peakprominence_minfraction = 0.1
+#
+## cluster size restrictions for total charge calculation and hit position reconstruction:
+## for cluster charge calculation: +/- 4 strips from peak = maximum cluster size 9 strips
+moller.uvagem.maxnu_charge = 4
+moller.uvagem.maxnv_charge = 4
+## for cluster position reconstruction: +/- 2 strips from peak = maximum cluster size 5 strips
+moller.uvagem.maxnu_pos = 2
+moller.uvagem.maxnv_pos = 2
+#
+moller.uvagem.sigmahitshape = 0.0004 
+moller.uvagem.sigmahitpos = 0.00015 # 0.15 mm or 150 um
+moller.uvagem.trackchi2cut = 50000.0
+moller.uvagem.onlinezerosuppression = 0 # under normal conditions, this should always be 1, unless running normal data taking in pedestal mode:
+
+
+############### Parameters searched by mollerGEMSpectrometerTracker::ReadDatabase() ######################
+#moller.uvagem.zerosuppress_nsigma = 5.0
+moller.uvagem.minhitsontrack = 3
+moller.uvagem.maxhitcombos = 5000
+moller.uvagem.maxhitcombos_inner = 10000
+moller.uvagem.maxhitcombos_total = 1.e6
+moller.uvagem.tryfasttrack = 1
+moller.uvagem.gridbinwidthx = 0.05
+moller.uvagem.gridbinwidthy = 0.05
+moller.uvagem.gridedgetolerancex = 0.015
+moller.uvagem.gridedgetolerancey = 0.015
+#moller.uvagem.useconstraint = 0
+
+moller.uvagem.xptar_min = -0.35
+moller.uvagem.xptar_max = -0.35
+
+moller.uvagem.yptar_min = -0.15
+moller.uvagem.yptar_max = -0.15
+################### DECODE INFO #################################################################
+## Channel maps for decoding:                                                                  ## 
+# existing mollerGEMPlane uses the struct mpdmap_t                                                ##
+# the rows for which have eight entries (not sure if this is sufficient):                      ##
+# At minimum we need 9 entries in the decode map, because now we need to specify the strip     ##
+# axis in the decode map in migrating from mollerGEMPlane (which has one strip orientation)       ##
+# to mollerGEMModule (which has two)                                                              ##
+#################################################################################################
+
+# the chan map ordering here is: 
+# #  crate   slot    fiber_id GEMID  adc_ch   i2c      pos   invert   axis
+# J0 middle
+moller.uvagem.m0.chanmap = 
+      2      13        4      0       10      16      0       0       0 
+      2      13        4      0       11      17      2       0       0 
+      2      13        4      0       12      18      4       0       0 
+      2      13        4      0       13      19      6       0       0 
+      2      13        4      0       14      20      8       0       0 
+      2      13        5      0       10      16      7       1       1 
+      2      13        5      0       11      17      5       1       1 
+      2      13        5      0       12      18      3       1       1 
+      2      13        5      0       13      19      1       1       1 
+      2      13        6      0       10      16      9       1       0 
+      2      13        6      0       11      17      7       1       0 
+      2      13        6      0       12      18      5       1       0 
+      2      13        6      0       13      19      3       1       0 
+      2      13        6      0       14      20      1       1       0 
+      2      13        7      0       14      16      0       0       1 
+      2      13        7      0       13      17      2       0       1 
+      2      13        7      0       12      18      4       0       1 
+      2      13        7      0       11      19      6       0       1 
+
+
+# the chan map ordering here is: 
+# #  crate   slot    fiber_id GEMID  adc_ch   i2c      pos   invert   axis
+# J4 middle
+moller.uvagem.m1.chanmap = 
+      2      13        8      1       10      16      0       0       0 
+      2      13        8      1       11      17      2       0       0 
+      2      13        8      1       12      18      4       0       0 
+      2      13        8      1       13      19      6       0       0 
+      2      13        8      1       14      20      8       0       0 
+      2      13        9      1       10      16      7       1       1 
+      2      13        9      1       11      17      5       1       1 
+      2      13        9      1       12      18      3       1       1 
+      2      13        9      1       13      19      1       1       1 
+      2      13       10      1       10      16      9       1       0 
+      2      13       10      1       11      17      7       1       0 
+      2      13       10      1       12      18      5       1       0 
+      2      13       10      1       13      19      3       1       0 
+      2      13       10      1       14      20      1       1       0 
+      2      13       11      1       10      16      0       0       1 
+      2      13       11      1       11      17      2       0       1 
+      2      13       11      1       12      18      4       0       1 
+      2      13       11      1       13      19      6       0       1 
+
+#
+# the chan map ordering here is: 
+# #  crate   slot    fiber_id GEMID  adc_ch   i2c      pos   invert   axis
+# J2 middle
+#moller.uvagem.m2.chanmap = 
+#      2      13       12      2       10      16      0       0       0 
+#      2      13       12      2       11      17      2       0       0 
+#      2      13       12      2       12      18      4       0       0 
+#      2      13       12      2       13      19      6       0       0 
+#      2      13       12      2       14      20      8       0       0 
+#      2      13       13      2       10      16      7       1       1 
+#      2      13       13      2       11      17      5       1       1 
+#      2      13       13      2       12      18      3       1       1 
+#      2      13       13      2       13      19      1       1       1 
+#      2      13       14      2       10      16      9       1       0 
+#      2      13       14      2       11      17      7       1       0 
+#      2      13       14      2       12      18      5       1       0 
+#      2      13       14      2       13      19      3       1       0 
+#      2      13       14      2       14      20      1       1       0 
+#      2      13       15      2       10      16      0       0       1 
+#      2      13       15      2       11      17      2       0       1 
+#      2      13       15      2       12      18      4       0       1 
+#      2      13       15      2       13      19      6       0       1 
+#
+# m0 specifies module
+# As far as I can tell, slot and mpd are redundant. So maybe we could drop the number of entries in struct mpdmap_t back to 8
+# "gem" is also in principle unnecessary, but we can use this to store the unique "prodID" to keep track of each GEM
+# adc, i2c, pos, invert, and axis are all necessary for decoding:
+# the chan map ordering here is: crate slot mpd_id(fibre)  GEMID adc_ch i2c pos invert axis
+# ## vtpcrate  slot  fiber  gemid  adc_ch   i2c   pos     invert   axis
+moller.uvagem.m2.chanmap = 
+      2      13       3      3       0       15       0       1       1 
+      2      13       3      3       2       13       1       1       1 
+      2      13       3      3       4       11       2       1       1 
+      2      13       3      3       6        9       3       1       1 
+      2      13       3      3       8        7       4       1       1 
+      2      13       3      3       1       14       0       1       0 
+      2      13       3      3       3       12       1       1       0 
+      2      13       3      3       5       10       2       1       0 
+      2      13       3      3       7        8       3       1       0 
+      2      13       3      3       9        6       4       1       0 
+
+moller.uvagem.m3.chanmap = 
+# ## vtpcrate  slot  fiber  gemid  adc_ch   i2c   pos     invert   axis
+      2      13       12      4       0       15       0       1       1 
+      2      13       12      4       2       13       1       1       1 
+      2      13       12      4       4	     11       2       1       1 
+      2      13       12      4       6        9       3       1       1 
+      2      13       12      4       8        7       4       1       1 
+      2      13       12      4       1       14       0       1       0 
+      2      13       12      4       3       12       1       1       0 
+      2      13       12      4       5       10       2       1       0 
+      2      13       12      4       7        8       3       1       0 
+      2      13       12      4       9        6       4       1       0 
+#
+#      2      13       3      4       0       13       0       1       1 
+#      2      13       3      4       2       11       1       1       1 
+#      2      13       3      4       4	      9       2       1       1 
+#      2      13       3      4       6        7       3       1       1 
+#      2      13       3      4       8        5       4       1       1 
+#      2      13       3      4       1       12       0       1       0 
+#      2      13       3      4       3       10       1       1       0 
+#      2      13       3      4       5        8       2       1       0 
+#      2      13       3      4       7        6       3       1       0 
+#      2      13       3      4       9        4       4       1       0 
+moller.uvagem.pedfile = gemped/daq_ped_moller_uvagem_run1309.dat
+moller.uvagem.cmfile = gemped/db_cmr_moller_uvagem_run1309.dat
+
+#moller.uvagem.m0.commonmode_meanU = 
+#           1059.8            1004.4              1028            949.08            1123.4            1041.5              1154            1098.3            896.12            1063.8              1028               877 
+#moller.uvagem.m0.commonmode_rmsU = 
+#           34.968            35.009            38.086            38.922            47.538             51.46             51.08            49.864            41.599            41.906            36.597            41.473 
+#moller.uvagem.m0.commonmode_meanV = 
+#           792.74            849.08            944.96            657.76            945.29             974.8            930.07            1008.3            980.51            917.57 
+#moller.uvagem.m0.commonmode_rmsV = 
+#           51.305            41.862              47.6            45.125            48.788            56.636            57.243            58.825             57.07            60.361 
+
+moller.uvagem.useconstraint = 0
+moller.uvagem.useopticsconstraint = 0
+moller.uvagem.useslopeconstraint = 0
+
+molleruvagem.usestriptimingcut = 0
+
