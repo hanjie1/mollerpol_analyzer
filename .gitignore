@@ -15,3 +15,7 @@ DB/
 *.swp
 .DS_Store
 
+.history
+.viminfo
+.root_hist
+

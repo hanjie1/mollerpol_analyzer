@@ -5,7 +5,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "MOLLERGenericDetector.h"
+#include "MollerPolGenericDetector.h"
 
 #include "THaEvData.h"
 #include "THaDetMap.h"
@@ -15,7 +15,7 @@
 #include "TClonesArray.h"
 #include "TDatime.h"
 #include "TMath.h"
-#include "MOLLERManager.h"
+#include "MollerPolGEMManager.h"
 #include "THaCrateMap.h"
 #include "Helper.h"
 

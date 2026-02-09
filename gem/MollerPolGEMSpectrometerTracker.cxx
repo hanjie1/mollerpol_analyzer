@@ -8,8 +8,8 @@
 #include "THaAnalysisObject.h"
 
 #include "THaSpectrometer.h"
-#include "MOLLERGEMSpectrometerTracker.h"
-#include "MOLLERGEMModule.h"
+#include "MollerPolGEMSpectrometerTracker.h"
+#include "MollerPolGEMModule.h"
 #include "THaTrack.h"
 #include "TClonesArray.h"
 #include "Helper.h"

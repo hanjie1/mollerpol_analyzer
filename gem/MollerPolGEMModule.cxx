@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "MOLLERGEMModule.h"
+#include "MollerPolGEMModule.h"
 #include "TDatime.h"
 #include "THaEvData.h"
 #include "THaApparatus.h"

@@ -5,7 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "MOLLERSpectrometer.h"
+#include "MollerPolSpectrometer.h"
 
 using namespace std;
 

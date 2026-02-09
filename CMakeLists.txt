@@ -24,14 +24,14 @@ set(src
 
   #--------GEM content--------
   gem/MPDModule.cxx
-  gem/MOLLERData.cxx
-  gem/MOLLERElement.cxx
-  gem/MOLLERManager.cxx
-  gem/MOLLERGenericDetector.cxx
-  gem/MOLLERSpectrometer.cxx
-  gem/MOLLERGEMModule.cxx
-  gem/MOLLERGEMTrackerBase.cxx
-  gem/MOLLERGEMSpectrometerTracker.cxx
+  gem/MollerPolGEMData.cxx
+  gem/MollerPolGEMElement.cxx
+  gem/MollerPolGEMManager.cxx
+  gem/MollerPolGenericDetector.cxx
+  gem/MollerPolSpectrometer.cxx
+  gem/MollerPolGEMModule.cxx
+  gem/MollerPolGEMTrackerBase.cxx
+  gem/MollerPolGEMSpectrometerTracker.cxx
   )
 
 # Headers.

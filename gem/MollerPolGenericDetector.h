@@ -23,7 +23,7 @@
 #include "TRotation.h"
 #include "TVector3.h"
 #include "THaDetMap.h"
-#include "MOLLERElement.h"
+#include "MollerPolGEMElement.h"
 #include "Helper.h"
 
 namespace MOLLERModeADC {

@@ -1,4 +1,4 @@
-#include "MOLLERData.h"
+#include "MollerPolGEMData.h"
 #include "TMath.h"
 #include <iostream>
 #define MOLLER_ADC_MODE_SINGLE 0 //< Simple ADC with only integral

@@ -2,7 +2,7 @@
 #define MOLLERGEMSPECTROMETERTRACKER_H 1
 #include <vector>
 #include <THaTrackingDetector.h>
-#include "MOLLERGEMTrackerBase.h"
+#include "MollerPolGEMTrackerBase.h"
 
 class THaRunBase;
 class THaApparatus;
