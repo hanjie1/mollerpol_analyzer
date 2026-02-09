@@ -1,1 +1,17 @@
+# --- do not commit local/runtime stuff ---
+build/
+Replay/
+scripts/
+DB/
+
+# outputs
+*.root
+*.log
+*.dat
+*.pdf
+
+# editor / OS
+*~
 *.swp
+.DS_Store
+
