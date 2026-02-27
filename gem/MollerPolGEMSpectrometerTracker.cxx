@@ -12,7 +12,7 @@
 #include "MollerPolGEMModule.h"
 #include "THaTrack.h"
 #include "TClonesArray.h"
-#include "Helper.h"
+#include "GEMHelper.h"
 
 using namespace Podd;
 

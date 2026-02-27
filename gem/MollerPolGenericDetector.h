@@ -24,7 +24,7 @@
 #include "TVector3.h"
 #include "THaDetMap.h"
 #include "MollerPolGEMElement.h"
-#include "Helper.h"
+#include "GEMHelper.h"
 
 namespace MOLLERModeADC {
   enum Mode{

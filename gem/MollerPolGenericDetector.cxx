@@ -17,7 +17,7 @@
 #include "TMath.h"
 #include "MollerPolGEMManager.h"
 #include "THaCrateMap.h"
-#include "Helper.h"
+#include "GEMHelper.h"
 
 #include <cstring>
 #include <iostream>
