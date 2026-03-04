@@ -284,7 +284,7 @@ Int_t MollerPolGenericDetector::ReadDatabase( const TDatime& date )
     fRefChanMap.resize(nmodules);
     fRefChanLo.resize(nmodules);
     fRefChanHi.resize(nmodules);
-    Decoder::THaCrateMap *cratemap = MollerPolManager::GetInstance()->GetCrateMap();
+    Decoder::THaCrateMap *cratemap = MollerPolGEMManager::GetInstance()->GetCrateMap();
     Int_t kr = 0,ka = 0, kt = 0, km = 0, k = 0;
     for( Int_t i = 0; i < nmodules && !err; i++) {
       Int_t krmod = 0;
@@ -537,18 +537,18 @@ Int_t MollerPolGenericDetector::ReadDatabase( const TDatime& date )
     DeleteContainer(fRefElements);
     fRefElements.resize(fNRefElem);
     for (Int_t nr=0;nr<fNRefElem;nr++) {
-      MollerPolElement *el = MakeElement(0,0,0,nr,0,0,nr);
+      MollerPolGEMElement *el = MakeElement(0,0,0,nr,0,0,nr);
       if (RefMode[nr] ==1) {
             if( fModeADC == MollerPolModeADC::kWaveform ) {
               el->SetWaveform(refadc_ped[nr],refadc_gain[nr],refadc_conv[nr],refadc_GoodTimeCut[nr]);
-	      MollerPolData::Waveform *wave = el->Waveform();
+	      MollerPolGEMData::Waveform *wave = el->Waveform();
               wave->SetWaveformParam(refadc_thres[nr],refadc_FixThresBin[nr],refadc_NSB[nr],refadc_NSA[nr],refadc_NPedBin[nr]);
 	      wave->SetAmpCal(refadc_AmpToIntRatio[nr]*refadc_gain[nr]);
 	      wave->SetTrigCal(1.);
             } else {
               el->SetADC(refadc_ped[nr],refadc_gain[nr]);
 	      if( fModeADC == MollerPolModeADC::kADC ) {
-		MollerPolData::ADC *fadc=el->ADC();
+		MollerPolGEMData::ADC *fadc=el->ADC();
 		fadc->SetADCParam(refadc_conv[nr],refadc_NSB[nr],refadc_NSA[nr],refadc_NPedBin[nr],refadc_GoodTimeCut[nr]);
 		fadc->SetAmpCal(refadc_AmpToIntRatio[nr]*refadc_gain[nr]);
 	        fadc->SetTrigCal(1.);
@@ -718,11 +718,11 @@ Int_t MollerPolGenericDetector::ReadDatabase( const TDatime& date )
           x = xyz[0] - r*dxyz[0];
           y = xyz[1] - c*dxyz[1];
           z = xyz[2] - l*dxyz[2];
-          MollerPolElement *e = MakeElement(x,y,z,rr,cc,ll,k+fChanMapStart);
+          MollerPolGEMElement *e = MakeElement(x,y,z,rr,cc,ll,k+fChanMapStart);
           if( WithADC() ) {
             if( fModeADC == MollerPolModeADC::kWaveform ) {
               e->SetWaveform(adc_ped[k],adc_gain[k],adc_conv[k],adc_GoodTimeCut[k]);
-	      MollerPolData::Waveform *wave = e->Waveform();
+	      MollerPolGEMData::Waveform *wave = e->Waveform();
               wave->SetWaveformParam(adc_thres[k],adc_FixThresBin[k],adc_NSB[k],adc_NSA[k],adc_NPedBin[k]);
 	      wave->SetAmpCal(adc_AmpToIntRatio[k]*adc_gain[k]);
 	      wave->SetTrigCal(1.);
@@ -730,7 +730,7 @@ Int_t MollerPolGenericDetector::ReadDatabase( const TDatime& date )
             } else {
               e->SetADC(adc_ped[k],adc_gain[k]);
 	      if( fModeADC == MollerPolModeADC::kADC ) {
-		MollerPolData::ADC *fadc=e->ADC();
+		MollerPolGEMData::ADC *fadc=e->ADC();
 		fadc->SetADCParam(adc_conv[k],adc_NSB[k],adc_NSA[k],adc_NPedBin[k],adc_GoodTimeCut[k]);
 	        fadc->SetAmpCal(adc_AmpToIntRatio[k]*adc_gain[k]);
 		fadc->SetTrigCal(1.);
@@ -860,7 +860,7 @@ Int_t MollerPolGenericDetector::Decode( const THaEvData& evdata )
 
   //static const char* const here = "Decode()";
   // Loop over modules for the reference time
-  MollerPolElement *blk = nullptr;
+  MollerPolGEMElement *blk = nullptr;
   if (!fDisableRefADC) {
   for( UInt_t imod = 0; imod < fDetMap->GetSize(); imod++ ) {
     if (!fModuleRefTimeFlag[imod]) continue;
@@ -897,7 +897,7 @@ Int_t MollerPolGenericDetector::Decode( const THaEvData& evdata )
   }
   //
   for(Int_t k = 0; k < fNelem; k++) {
-    MollerPolElement *tblk = fElements[k];  
+    MollerPolGEMElement *tblk = fElements[k];  
     FindGoodHit(tblk);
   }
   //
@@ -905,16 +905,16 @@ Int_t MollerPolGenericDetector::Decode( const THaEvData& evdata )
 }
 ////
 Int_t MollerPolGenericDetector::DecodeADC( const THaEvData& evdata,
-    MollerPolElement *blk, THaDetMap::Module *d, Int_t chan,Bool_t IsRef)
+    MollerPolGEMElement *blk, THaDetMap::Module *d, Int_t chan,Bool_t IsRef)
 {
   UInt_t nhit = evdata.GetNumHits(d->crate, d->slot, chan);
   if(nhit == 0  || !WithADC() || !blk)    return 0;
   // If not a reference element then determine the reference time to use
   Double_t reftime=0; 
   if (!IsRef && !fDisableRefADC && d->refindex>=0) {
-     MollerPolElement *refblk = fRefElements[d->refindex];
+     MollerPolGEMElement *refblk = fRefElements[d->refindex];
      if(fModeADC == MollerPolModeADC::kWaveform ) {
-        MollerPolData::Waveform *wave = refblk->Waveform();
+        MollerPolGEMData::Waveform *wave = refblk->Waveform();
 	//Now only one pulse found per sample 	
        reftime = wave->GetTime().val;
        wave->SetGoodHit(0);
@@ -957,7 +957,7 @@ Int_t MollerPolGenericDetector::DecodeADC( const THaEvData& evdata,
     }
     blk->Waveform()->Process(samples);
     samples.clear();
-    MollerPolData::Waveform *wave = blk->Waveform();
+    MollerPolGEMData::Waveform *wave = blk->Waveform();
     wave->SetValTime(wave->GetTime().val- reftime);
   }
   return nhit;
@@ -991,7 +991,7 @@ Int_t MollerPolGenericDetector::CoarseProcess(TClonesArray& )// tracks)
   if(fCoarseProcessed) return 0;
 
   // Pack simple data for output to the tree, and call CoarseProcess on all elements
-  MollerPolElement *blk = 0;
+  MollerPolGEMElement *blk = 0;
   size_t nsamples;
   size_t idx;
   // Reference time
@@ -1008,7 +1008,7 @@ Int_t MollerPolGenericDetector::CoarseProcess(TClonesArray& )// tracks)
              fRefGood.ADCelemID.push_back(blk->GetID());
            Double_t ped=blk->ADC()->GetPed();
           fRefGood.ped.push_back(ped);
-          const MollerPolData::PulseADCData &hit = blk->ADC()->GetGoodHit();
+          const MollerPolGEMData::PulseADCData &hit = blk->ADC()->GetGoodHit();
           fRefGood.a.push_back(hit.integral.raw);
           fRefGood.a_mult.push_back(blk->ADC()->GetNHits());
           if (fModeADC == MollerPolModeADC::kADCSimple) fRefGood.a_p.push_back(hit.integral.raw-ped);
@@ -1049,7 +1049,7 @@ Int_t MollerPolGenericDetector::CoarseProcess(TClonesArray& )// tracks)
 	  }
           // Now store all the hits if specified the by user
           if(fStoreRawHits) {
-            const std::vector<MollerPolData::PulseADCData> &hits = blk->ADC()->GetAllHits();
+            const std::vector<MollerPolGEMData::PulseADCData> &hits = blk->ADC()->GetAllHits();
             for( const auto &hit : hits) {
               fRefRaw.ADCelemID.push_back(blk->GetID());
               fRefRaw.a.push_back(hit.integral.val);
@@ -1058,7 +1058,7 @@ Int_t MollerPolGenericDetector::CoarseProcess(TClonesArray& )// tracks)
              }
           }
       } else if( fModeADC == MollerPolModeADC::kWaveform && blk->Waveform()->HasData()){
-        MollerPolData::Waveform *wave = blk->Waveform();
+        MollerPolGEMData::Waveform *wave = blk->Waveform();
 	if(wave->HasData()) {		
           if(fStoreRawHits) {
            std::vector<Double_t> &s_r =wave->GetDataRaw();
@@ -1145,7 +1145,7 @@ Int_t MollerPolGenericDetector::CoarseProcess(TClonesArray& )// tracks)
              fGood.ADCelemID.push_back(blk->GetID());
            Double_t ped=blk->ADC()->GetPed();
           fGood.ped.push_back(ped);
-          const MollerPolData::PulseADCData &hit = blk->ADC()->GetGoodHit();
+          const MollerPolGEMData::PulseADCData &hit = blk->ADC()->GetGoodHit();
           fGood.a.push_back(hit.integral.raw);
           fGood.a_mult.push_back(blk->ADC()->GetNHits());
           if (fModeADC == MollerPolModeADC::kADCSimple) fGood.a_p.push_back(hit.integral.raw-ped);
@@ -1186,7 +1186,7 @@ Int_t MollerPolGenericDetector::CoarseProcess(TClonesArray& )// tracks)
 	  }
           // Now store all the hits if specified the by user
           if(fStoreRawHits) {
-            const std::vector<MollerPolData::PulseADCData> &hits = blk->ADC()->GetAllHits();
+            const std::vector<MollerPolGEMData::PulseADCData> &hits = blk->ADC()->GetAllHits();
             for( const auto &hit : hits) {
               fRaw.a.push_back(hit.integral.val);
               fRaw.a_amp.push_back(hit.amplitude.val);
@@ -1194,7 +1194,7 @@ Int_t MollerPolGenericDetector::CoarseProcess(TClonesArray& )// tracks)
              }
           }
       } else { // Waveform mode
-        MollerPolData::Waveform *wave = blk->Waveform();
+        MollerPolGEMData::Waveform *wave = blk->Waveform();
 	if(wave->HasData()) {		
           if(fStoreRawHits) {
            std::vector<Double_t> &s_r =wave->GetDataRaw();
@@ -1261,7 +1261,7 @@ Int_t MollerPolGenericDetector::CoarseProcess(TClonesArray& )// tracks)
 }
 
 //
-Int_t MollerPolGenericDetector::FindGoodHit(MollerPolElement *blk)
+Int_t MollerPolGenericDetector::FindGoodHit(MollerPolGEMElement *blk)
 {
   Int_t GoodHit=0;  
   if (WithADC()) {		
@@ -1290,7 +1290,7 @@ Int_t MollerPolGenericDetector::FindGoodHit(MollerPolElement *blk)
 	   }
 
     } else if (fModeADC == MollerPolModeADC::kWaveform) {
-         MollerPolData::Waveform *wave = blk->Waveform();
+         MollerPolGEMData::Waveform *wave = blk->Waveform();
          wave->SetGoodHit(-1);
 	 if (wave->HasData())  {
          Int_t HitIndex = -1;
@@ -1322,8 +1322,8 @@ void MollerPolGenericDetector::ClearOutputVariables()
 
 ///////////////////////////////////////////////////////////////////////////////
 /// MollerPolGenericDetector constructor
-MollerPolElement* MollerPolGenericDetector::MakeElement(Double_t x, Double_t y, Double_t z,
+MollerPolGEMElement* MollerPolGenericDetector::MakeElement(Double_t x, Double_t y, Double_t z,
     Int_t row, Int_t col, Int_t layer, Int_t id)
 {
-  return new MollerPolElement(x,y,z,row,col,layer, id);
+  return new MollerPolGEMElement(x,y,z,row,col,layer, id);
 }

@@ -14,7 +14,7 @@
 #pragma link C++ class MollerPolSpectrometer+;
 #pragma link C++ class MollerPolGEMSpectrometerTracker+;
 #pragma link C++ class MollerPolGenericDetector+;
-#pragma link C++ class MollerPolElement+;
-#pragma link C++ class MollerPolData+;
-#pragma link C++ class MollerPolManager+;
+#pragma link C++ class MollerPolGEMElement+;
+#pragma link C++ class MollerPolGEMData+;
+#pragma link C++ class MollerPolGEMManager+;
 #endif

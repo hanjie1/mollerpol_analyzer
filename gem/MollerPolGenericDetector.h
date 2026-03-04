@@ -109,14 +109,14 @@ public:
   virtual Int_t      CoarseProcess(TClonesArray& tracks);
   virtual Int_t      FineProcess(TClonesArray& tracks);
 
-  virtual Int_t      DecodeADC( const THaEvData&, MollerPolElement *blk,
+  virtual Int_t      DecodeADC( const THaEvData&, MollerPolGEMElement *blk,
 				THaDetMap::Module *d, Int_t chan, Bool_t IsRef);
 
   // Utility functions
   // Can be re-implemented by other classes to specify a different
-  // MollerPolElement sub-class (i.e. useful when one wants to chang  the logic
-  // in MollerPolElement::CoarseProcess()
-  virtual MollerPolElement* MakeElement(Double_t x, Double_t y, Double_t z, Int_t row,
+  // MollerPolGEMElement sub-class (i.e. useful when one wants to chang  the logic
+  // in MollerPolGEMElement::CoarseProcess()
+  virtual MollerPolGEMElement* MakeElement(Double_t x, Double_t y, Double_t z, Int_t row,
       Int_t col, Int_t layer, Int_t id = 0);
   
   Double_t SizeRow() const { return fSizeRow; };
@@ -126,7 +126,7 @@ protected:
 
   virtual Int_t  ReadDatabase( const TDatime& date );
   virtual Int_t  DefineVariables( EMode mode = kDefine );
-  virtual Int_t  FindGoodHit(MollerPolElement *); // 
+  virtual Int_t  FindGoodHit(MollerPolGEMElement *); // 
 
   // Configuration
   Int_t  fNRefElem;        ///< Number of Ref Time elements
@@ -158,9 +158,9 @@ protected:
   MollerPolGenericOutputData fRefRaw;      //< All Ref time hits
 
   // Blocks, where the grid is just for easy access to the elements by row,col,layer
-  std::vector<MollerPolElement*> fElements;
-  std::vector<MollerPolElement*> fRefElements; //< Reference elements (for TDCs and multi-function ADCs)
-  std::vector<std::vector<std::vector<MollerPolElement*> > > fElementGrid;
+  std::vector<MollerPolGEMElement*> fElements;
+  std::vector<MollerPolGEMElement*> fRefElements; //< Reference elements (for TDCs and multi-function ADCs)
+  std::vector<std::vector<std::vector<MollerPolGEMElement*> > > fElementGrid;
   // Clusters for this event
 
   // Other parameters

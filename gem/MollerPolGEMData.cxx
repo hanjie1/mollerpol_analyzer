@@ -4,7 +4,7 @@
 #define MollerPol_ADC_MODE_SINGLE 0 //< Simple ADC with only integral
 #define MollerPol_ADC_MODE_MULTI  1 //< FADC 250 mode 7
 
-namespace MollerPolData {
+namespace MollerPolGEMData {
 
   /////////////////////////////////////////////////////////////////////////////
   // ADC data functions
@@ -175,4 +175,4 @@ namespace MollerPolData {
     fHasData = false;
   }
 
-}; // end MollerPolData
+}; // end MollerPolGEMData

@@ -1,9 +1,9 @@
-#ifndef ROOT_MollerPolElement
-#define ROOT_MollerPolElement
+#ifndef ROOT_MollerPolGEMElement
+#define ROOT_MollerPolGEMElement
 
 ////////////////////////////////////////////////////////////////////////////
 //                                                                        //
-// MollerPolElement                                                       //
+// MollerPolGEMElement                                                       //
 //                                                                        //
 ////////////////////////////////////////////////////////////////////////////
 
@@ -13,13 +13,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class MollerPolElement : public TObject {
+class MollerPolGEMElement : public TObject {
 
 public:
-  MollerPolElement() : fADC(nullptr), fWaveform(nullptr) {};
-  MollerPolElement(Double_t x, Double_t y, Double_t z,
+  MollerPolGEMElement() : fADC(nullptr), fWaveform(nullptr) {};
+  MollerPolGEMElement(Double_t x, Double_t y, Double_t z,
       Int_t row, Int_t col, Int_t layer, Int_t id = 0);
-  virtual ~MollerPolElement();
+  virtual ~MollerPolGEMElement();
 
   // Getters
   Double_t GetX()     const { return fX; }
@@ -33,8 +33,8 @@ public:
   Int_t   GetLayer() const { return fLayer; }
   Int_t   GetStat()  const { return fStat; }
   Int_t   GetID()    const { return fID; }
-  virtual MollerPolData::ADC* ADC()         { return fADC; }
-  virtual MollerPolData::Waveform* Waveform() { return fWaveform; }
+  virtual MollerPolGEMData::ADC* ADC()         { return fADC; }
+  virtual MollerPolGEMData::Waveform* Waveform() { return fWaveform; }
 
   // Setters
   void SetX(Double_t var)    { fX = var; }
@@ -73,10 +73,10 @@ protected:
   Int_t   fStat;    ///< Status: 0: not seen, 1: seen, 2: local max
   Int_t   fID;      ///< a logical number to this element
 
-  MollerPolData::ADC *fADC; //< All ADC hits
-  MollerPolData::Waveform *fWaveform;
+  MollerPolGEMData::ADC *fADC; //< All ADC hits
+  MollerPolGEMData::Waveform *fWaveform;
 
-  ClassDef(MollerPolElement,1) ///< Generic shower block class (no data)
+  ClassDef(MollerPolGEMElement,1) ///< Generic shower block class (no data)
 };
 
 #endif

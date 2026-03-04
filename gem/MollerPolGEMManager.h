@@ -13,11 +13,11 @@ namespace Decoder {
   class THaCrateMap;
 }
 
-class MollerPolManager : public TObject {
+class MollerPolGEMManager : public TObject {
 public:
-  MollerPolManager();
-  virtual ~MollerPolManager();
-  static MollerPolManager *GetInstance();
+  MollerPolGEMManager();
+  virtual ~MollerPolGEMManager();
+  static MollerPolGEMManager *GetInstance();
   static void SetDefaultCrateMapName(const char* name);
 
   Decoder::THaCrateMap* GetCrateMap();
@@ -25,9 +25,9 @@ public:
 private:
   Decoder::THaCrateMap *fCrateMap;
   static TString fCrateMapName;
-  static MollerPolManager *fManager;
+  static MollerPolGEMManager *fManager;
 
-  ClassDef(MollerPolManager,0) ///< Base class for MollerPol Manage
+  ClassDef(MollerPolGEMManager,0) ///< Base class for MollerPol Manage
 };
 
 #endif//MollerPolMANAGER_H

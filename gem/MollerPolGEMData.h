@@ -4,7 +4,7 @@
 #include <vector>
 #include <Rtypes.h> // Include standard ROOT types
 
-namespace MollerPolData {
+namespace MollerPolGEMData {
   ///////////////////////////////////////////////////////////////////////////////
   // Single valued data structure
   struct SingleData {
@@ -183,6 +183,6 @@ namespace MollerPolData {
   };
 
 
-} // end MollerPolData namespace
+} // end MollerPolGEMData namespace
 
 #endif // MollerPolDATA_H
