@@ -21,6 +21,17 @@ set(src
   Scaler9250.cxx
   MollerPolScalerEvtHandler.cxx
   MollerPolHelicityDecoderBoard.cxx
+
+  #--------GEM content--------
+  gem/MPDModule.cxx
+  gem/MollerPolGEMData.cxx
+  gem/MollerPolGEMElement.cxx
+  gem/MollerPolGEMManager.cxx
+  gem/MollerPolGenericDetector.cxx
+  gem/MollerPolSpectrometer.cxx
+  gem/MollerPolGEMModule.cxx
+  gem/MollerPolGEMTrackerBase.cxx
+  gem/MollerPolGEMSpectrometerTracker.cxx
   )
 
 # Headers.
@@ -63,6 +74,7 @@ target_include_directories(${PACKAGE}
   PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gem>
   )
 target_link_libraries(${PACKAGE} PUBLIC Podd::HallA)
 
