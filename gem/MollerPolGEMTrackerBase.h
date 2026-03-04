@@ -1,11 +1,11 @@
-#ifndef MOLLERGEMTRACKERBASE_H
-#define MOLLERGEMTRACKERBASE_H
+#ifndef MollerPolGEMTRACKERBASE_H
+#define MollerPolGEMTRACKERBASE_H
 
 #include <vector>
 #include <map>
 #include <set>
 #include <fstream>
-//#include "MOLLERGEMModule.h"
+//#include "MollerPolGEMModule.h"
 #include "TVector3.h"
 #include "TVector2.h"
 //#include <THaTrackingDetector.h>
@@ -14,17 +14,17 @@
 //class THaRunBase;
 //class THaApparatus;
 //class THaEvData;
-class MOLLERGEMModule;
+class MollerPolGEMModule;
 class TClonesArray;
 
 //class THaCrateMap;
 
 //This class is not going to inherit from THaAnything or from TObject.
-//Instead, this class is only going to contain the common data members and methods needed by MOLLERGEMSpectrometerTracker and MOLLERGEMPolarimeterTracker, largely following the stand-alone clustering and track finding codes. The database reading and initialization will be taken care of by the derived classes: 
+//Instead, this class is only going to contain the common data members and methods needed by MollerPolGEMSpectrometerTracker and MollerPolGEMPolarimeterTracker, largely following the stand-alone clustering and track finding codes. The database reading and initialization will be taken care of by the derived classes: 
 //Base class for GEM tracking assembly (of either the "tracking" or "non-tracking" flavor)
 
 
-class MOLLERGEMTrackerBase {
+class MollerPolGEMTrackerBase {
 public:
   void Clear(); //clear out all the event-specific data structures
 
@@ -67,8 +67,8 @@ public:
   inline void SetMakeCommonModePlots( int cmplots=0 ){ fCommonModePlotsFlag = cmplots; fCommonModePlotsFlagIsSet = true; }
 
 protected:
-  MOLLERGEMTrackerBase(); //only derived classes can construct me.
-  virtual ~MOLLERGEMTrackerBase(); 
+  MollerPolGEMTrackerBase(); //only derived classes can construct me.
+  virtual ~MollerPolGEMTrackerBase(); 
 
   bool fclustering_done;
   bool ftracking_done;
@@ -140,10 +140,10 @@ protected:
   void PurgeHits(int itrack);
   
   //Data members:
-  std::vector <MOLLERGEMModule *> fModules; //array of MOLLERGEMModules:
+  std::vector <MollerPolGEMModule *> fModules; //array of MollerPolGEMModules:
   bool fModulesInitialized;
 
-  //Moved these to MOLLERGEMModule:
+  //Moved these to MollerPolGEMModule:
   //bool fOnlineZeroSuppression; //Flag specifying whether pedestal subtraction has been done "online" (maybe this should be module-specific? probably not)
   //bool fZeroSuppress;
   //double fZeroSuppressRMS;
@@ -254,8 +254,8 @@ protected:
   
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //            DATA members to hold the track information (at least temporarily, will eventually                 //
-  //            be passed to the THaSpectrometer tracks TClonesArray for MOLLERGEMSpectrometerTracker                //
-  //            We'll need to figure out how to handle things for MOLLERGEMPolarimeterTracker                        //
+  //            be passed to the THaSpectrometer tracks TClonesArray for MollerPolGEMSpectrometerTracker                //
+  //            We'll need to figure out how to handle things for MollerPolGEMPolarimeterTracker                        //
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   //////////////////// "Hit list" arrays used by tracking algorithm /////////////////////////
@@ -514,8 +514,8 @@ protected:
   
   //We'll define hit map/efficiency histograms here.
   // NOTE: in order for these to actually show up in output, derived classes must initialize these histograms
-  // in MOLLERGEMSpectrometerTracker::Begin() or MOLLERGEMPolarimeterTracker::Begin() and
-  // write them to the output ROOT file in MOLLERGEMSpectrometerTracker::End() or MOLLERGEMPolarimeterTracker::End()
+  // in MollerPolGEMSpectrometerTracker::Begin() or MollerPolGEMPolarimeterTracker::Begin() and
+  // write them to the output ROOT file in MollerPolGEMSpectrometerTracker::End() or MollerPolGEMPolarimeterTracker::End()
   TClonesArray *hdidhit_x_layer;
   TClonesArray *hdidhit_y_layer;
   TClonesArray *hdidhit_xy_layer;

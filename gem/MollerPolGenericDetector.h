@@ -1,9 +1,9 @@
-#ifndef MOLLERGenericDetector_h
-#define MOLLERGenericDetector_h
+#ifndef MollerPolGenericDetector_h
+#define MollerPolGenericDetector_h
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//MOLLERGenericDetector
+//MollerPolGenericDetector
 //
 // A generic detector class which could contain the following types
 // of data:
@@ -26,7 +26,7 @@
 #include "MollerPolGEMElement.h"
 #include "GEMHelper.h"
 
-namespace MOLLERModeADC {
+namespace MollerPolModeADC {
   enum Mode{
     kNone,
     kADC,       //< Contains pulse information also
@@ -38,7 +38,7 @@ namespace MOLLERModeADC {
 
 // This structure has output data when the user wants every hit to be stored
 // in the rootfile.
-struct MOLLERGenericOutputData {
+struct MollerPolGenericOutputData {
   // Note [] means it can be variable sized data per event/module
   // Module info
   std::vector<Int_t> ADCrow;         //< [] row
@@ -87,36 +87,36 @@ struct MOLLERGenericOutputData {
   }
 };
 
-class MOLLERGenericDetector : public THaNonTrackingDetector {
-  //class MOLLERGenericDetector : public THaShower {
+class MollerPolGenericDetector : public THaNonTrackingDetector {
+  //class MollerPolGenericDetector : public THaShower {
 
 public:
-  explicit MOLLERGenericDetector( const char* name, const char* description = "",
+  explicit MollerPolGenericDetector( const char* name, const char* description = "",
                                THaApparatus* a = nullptr);
-  virtual ~MOLLERGenericDetector();
+  virtual ~MollerPolGenericDetector();
 
   virtual void Clear( Option_t* opt="" );
 
-  void SetModeADC(MOLLERModeADC::Mode mode);
+  void SetModeADC(MollerPolModeADC::Mode mode);
   void SetDisableRefADC(Bool_t b) { fDisableRefADC = b; }
   void SetStoreRawHits(Bool_t var) { fStoreRawHits = var; }
   void SetStoreEmptyElements(Bool_t b) { fStoreEmptyElements = b; }
 
-  Bool_t WithADC() { return fModeADC != MOLLERModeADC::kNone; };
+  Bool_t WithADC() { return fModeADC != MollerPolModeADC::kNone; };
 
   // Standard apparatus re-implemented functions
   virtual Int_t      Decode( const THaEvData& );
   virtual Int_t      CoarseProcess(TClonesArray& tracks);
   virtual Int_t      FineProcess(TClonesArray& tracks);
 
-  virtual Int_t      DecodeADC( const THaEvData&, MOLLERElement *blk,
+  virtual Int_t      DecodeADC( const THaEvData&, MollerPolElement *blk,
 				THaDetMap::Module *d, Int_t chan, Bool_t IsRef);
 
   // Utility functions
   // Can be re-implemented by other classes to specify a different
-  // MOLLERElement sub-class (i.e. useful when one wants to chang  the logic
-  // in MOLLERElement::CoarseProcess()
-  virtual MOLLERElement* MakeElement(Double_t x, Double_t y, Double_t z, Int_t row,
+  // MollerPolElement sub-class (i.e. useful when one wants to chang  the logic
+  // in MollerPolElement::CoarseProcess()
+  virtual MollerPolElement* MakeElement(Double_t x, Double_t y, Double_t z, Int_t row,
       Int_t col, Int_t layer, Int_t id = 0);
   
   Double_t SizeRow() const { return fSizeRow; };
@@ -126,7 +126,7 @@ protected:
 
   virtual Int_t  ReadDatabase( const TDatime& date );
   virtual Int_t  DefineVariables( EMode mode = kDefine );
-  virtual Int_t  FindGoodHit(MOLLERElement *); // 
+  virtual Int_t  FindGoodHit(MollerPolElement *); // 
 
   // Configuration
   Int_t  fNRefElem;        ///< Number of Ref Time elements
@@ -136,7 +136,7 @@ protected:
   Double_t fSizeCol;
   Int_t fNcolsMax;      ///< Max number of columns out of all rows
   Int_t  fNlayers;      ///< Number of layers (in z-direction)
-  MOLLERModeADC::Mode fModeADC;      //< ADC Mode
+  MollerPolModeADC::Mode fModeADC;      //< ADC Mode
   Bool_t fDisableRefADC; //< Reference ADC may be optionally disabled
   Bool_t fStoreEmptyElements; //< Do not store data for empty elements in rootfile
   Bool_t fIsMC; // flag to indicate if data are simulated;
@@ -152,15 +152,15 @@ protected:
   std::vector<Int_t> fRefChanHi; //< Module Reftime High channel number
 
   // Output variable containers
-  MOLLERGenericOutputData fGood;     //< Good data output
-  MOLLERGenericOutputData fRaw;      //< All hits
-  MOLLERGenericOutputData fRefGood;     //< Good Ref time data output
-  MOLLERGenericOutputData fRefRaw;      //< All Ref time hits
+  MollerPolGenericOutputData fGood;     //< Good data output
+  MollerPolGenericOutputData fRaw;      //< All hits
+  MollerPolGenericOutputData fRefGood;     //< Good Ref time data output
+  MollerPolGenericOutputData fRefRaw;      //< All Ref time hits
 
   // Blocks, where the grid is just for easy access to the elements by row,col,layer
-  std::vector<MOLLERElement*> fElements;
-  std::vector<MOLLERElement*> fRefElements; //< Reference elements (for TDCs and multi-function ADCs)
-  std::vector<std::vector<std::vector<MOLLERElement*> > > fElementGrid;
+  std::vector<MollerPolElement*> fElements;
+  std::vector<MollerPolElement*> fRefElements; //< Reference elements (for TDCs and multi-function ADCs)
+  std::vector<std::vector<std::vector<MollerPolElement*> > > fElementGrid;
   // Clusters for this event
 
   // Other parameters
@@ -183,15 +183,15 @@ protected:
 private:
   void ClearOutputVariables();
 
-  ClassDef(MOLLERGenericDetector,0)     //Generic shower detector class
+  ClassDef(MollerPolGenericDetector,0)     //Generic shower detector class
 };
 
-/*inline Int_t MOLLERGenericDetector::blkidx(Int_t row, Int_t col, Int_t layer)
+/*inline Int_t MollerPolGenericDetector::blkidx(Int_t row, Int_t col, Int_t layer)
 {
   return fNlayers*(fNcols[row]*row + col) + layer;
 }
 
-inline void MOLLERGenericDetector::blkrcl(Int_t index, Int_t &row, Int_t &col,
+inline void MollerPolGenericDetector::blkrcl(Int_t index, Int_t &row, Int_t &col,
     Int_t &layer)
 {
   row = index/(fNlayers*fNcols);
@@ -204,4 +204,4 @@ inline void MOLLERGenericDetector::blkrcl(Int_t index, Int_t &row, Int_t &col,
 ////////////////////////////////////////////////////////////////////////////////
 // Specify some default sub-classes available to the user
 
-#endif // MOLLERGenericDetector_h
+#endif // MollerPolGenericDetector_h

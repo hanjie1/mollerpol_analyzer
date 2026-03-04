@@ -15,12 +15,12 @@
 #include <iomanip>
 
 using namespace std;
-//using namespace MOLLERGEMModule;
+//using namespace MollerPolGEMModule;
 
 //This should not be hard-coded, I think, but read in from the database (or perhaps not, if it never changes? For now we keep it hard-coded)
 // const int APVMAP[128] = {1, 33, 65, 97, 9, 41, 73, 105, 17, 49, 81, 113, 25, 57, 89, 121, 3, 35, 67, 99, 11, 43, 75, 107, 19, 51, 83, 115, 27, 59, 91, 123, 5, 37, 69, 101, 13, 45, 77, 109, 21, 53, 85, 117, 29, 61, 93, 125, 7, 39, 71, 103, 15, 47, 79, 111, 23, 55, 87, 119, 31, 63, 95, 127, 0, 32, 64, 96, 8, 40, 72, 104, 16, 48, 80, 112, 24, 56, 88, 120, 2, 34, 66, 98, 10, 42, 74, 106, 18, 50, 82, 114, 26, 58, 90, 122, 4, 36, 68, 100, 12, 44, 76, 108, 20, 52, 84, 116, 28, 60, 92, 124, 6, 38, 70, 102, 14, 46, 78, 110, 22, 54, 86, 118, 30, 62, 94, 126};
 
-MOLLERGEMModule::MOLLERGEMModule( const char *name, const char *description,
+MollerPolGEMModule::MollerPolGEMModule( const char *name, const char *description,
 			    THaDetectorBase* parent ):
   THaSubDetector(name,description,parent)
 {
@@ -144,12 +144,12 @@ MOLLERGEMModule::MOLLERGEMModule( const char *name, const char *description,
 
   fIsMC = false; //need to set default value!
 
-  fAPVmapping = MOLLERGEM::kUVA_XY; //default to UVA X/Y style APV mapping, but require this in the database::
+  fAPVmapping = MollerPolGEM::kUVA_XY; //default to UVA X/Y style APV mapping, but require this in the database::
 
   InitAPVMAP();
 
   fModuleGain = 1.0;
-  //  std::cout << "MOLLERGEMModule constructor invoked, name = " << name << std::endl;
+  //  std::cout << "MollerPolGEMModule constructor invoked, name = " << name << std::endl;
 
   //Number of sigmas for defining common-mode max for online zero suppression
   fCommonModeRange_nsigma = 5.0;
@@ -227,7 +227,7 @@ MOLLERGEMModule::MOLLERGEMModule( const char *name, const char *description,
   return;
 }
 
-MOLLERGEMModule::~MOLLERGEMModule() {
+MollerPolGEMModule::~MollerPolGEMModule() {
   // if( fStrip ){
   //     fadc0 = NULL;
   //     fadc1 = NULL;
@@ -250,9 +250,9 @@ MOLLERGEMModule::~MOLLERGEMModule() {
 
 }
 
-Int_t MOLLERGEMModule::ReadDatabase( const TDatime& date ){
+Int_t MollerPolGEMModule::ReadDatabase( const TDatime& date ){
   
-  //std::cout << "[MOLLERGEMModule::ReadDatabase]" << std::endl;
+  //std::cout << "[MollerPolGEMModule::ReadDatabase]" << std::endl;
   
   Int_t status;
 
@@ -426,7 +426,7 @@ Int_t MOLLERGEMModule::ReadDatabase( const TDatime& date ){
     return status;
   }
 
-  if(fAPVmapping == MOLLERGEM::kUVA_MOLLER)
+  if(fAPVmapping == MollerPolGEM::kUVA_MollerPol)
     effN_APV25_CHAN =121;
   else 
     effN_APV25_CHAN =128;
@@ -456,10 +456,10 @@ Int_t MOLLERGEMModule::ReadDatabase( const TDatime& date ){
   
   //  std::cout << "After loadDB, fCommonModePlotsInitialized = " << fCommonModePlotsInitialized << std::endl;
  
-  if( /*fAPVmapping < MOLLERGEM::kINFN ||*/ fAPVmapping > MOLLERGEM::kMC ) {
-    //std::cout << "Warning in MOLLERGEMModule::Decode for module " << GetParent()->GetName() << "." << GetName() << ": invalid APV mapping choice, defaulting to UVA X/Y." 
+  if( /*fAPVmapping < MollerPolGEM::kINFN ||*/ fAPVmapping > MollerPolGEM::kMC ) {
+    //std::cout << "Warning in MollerPolGEMModule::Decode for module " << GetParent()->GetName() << "." << GetName() << ": invalid APV mapping choice, defaulting to UVA X/Y." 
 //	      << " Analysis results may be incorrect" << std::endl;
-    fAPVmapping = MOLLERGEM::kUVA_XY;
+    fAPVmapping = MollerPolGEM::kUVA_XY;
   }
   
   //prevent the user from defining something silly for the common-mode stuff:
@@ -481,7 +481,7 @@ Int_t MOLLERGEMModule::ReadDatabase( const TDatime& date ){
     fCommonModeFlag = -1;
     fPedestalMode = false;
     fOnlineZeroSuppression = true;
-    fAPVmapping = MOLLERGEM::kMC;
+    fAPVmapping = MollerPolGEM::kMC;
   }
 
   fPxU = cos( fUAngle * TMath::DegToRad() );
@@ -530,7 +530,7 @@ Int_t MOLLERGEMModule::ReadDatabase( const TDatime& date ){
     //Populate relevant quantities mapped by strip index:
     /*for( int ich=0; ich<fN_APV25_CHAN; ich++ ){
       int strip = GetStripNumber( ich, thisdata.pos, thisdata.invert );
-      if( thisdata.axis == MOLLERGEM::kUaxis ){
+      if( thisdata.axis == MollerPolGEM::kUaxis ){
 	fAPVch_by_Ustrip[strip] = ich;
 	fMPDID_by_Ustrip[strip] = thisdata.mpd_id;
 	fADCch_by_Ustrip[strip] = thisdata.adc_id;
@@ -541,7 +541,7 @@ Int_t MOLLERGEMModule::ReadDatabase( const TDatime& date ){
       }
     }*/
 
-    if( thisdata.axis == MOLLERGEM::kUaxis ){
+    if( thisdata.axis == MollerPolGEM::kUaxis ){
       fNAPVs_U++;
     } else {
       fNAPVs_V++;
@@ -1024,7 +1024,7 @@ Int_t MOLLERGEMModule::ReadDatabase( const TDatime& date ){
   //     fPedestal[idx] = rawped[i+1];
   //   } else {
 		
-  //     std::cout << "[MOLLERGEMModule::ReadDatabase]  WARNING: " << " strip " << idx  << " listed but not enough strips in cratemap" << std::endl;
+  //     std::cout << "[MollerPolGEMModule::ReadDatabase]  WARNING: " << " strip " << idx  << " listed but not enough strips in cratemap" << std::endl;
   //   }
   // }
 
@@ -1034,7 +1034,7 @@ Int_t MOLLERGEMModule::ReadDatabase( const TDatime& date ){
   //   if( idx < N_APV25_CHAN*nentry ){
   //     fRMS[idx] = rawrms[i+1];
   //   } else {
-  //     std::cout << "[MOLLERGEMModule::ReadDatabase]  WARNING: " << " strip " << idx  << " listed but not enough strips in cratemap" << std::endl;
+  //     std::cout << "[MollerPolGEMModule::ReadDatabase]  WARNING: " << " strip " << idx  << " listed but not enough strips in cratemap" << std::endl;
   //   }
   // }
 
@@ -1043,7 +1043,7 @@ Int_t MOLLERGEMModule::ReadDatabase( const TDatime& date ){
   return 0;
 }
 
-Int_t MOLLERGEMModule::ReadGeometry( FILE *file, const TDatime &date, Bool_t required ){ //We start with a copy of THaDetectorBase::ReadGeometry and modify accordingly:
+Int_t MollerPolGEMModule::ReadGeometry( FILE *file, const TDatime &date, Bool_t required ){ //We start with a copy of THaDetectorBase::ReadGeometry and modify accordingly:
   // Read this detector's basic geometry information from the database.
   // Derived classes may override to read more advanced data.
 
@@ -1142,7 +1142,7 @@ Int_t MOLLERGEMModule::ReadGeometry( FILE *file, const TDatime &date, Bool_t req
 }
 
     
-Int_t MOLLERGEMModule::DefineVariables( EMode mode ) {
+Int_t MollerPolGEMModule::DefineVariables( EMode mode ) {
   if( mode == kDefine and fIsSetup ) return kOK;
   fIsSetup = ( mode == kDefine );
 
@@ -1228,7 +1228,7 @@ Int_t MOLLERGEMModule::DefineVariables( EMode mode ) {
 
   //Note: for both 1D clusters and 2D hits,
   //we should add some of the new variables relating to deconvolution in these arrays, but
-  //that should take a lower priority than the ones in MOLLERGEMSpectrometerTracker relating to hits that
+  //that should take a lower priority than the ones in MollerPolGEMSpectrometerTracker relating to hits that
   //end up on good tracks
 
   RVarDef varclust[] = {
@@ -1302,7 +1302,7 @@ Int_t MOLLERGEMModule::DefineVariables( EMode mode ) {
     
 }
 
-void MOLLERGEMModule::Clear( Option_t* opt){ //we will want to clear out many more things too
+void MollerPolGEMModule::Clear( Option_t* opt){ //we will want to clear out many more things too
   // Modify this a little bit so we only clear out the "hit counters", not necessarily the
   // arrays themselves, to make the decoding more efficient:
 
@@ -1374,8 +1374,8 @@ void MOLLERGEMModule::Clear( Option_t* opt){ //we will want to clear out many mo
   //THaSubDetector::Clear(opt);
 }
 
-Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
-  //std::cout << "[MOLLERGEMModule::Decode " << fName << "]" << std::endl;
+Int_t   MollerPolGEMModule::Decode( const THaEvData& evdata ){
+  //std::cout << "[MollerPolGEMModule::Decode " << fName << "]" << std::endl;
   
   //initialize generic "strip" counter to zero:
   fNstrips_hit = 0;
@@ -1391,7 +1391,7 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 
   //std::cout << "MAXNSAMP_PER_APV = " << MAXNSAMP_PER_APV << std::endl;
 
-  //we could save some time on these allocations by making these data members of MOLLERGEMModule: these are probably expensive:
+  //we could save some time on these allocations by making these data members of MollerPolGEMModule: these are probably expensive:
 
   //to avoid rewriting the other code below, declare references to the fixed-size arrays:
   vector<UInt_t> &Strip = fStripAPV;
@@ -1565,7 +1565,7 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
     
     //Int_t nchan = evdata.GetNumChan( it->crate, it->slot ); //this could be made faster
 
-    MOLLERGEM::GEMaxis_t axis = it->axis == 0 ? MOLLERGEM::kUaxis : MOLLERGEM::kVaxis; 
+    MollerPolGEM::GEMaxis_t axis = it->axis == 0 ? MollerPolGEM::kUaxis : MollerPolGEM::kVaxis; 
     
     //printf("nchan = %d\n", nchan );
 
@@ -1656,7 +1656,7 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
       // First loop over the hits: populate strip, raw strip, raw ADC, ped sub ADC and common-mode-subtracted aDC:
       for( int iraw=0; iraw<nsamp; iraw++ ){ //NOTE: iraw = isamp + fN_MPD_TIME_SAMP * istrip
 	int strip = evdata.GetRawData( it->crate, it->slot, effChan, iraw );
-	if(fAPVmapping == MOLLERGEM::kUVA_MOLLER && strip<7)
+	if(fAPVmapping == MollerPolGEM::kUVA_MollerPol && strip<7)
 	   continue;
 	UInt_t decoded_rawADC = evdata.GetData( it->crate, it->slot, effChan, iraw );
 
@@ -1671,7 +1671,7 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	rawADC[iraw] = ADC;
 	//std::cout<<"iraw = "<<iraw<<" ; isamp = "<<isamp<<" ; strip = "<<strip<<" ; StripPos = "<<Strip[iraw]<< "; Raw ADC = "
 	//<<ADC<<" ; effChan = "<<effChan<<" ; APVmapping = "<< int(fAPVmapping)<< std::endl;	
-	double ped = (axis == MOLLERGEM::kUaxis ) ? fPedestalU[Strip[iraw]] : fPedestalV[Strip[iraw]];
+	double ped = (axis == MollerPolGEM::kUaxis ) ? fPedestalU[Strip[iraw]] : fPedestalV[Strip[iraw]];
 
 	// If pedestal subtraction was done online, don't do it again:
 	// In pedestal mode, the DAQ should NOT have subtracted the pedestals,
@@ -1763,7 +1763,7 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	      // std::cout << "iAPV, nAPVsU, nAPVsV, axis = " << iAPV << ", " << fNAPVs_U << ", "
 	      // 		<< fNAPVs_V << ", " << axis << std::endl;
 	      if(!CM_OUT_OF_RANGE || fPedestalMode){
-	      if( axis == MOLLERGEM::kUaxis ){
+	      if( axis == MollerPolGEM::kUaxis ){
 		cm_mean = fCommonModeMeanU[iAPV];
 
 		fCommonModeDistU->Fill( iAPV, commonMode[isamp] - cm_mean );
@@ -1846,14 +1846,14 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	      if( fMakeCommonModePlots ){
 		if( Correction != 0. ){
 
-		  double CMbiasDB = ( it->axis == MOLLERGEM::kUaxis ) ? fCMbiasU[iAPV] : fCMbiasV[iAPV];
+		  double CMbiasDB = ( it->axis == MollerPolGEM::kUaxis ) ? fCMbiasU[iAPV] : fCMbiasV[iAPV];
 		  double CMbias = CMbiasDB;
 		  
 		  if( fNeventsOnlineBias_by_APV[apvcounter] >= std::min( UInt_t(100), std::max(UInt_t(10), fN_MPD_TIME_SAMP * fNeventsCommonModeLookBack) ) ){
 		    CMbias = fCommonModeOnlineBiasRollingAverage_by_APV[apvcounter]; 
 		  }
 		  
-		  if( it->axis == MOLLERGEM::kUaxis ){
+		  if( it->axis == MollerPolGEM::kUaxis ){
 		    fCommonModeCorrectionU->Fill( iAPV, -Correction );
 		    fCommonModeResidualBiasU->Fill( iAPV, fCM_online[isamp] -Correction - commonMode[isamp] );
 		    fCommonModeResidualBias_vs_OccupancyU->Fill( double(ngoodhits)/double(effN_APV25_CHAN), fCM_online[isamp] - Correction - commonMode[isamp] );		    
@@ -1865,7 +1865,7 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 		    fCommonModeResidualBiasV_corrected->Fill( iAPV, fCM_online[isamp] -Correction - commonMode[isamp] - 2.0*CMbias*(1.0-double(ngoodhits)/double(effN_APV25_CHAN)) );
 		  }
 		} else {
-		  if( it->axis == MOLLERGEM::kUaxis ){
+		  if( it->axis == MollerPolGEM::kUaxis ){
 		    fCommonModeDiffU_Uncorrected->Fill( iAPV, commonMode[isamp] - fCM_online[isamp] );
 		  } else {
 		    fCommonModeDiffV_Uncorrected->Fill( iAPV, commonMode[isamp] - fCM_online[isamp] );
@@ -1901,7 +1901,7 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	  if( CommonModeCorrection[isamp] != 0.0 ){ //if we are applying a correction, correct it for bias:
 	    UInt_t iAPV = it->pos;
 	    
-	    double CMbiasDB = ( it->axis == MOLLERGEM::kUaxis ) ? fCMbiasU[iAPV] : fCMbiasV[iAPV];
+	    double CMbiasDB = ( it->axis == MollerPolGEM::kUaxis ) ? fCMbiasU[iAPV] : fCMbiasV[iAPV];
 	    
 	    double CMbias = CMbiasDB;
 	    
@@ -1934,7 +1934,7 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
     
       for( Int_t istrip = 0; istrip < nstrips; ++istrip ) {
 
-	if(fAPVmapping == MOLLERGEM::kUVA_MOLLER && istrip<7) continue;
+	if(fAPVmapping == MollerPolGEM::kUVA_MollerPol && istrip<7) continue;
 
 	//The following loop is no longer necessary if we always do a loop over the data to populate the "local" hit arrays:
 	// if( CM_ENABLED ){ //unless fIsMC is true, then both CM and pedestals were subtracted online:
@@ -1951,7 +1951,7 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	//     //no need to grab pedestal if CM_ENABLED is true:
 	    
 	//     double ped = 0;
-	//     if(fIsMC) ped = (axis == MOLLERGEM::kUaxis ) ? fPedestalU[Strip[iraw]] : fPedestalV[Strip[iraw]];
+	//     if(fIsMC) ped = (axis == MollerPolGEM::kUaxis ) ? fPedestalU[Strip[iraw]] : fPedestalV[Strip[iraw]];
 	    
 	//     rawADC[iraw] = Int_t(ADC);
 	//     pedsubADC[iraw] = double(ADC) - ped;
@@ -1981,12 +1981,12 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	//Pedestal has already been subtracted by the time we get herre, but let's grab anyway in case it's needed:
 	
 	//"pedtemp" is only used to fill pedestal histograms as of now:
-	double pedtemp = ( axis == MOLLERGEM::kUaxis ) ? fPedestalU[strip] : fPedestalV[strip];
+	double pedtemp = ( axis == MollerPolGEM::kUaxis ) ? fPedestalU[strip] : fPedestalV[strip];
 
 	if( fPedSubFlag != 0 && !fIsMC && !fPedestalMode ) pedtemp = 0.0;
 
-	double rmstemp = ( axis == MOLLERGEM::kUaxis ) ? fPedRMSU[strip] : fPedRMSV[strip];
-	double gaintemp = ( axis == MOLLERGEM::kUaxis ) ? fUgain[strip/double(effN_APV25_CHAN)] : fVgain[strip/double(effN_APV25_CHAN)]; //should probably not hard-code 128 here
+	double rmstemp = ( axis == MollerPolGEM::kUaxis ) ? fPedRMSU[strip] : fPedRMSV[strip];
+	double gaintemp = ( axis == MollerPolGEM::kUaxis ) ? fUgain[strip/double(effN_APV25_CHAN)] : fVgain[strip/double(effN_APV25_CHAN)]; //should probably not hard-code 128 here
 
 	// std::cout << "pedestal temp, rms temp, nsigma cut, threshold, zero suppress, pedestal mode = " << pedtemp << ", " << rmstemp << ", " << fZeroSuppressRMS
 	//   	  << ", " << fZeroSuppressRMS * rmstemp << ", " << fZeroSuppress << ", " << fPedestalMode << std::endl;
@@ -1999,7 +1999,7 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	  //If applicable, subtract common-mode here:
 	  
 	  //We need to subtract the common-mode if it was calculated offline:
-	  if( !CM_ENABLED && BUILD_ALL_SAMPLES && nstrips == fN_APV25_CHAN ){//For MOLLER GEM we have #128/APV readout - > nstrips =128
+	  if( !CM_ENABLED && BUILD_ALL_SAMPLES && nstrips == fN_APV25_CHAN ){//For MollerPol GEM we have #128/APV readout - > nstrips =128
 	    
 	    // std::cout << "isamp, commonMode = " << adc_samp << ", " << commonMode[adc_samp]
 	    // 	      << std::endl;
@@ -2078,9 +2078,9 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	// AND the CM_ENABLED is not set, meaning we did cm and ped subtraction offline
 	
 	if( (fPedestalMode || fMakeCommonModePlots) && !CM_ENABLED ){ 
-	  int iAPV = strip/double(effN_APV25_CHAN); //For MOLLER GEM strip/APV should be int. multiple of 121.
+	  int iAPV = strip/double(effN_APV25_CHAN); //For MollerPol GEM strip/APV should be int. multiple of 121.
 	  
-	  if( axis == MOLLERGEM::kUaxis ){
+	  if( axis == MollerPolGEM::kUaxis ){
 	    for( int isamp=0; isamp<fN_MPD_TIME_SAMP; isamp++ ){
 	      //std::cout << "U axis: iAPV, fAPVmapping, isamp, strip, rawADC, ADC, ped, commonmode = " <<iAPV<<" , "<<
                  //fAPVmapping <<" , "<< isamp << ", " << strip << ", "
@@ -2366,8 +2366,8 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	  //  fStripADCavg.push_back( ADCsum_temp/double(fN_MPD_TIME_SAMP) );
 	  fStripADCavg[fNstrips_hit] = ADCsum_temp/double(fN_MPD_TIME_SAMP);
 	  
-	  UInt_t isU = (axis == MOLLERGEM::kUaxis) ? 1 : 0;
-	  UInt_t isV = (axis == MOLLERGEM::kVaxis) ? 1 : 0;
+	  UInt_t isU = (axis == MollerPolGEM::kUaxis) ? 1 : 0;
+	  UInt_t isV = (axis == MollerPolGEM::kVaxis) ? 1 : 0;
 	  //	  fStripIsU.push_back( isU );
 	  //      fStripIsV.push_back( isV );
 	  fStripIsU[fNstrips_hit] = isU;
@@ -2379,8 +2379,8 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	  fNstrips_hitU += isU;
 	  fNstrips_hitV += isV;
 	  
-	  //	  if( axis == MOLLERGEM::kUaxis ) fUstripIndex[strip] = fNstrips_hit;
-	  //      if( axis == MOLLERGEM::kVaxis ) fVstripIndex[strip] = fNstrips_hit;
+	  //	  if( axis == MollerPolGEM::kUaxis ) fUstripIndex[strip] = fNstrips_hit;
+	  //      if( axis == MollerPolGEM::kVaxis ) fVstripIndex[strip] = fNstrips_hit;
 
 	  //std::cout << "starting pedestal histograms..." << std::endl;
 
@@ -2494,8 +2494,8 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 
 	  //Variables used for negative signal studies
 	  fStripIsNeg[fNstrips_hit] = 1;
-	  fStripIsNegU[fNstrips_hit] = (axis == MOLLERGEM::kUaxis) ? 1 : 0;
-	  fStripIsNegV[fNstrips_hit] = (axis == MOLLERGEM::kVaxis) ? 1 : 0;
+	  fStripIsNegU[fNstrips_hit] = (axis == MollerPolGEM::kUaxis) ? 1 : 0;
+	  fStripIsNegV[fNstrips_hit] = (axis == MollerPolGEM::kVaxis) ? 1 : 0;
 	  fStripIsNegOnTrack[fNstrips_hit] = 0;
 	  fStripIsNegOnTrackU[fNstrips_hit] = 0;
 	  fStripIsNegOnTrackV[fNstrips_hit] = 0;
@@ -2542,8 +2542,8 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	  //  fStripADCavg.push_back( ADCsum_temp/double(fN_MPD_TIME_SAMP) );
 	  fStripADCavg[fNstrips_hit] = ADCsum_temp/double(fN_MPD_TIME_SAMP);
 	  
-	  UInt_t isU = (axis == MOLLERGEM::kUaxis) ? 1 : 0;
-	  UInt_t isV = (axis == MOLLERGEM::kVaxis) ? 1 : 0;
+	  UInt_t isU = (axis == MollerPolGEM::kUaxis) ? 1 : 0;
+	  UInt_t isV = (axis == MollerPolGEM::kVaxis) ? 1 : 0;
 	  //	  fStripIsU.push_back( isU );
 	  //      fStripIsV.push_back( isV );
 	  fStripIsU[fNstrips_hit] = isU;
@@ -2555,8 +2555,8 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
 	  fNstrips_hitU_neg += isU;
 	  fNstrips_hitV_neg += isV;
 	  
-	  //	  if( axis == MOLLERGEM::kUaxis ) fUstripIndex[strip] = fNstrips_hit;
-	  //      if( axis == MOLLERGEM::kVaxis ) fVstripIndex[strip] = fNstrips_hit;
+	  //	  if( axis == MollerPolGEM::kUaxis ) fUstripIndex[strip] = fNstrips_hit;
+	  //      if( axis == MollerPolGEM::kVaxis ) fVstripIndex[strip] = fNstrips_hit;
 
 	  //std::cout << "starting pedestal histograms...@ line # = "<<__LINE__ << std::endl;
 
@@ -2629,15 +2629,15 @@ Int_t   MOLLERGEMModule::Decode( const THaEvData& evdata ){
   return 0;
 }
 
-void MOLLERGEMModule::find_2Dhits(){ //version with no arguments calls 1D cluster finding with default (wide-open) track search constraints
+void MollerPolGEMModule::find_2Dhits(){ //version with no arguments calls 1D cluster finding with default (wide-open) track search constraints
   //these functions will fill the 1D cluster arrays:
 
   
-  find_clusters_1D(MOLLERGEM::kUaxis); //u strips
-  find_clusters_1D(MOLLERGEM::kVaxis); //v strips
+  find_clusters_1D(MollerPolGEM::kUaxis); //u strips
+  find_clusters_1D(MollerPolGEM::kVaxis); //v strips
 
-  // find_clusters_1D_experimental(MOLLERGEM::kUaxis);
-  // find_clusters_1D_experimental(MOLLERGEM::kVaxis);
+  // find_clusters_1D_experimental(MollerPolGEM::kUaxis);
+  // find_clusters_1D_experimental(MollerPolGEM::kVaxis);
   
   //Now make 2D clusters:
 
@@ -2653,7 +2653,7 @@ void MOLLERGEMModule::find_2Dhits(){ //version with no arguments calls 1D cluste
   }
 }
 
-void MOLLERGEMModule::find_2Dhits(TVector2 constraint_center, TVector2 constraint_width ){
+void MollerPolGEMModule::find_2Dhits(TVector2 constraint_center, TVector2 constraint_width ){
   //constraint center and constraint width are assumed given in meters in "local" detector x,y coordinates.
 
   double ucenter = constraint_center.X() * fPxU + constraint_center.Y() * fPyU;
@@ -2699,11 +2699,11 @@ void MOLLERGEMModule::find_2Dhits(TVector2 constraint_center, TVector2 constrain
   //The following routines will loop on all the strips and populate the 1D "cluster list" (vector<mollergemcluster_t> )
   //Taking half the difference between max and min as the "width" is consistent with how it is used in
   // find_clusters_1D; i.e., the peak is required to be within |peak position - constraint center| <= constraint width
-  find_clusters_1D(MOLLERGEM::kUaxis, ucenter, (umax-umin)/2.0 ); //U clusters
-  find_clusters_1D(MOLLERGEM::kVaxis, vcenter, (vmax-vmin)/2.0 );  //V clusters
+  find_clusters_1D(MollerPolGEM::kUaxis, ucenter, (umax-umin)/2.0 ); //U clusters
+  find_clusters_1D(MollerPolGEM::kVaxis, vcenter, (vmax-vmin)/2.0 );  //V clusters
 
-  //find_clusters_1D_experimental(MOLLERGEM::kUaxis, ucenter, (umax-umin)/2.0 );
-  //find_clusters_1D_experimental(MOLLERGEM::kVaxis, vcenter, (vmax-vmin)/2.0 );
+  //find_clusters_1D_experimental(MollerPolGEM::kUaxis, ucenter, (umax-umin)/2.0 );
+  //find_clusters_1D_experimental(MollerPolGEM::kVaxis, vcenter, (vmax-vmin)/2.0 );
   
   //Now make 2D clusters
 
@@ -2713,17 +2713,17 @@ void MOLLERGEMModule::find_2Dhits(TVector2 constraint_center, TVector2 constrain
 }
 
 //This will borrow a lot from the "standard" version:
-void MOLLERGEMModule::find_clusters_1D_experimental( MOLLERGEM::GEMaxis_t axis, Double_t constraint_center, Double_t constraint_width ){
+void MollerPolGEMModule::find_clusters_1D_experimental( MollerPolGEM::GEMaxis_t axis, Double_t constraint_center, Double_t constraint_width ){
   if( !fIsDecoded ){
     cout << "find_clusters invoked before decoding for GEM Module " << GetName() << ", doing nothing" << endl;
     return;
   }
 
-  UShort_t maxsep = ( axis == MOLLERGEM::kUaxis) ? fMaxNeighborsU_totalcharge : fMaxNeighborsV_totalcharge;
-  UShort_t maxsepcoord = ( axis == MOLLERGEM::kUaxis ) ? fMaxNeighborsU_hitpos : fMaxNeighborsV_hitpos;
-  UInt_t Nstrips = ( axis == MOLLERGEM::kUaxis ) ? fNstripsU : fNstripsV;
-  Double_t pitch = ( axis == MOLLERGEM::kUaxis ) ? fUStripPitch : fVStripPitch;
-  Double_t offset = (axis == MOLLERGEM::kUaxis) ? fUStripOffset : fVStripOffset;
+  UShort_t maxsep = ( axis == MollerPolGEM::kUaxis) ? fMaxNeighborsU_totalcharge : fMaxNeighborsV_totalcharge;
+  UShort_t maxsepcoord = ( axis == MollerPolGEM::kUaxis ) ? fMaxNeighborsU_hitpos : fMaxNeighborsV_hitpos;
+  UInt_t Nstrips = ( axis == MollerPolGEM::kUaxis ) ? fNstripsU : fNstripsV;
+  Double_t pitch = ( axis == MollerPolGEM::kUaxis ) ? fUStripPitch : fVStripPitch;
+  Double_t offset = (axis == MollerPolGEM::kUaxis) ? fUStripOffset : fVStripOffset;
 
   
   
@@ -2734,12 +2734,12 @@ void MOLLERGEMModule::find_clusters_1D_experimental( MOLLERGEM::GEMaxis_t axis, 
   //this temporary array is unnecessary (I think)
   //std::vector<std::map<UShort_t,Double_t> > ADCsamples(fN_MPD_TIME_SAMP); //key = strip, mapped value is array ADC values by time sample:
 
-  std::vector<mollergemcluster_t> &clusters = (axis == MOLLERGEM::kUaxis ) ? fUclusters : fVclusters;
+  std::vector<mollergemcluster_t> &clusters = (axis == MollerPolGEM::kUaxis ) ? fUclusters : fVclusters;
 
-  UInt_t &nclust = ( axis == MOLLERGEM::kUaxis ) ? fNclustU : fNclustV; 
-  UInt_t &nclust_pos = ( axis == MOLLERGEM::kUaxis ) ? fNclustU_pos : fNclustV_pos; 
-  UInt_t &nclust_neg = ( axis == MOLLERGEM::kUaxis ) ? fNclustU_neg : fNclustV_neg; 
-  UInt_t &nclust_tot = ( axis == MOLLERGEM::kUaxis ) ? fNclustU_total : fNclustV_total;
+  UInt_t &nclust = ( axis == MollerPolGEM::kUaxis ) ? fNclustU : fNclustV; 
+  UInt_t &nclust_pos = ( axis == MollerPolGEM::kUaxis ) ? fNclustU_pos : fNclustV_pos; 
+  UInt_t &nclust_neg = ( axis == MollerPolGEM::kUaxis ) ? fNclustU_neg : fNclustV_neg; 
+  UInt_t &nclust_tot = ( axis == MollerPolGEM::kUaxis ) ? fNclustU_total : fNclustV_total;
 
   nclust = 0;
   nclust_pos = 0;
@@ -2756,7 +2756,7 @@ void MOLLERGEMModule::find_clusters_1D_experimental( MOLLERGEM::GEMaxis_t axis, 
       bool newstrip = (striplist.insert( fStrip[ihit] ) ).second;
       if( newstrip ){ //should always be true:
 	hitindex[fStrip[ihit]] = ihit;
-	pedrms_strip[fStrip[ihit]] = ( axis == MOLLERGEM::kUaxis ) ? fPedRMSU[fStrip[ihit]] : fPedRMSV[fStrip[ihit]];
+	pedrms_strip[fStrip[ihit]] = ( axis == MollerPolGEM::kUaxis ) ? fPedRMSU[fStrip[ihit]] : fPedRMSV[fStrip[ihit]];
       }
       
     } // check strip is along axis we are currently studying
@@ -3150,7 +3150,7 @@ void MOLLERGEMModule::find_clusters_1D_experimental( MOLLERGEM::GEMaxis_t axis, 
     //window * area = ns * m^2 * 1e4 cm^2 /m^2 * 1e-6 ms/ns 
     double ratefac = window*area/100.0; // ms * cm^2
     
-    if( axis == MOLLERGEM::kUaxis ){
+    if( axis == MollerPolGEM::kUaxis ){
       hClusterBasedOccupancyUstrips->Fill( double(nclust_tot)/ratefac );
       hClusterMultiplicityUstrips->Fill( double(nclust_tot) );
     } else {
@@ -3163,11 +3163,11 @@ void MOLLERGEMModule::find_clusters_1D_experimental( MOLLERGEM::GEMaxis_t axis, 
 
 
 
-void MOLLERGEMModule::find_clusters_1D( MOLLERGEM::GEMaxis_t axis, Double_t constraint_center, Double_t constraint_width ){
+void MollerPolGEMModule::find_clusters_1D( MollerPolGEM::GEMaxis_t axis, Double_t constraint_center, Double_t constraint_width ){
 
   //Constraint center and constraint width are assumed to be given in "standard" Hall A units (meters) in module-local coordinates
   // (SPECIFICALLY: constraint center and constraint width are assumed to refer to the direction measured by the strips being considered here)
-  //This method will generally only be called by the reconstruction methods of MOLLERGEMTrackerBase
+  //This method will generally only be called by the reconstruction methods of MollerPolGEMTrackerBase
 
   // cout << "constraint center, constraint width = " << constraint_center << ", " << constraint_width << endl;
   
@@ -3176,19 +3176,19 @@ void MOLLERGEMModule::find_clusters_1D( MOLLERGEM::GEMaxis_t axis, Double_t cons
     return;
   }
 
-  UShort_t maxsep = ( axis == MOLLERGEM::kUaxis ) ? fMaxNeighborsU_totalcharge : fMaxNeighborsV_totalcharge;
-  UShort_t maxsepcoord = ( axis == MOLLERGEM::kUaxis ) ? fMaxNeighborsU_hitpos : fMaxNeighborsV_hitpos; 
-  UInt_t Nstrips = ( axis == MOLLERGEM::kUaxis ) ? fNstripsU : fNstripsV;
-  Double_t pitch = ( axis == MOLLERGEM::kUaxis ) ? fUStripPitch : fVStripPitch;
-  Double_t offset = (axis == MOLLERGEM::kUaxis) ? fUStripOffset : fVStripOffset;
+  UShort_t maxsep = ( axis == MollerPolGEM::kUaxis ) ? fMaxNeighborsU_totalcharge : fMaxNeighborsV_totalcharge;
+  UShort_t maxsepcoord = ( axis == MollerPolGEM::kUaxis ) ? fMaxNeighborsU_hitpos : fMaxNeighborsV_hitpos; 
+  UInt_t Nstrips = ( axis == MollerPolGEM::kUaxis ) ? fNstripsU : fNstripsV;
+  Double_t pitch = ( axis == MollerPolGEM::kUaxis ) ? fUStripPitch : fVStripPitch;
+  Double_t offset = (axis == MollerPolGEM::kUaxis) ? fUStripOffset : fVStripOffset;
   
   //hopefully this compiles and works correctly:
-  std::vector<mollergemcluster_t> &clusters = (axis == MOLLERGEM::kUaxis ) ? fUclusters : fVclusters;
+  std::vector<mollergemcluster_t> &clusters = (axis == MollerPolGEM::kUaxis ) ? fUclusters : fVclusters;
 
-  UInt_t &nclust = ( axis == MOLLERGEM::kUaxis ) ? fNclustU : fNclustV; 
-  UInt_t &nclust_pos = ( axis == MOLLERGEM::kUaxis ) ? fNclustU_pos : fNclustV_pos; 
-  UInt_t &nclust_neg = ( axis == MOLLERGEM::kUaxis ) ? fNclustU_neg : fNclustV_neg; 
-  UInt_t &nclust_tot = ( axis == MOLLERGEM::kUaxis ) ? fNclustU_total : fNclustV_total;
+  UInt_t &nclust = ( axis == MollerPolGEM::kUaxis ) ? fNclustU : fNclustV; 
+  UInt_t &nclust_pos = ( axis == MollerPolGEM::kUaxis ) ? fNclustU_pos : fNclustV_pos; 
+  UInt_t &nclust_neg = ( axis == MollerPolGEM::kUaxis ) ? fNclustU_neg : fNclustV_neg; 
+  UInt_t &nclust_tot = ( axis == MollerPolGEM::kUaxis ) ? fNclustU_total : fNclustV_total;
   
   nclust = 0;
   nclust_pos = 0;
@@ -3222,7 +3222,7 @@ void MOLLERGEMModule::find_clusters_1D( MOLLERGEM::GEMaxis_t axis, Double_t cons
 
       if( newstrip ){ //should always be true:
 	hitindex[fStrip[ihit]] = ihit;
-	if( axis == MOLLERGEM::kUaxis ){
+	if( axis == MollerPolGEM::kUaxis ){
 	  pedrms_strip[fStrip[ihit]] = fPedRMSU[fStrip[ihit]];
 	} else {
 	  pedrms_strip[fStrip[ihit]] = fPedRMSV[fStrip[ihit]];
@@ -3253,7 +3253,7 @@ void MOLLERGEMModule::find_clusters_1D( MOLLERGEM::GEMaxis_t axis, Double_t cons
       
       if( newstrip ){ //should always be true:
 	hitindex_neg[fStrip[ihit]] = ihit;
-	if( axis == MOLLERGEM::kUaxis ){
+	if( axis == MollerPolGEM::kUaxis ){
 	  pedrms_strip_neg[fStrip[ihit]] = fPedRMSU[fStrip[ihit]];
 	} else {
 	  pedrms_strip_neg[fStrip[ihit]] = fPedRMSV[fStrip[ihit]];
@@ -3694,7 +3694,7 @@ void MOLLERGEMModule::find_clusters_1D( MOLLERGEM::GEMaxis_t axis, Double_t cons
     //window * area = ns * m^2 * 1e4 cm^2 /m^2 * 1e-6 ms/ns 
     double ratefac = 2.0*window*area/100.0; // ms * cm^2
     
-    if( axis == MOLLERGEM::kUaxis ){
+    if( axis == MollerPolGEM::kUaxis ){
       hClusterBasedOccupancyUstrips->Fill( double(nclust_tot)/ratefac );
       hClusterMultiplicityUstrips->Fill( double(nclust_tot) );
     } else {
@@ -3708,7 +3708,7 @@ void MOLLERGEMModule::find_clusters_1D( MOLLERGEM::GEMaxis_t axis, Double_t cons
   //std::cout << "number of clusters found = " << nclust << std::endl;
   
   filter_1Dhits(axis);
-  // filter_1Dhits(MOLLERGEM::kVaxis);
+  // filter_1Dhits(MollerPolGEM::kVaxis);
 
 
   ////// Below is an exact copy of the parts above but clusters negative strips instead. This works by adding -1 factors
@@ -3993,7 +3993,7 @@ void MOLLERGEMModule::find_clusters_1D( MOLLERGEM::GEMaxis_t axis, Double_t cons
 
 }
 
-void MOLLERGEMModule::fill_2D_hit_arrays(){
+void MollerPolGEMModule::fill_2D_hit_arrays(){
   //Clear out the 2D hit array to get rid of any leftover junk from prior events:
   //fHits.clear();
   fN2Dhits = 0;
@@ -4003,7 +4003,7 @@ void MOLLERGEMModule::fill_2D_hit_arrays(){
   fHits.resize( std::min( fNclustU*fNclustV, fMAX2DHITS ) );
 
   //if( fNclustU * fNclustV > fMAX2DHITS ){
-  //   std::cout << "Warning in MOLLERGEMModule::fill_2D_hit_arrays(): 
+  //   std::cout << "Warning in MollerPolGEMModule::fill_2D_hit_arrays(): 
   // }
 
   int nsamp_corr = fN_MPD_TIME_SAMP;
@@ -4207,7 +4207,7 @@ void MOLLERGEMModule::fill_2D_hit_arrays(){
   } //end loop over "U" clusters
 
   if( maxhits_exceeded ){
-    std::cout << "Warning in [MOLLERGEMModule::fill_2D_hit_arrays()]: good 2D hit candidates exceeded user maximum of " << fMAX2DHITS << " for module " << GetName() << ", 2D hit list truncated" << std::endl;
+    std::cout << "Warning in [MollerPolGEMModule::fill_2D_hit_arrays()]: good 2D hit candidates exceeded user maximum of " << fMAX2DHITS << " for module " << GetName() << ", 2D hit list truncated" << std::endl;
   }
 
   fHits.resize( fN2Dhits );
@@ -4216,11 +4216,11 @@ void MOLLERGEMModule::fill_2D_hit_arrays(){
   
 }
 
-void    MOLLERGEMModule::Print( Option_t* opt) const{
+void    MollerPolGEMModule::Print( Option_t* opt) const{
   return;
 }
 
-Int_t   MOLLERGEMModule::Begin( THaRunBase* r){ //Does nothing
+Int_t   MollerPolGEMModule::Begin( THaRunBase* r){ //Does nothing
   //Here we can create some histograms that will be written to the ROOT file:
   //This is a natural place to do the hit maps/efficiency maps:
   fZeroSuppress = fZeroSuppress && !fPedestalMode; 
@@ -4419,7 +4419,7 @@ Int_t   MOLLERGEMModule::Begin( THaRunBase* r){ //Does nothing
   //std::cout << "fCommonModePlotsInitialized = " << fCommonModePlotsInitialized << std::endl;
   if( fMakeCommonModePlots && !fCommonModePlotsInitialized ){
 
-    //std::cout << "MOLLERGEMModule::Begin: making common-mode histograms for module " << GetName() << std::endl;
+    //std::cout << "MollerPolGEMModule::Begin: making common-mode histograms for module " << GetName() << std::endl;
     //U strips:
    
     fCommonModeDistU = new TH2D( TString::Format( "hcommonmodeU_%s", detname.Data() ), "U/X strips common-mode (user); APV card; Common-mode - Common-mode mean (user)", fNAPVs_U, -0.5, fNAPVs_U-0.5, 500, -200.0,200.0 );
@@ -4503,7 +4503,7 @@ Int_t   MOLLERGEMModule::Begin( THaRunBase* r){ //Does nothing
   return 0;
 }
 
-void MOLLERGEMModule::PrintPedestals( std::ofstream &dbfile_CM, std::ofstream &daqfile_ped, std::ofstream &daqfile_CM ){
+void MollerPolGEMModule::PrintPedestals( std::ofstream &dbfile_CM, std::ofstream &daqfile_ped, std::ofstream &daqfile_CM ){
   //The first argument is a file in the format expected by the database,
   //The second argument is a file in the format expected by the DAQ:
 
@@ -4511,7 +4511,7 @@ void MOLLERGEMModule::PrintPedestals( std::ofstream &dbfile_CM, std::ofstream &d
   // "common-mode min" and "common-mode max" values:
   // we can simply use the existing arrays to store the values:
 
-  //std::cout << "[MOLLERGEMModule::PrintPedestals]: module " << GetName() <<" ; fAPVmapping = "<<fAPVmapping<<"; Eff APV Chan = "<<int(effN_APV25_CHAN)<< std::endl;
+  //std::cout << "[MollerPolGEMModule::PrintPedestals]: module " << GetName() <<" ; fAPVmapping = "<<fAPVmapping<<"; Eff APV Chan = "<<int(effN_APV25_CHAN)<< std::endl;
 
   hpedmeanU_distribution->Reset();
   hpedmeanV_distribution->Reset();
@@ -4705,8 +4705,8 @@ void MOLLERGEMModule::PrintPedestals( std::ofstream &dbfile_CM, std::ofstream &d
     //Then loop over the strips:
     for( int ich=0; ich<fN_APV25_CHAN; ich++ ){
       int strip = GetStripNumber( ich, pos, invert );
-      double pedmean = (axis == MOLLERGEM::kUaxis ) ? fPedestalU[strip] : fPedestalV[strip];
-      double pedrms = (axis == MOLLERGEM::kUaxis ) ? fPedRMSU[strip] : fPedRMSV[strip];
+      double pedmean = (axis == MollerPolGEM::kUaxis ) ? fPedestalU[strip] : fPedestalV[strip];
+      double pedrms = (axis == MollerPolGEM::kUaxis ) ? fPedRMSU[strip] : fPedRMSV[strip];
 
       daqfile_ped << std::setw(16) << ich
 	      << std::setw(16) << std::setprecision(4) << pedmean
@@ -4714,8 +4714,8 @@ void MOLLERGEMModule::PrintPedestals( std::ofstream &dbfile_CM, std::ofstream &d
 	      << std::endl;
     }
 
-    double cm_mean = (axis == MOLLERGEM::kUaxis ) ? commonmode_meanU[ pos ] : commonmode_meanV[ pos ];
-    double cm_rms = (axis == MOLLERGEM::kUaxis ) ? commonmode_rmsU[ pos ] : commonmode_rmsV[ pos ];
+    double cm_mean = (axis == MollerPolGEM::kUaxis ) ? commonmode_meanU[ pos ] : commonmode_meanV[ pos ];
+    double cm_rms = (axis == MollerPolGEM::kUaxis ) ? commonmode_rmsU[ pos ] : commonmode_rmsV[ pos ];
 
     //std::cout << "module " << GetName() << ", common-mode range number of sigmas = " << fCommonModeRange_nsigma  << std::endl;
     
@@ -4744,7 +4744,7 @@ void MOLLERGEMModule::PrintPedestals( std::ofstream &dbfile_CM, std::ofstream &d
   }
 }
 
-Int_t   MOLLERGEMModule::End( THaRunBase* r){ //Calculates efficiencies and writes hit maps and efficiency histograms and/or pedestal info to ROOT file:
+Int_t   MollerPolGEMModule::End( THaRunBase* r){ //Calculates efficiencies and writes hit maps and efficiency histograms and/or pedestal info to ROOT file:
   if( fMakeEventInfoPlots && fEventInfoPlotsInitialized ){
     hMPD_EventCount_Alignment->Write(0,kOverwrite);
     hMPD_EventCount_Alignment_vs_Fiber->Write(0,kOverwrite);
@@ -4889,7 +4889,7 @@ Int_t   MOLLERGEMModule::End( THaRunBase* r){ //Calculates efficiencies and writ
 }
 
 //utility method to calculate correlation coefficient of U and V samples: 
-Double_t MOLLERGEMModule::CorrCoeff( int nsamples, const std::vector<double> &Usamples, const std::vector<double> &Vsamples, int firstsample ){
+Double_t MollerPolGEMModule::CorrCoeff( int nsamples, const std::vector<double> &Usamples, const std::vector<double> &Vsamples, int firstsample ){
   Double_t sumu=0.0, sumv=0.0, sumu2=0.0, sumv2=0.0, sumuv=0.0;
 
   if ( (int)Usamples.size() < firstsample+nsamples || (int)Vsamples.size() < firstsample+nsamples ){
@@ -4916,7 +4916,7 @@ Double_t MOLLERGEMModule::CorrCoeff( int nsamples, const std::vector<double> &Us
   
 }
 
-TVector2 MOLLERGEMModule::UVtoXY( TVector2 UV ){
+TVector2 MollerPolGEMModule::UVtoXY( TVector2 UV ){
   double det = fPxU*fPyV - fPyU*fPxV;
 
   double Utemp = UV.X();
@@ -4928,7 +4928,7 @@ TVector2 MOLLERGEMModule::UVtoXY( TVector2 UV ){
   return TVector2(Xtemp,Ytemp);
 }
 
-TVector2 MOLLERGEMModule::XYtoUV( TVector2 XY ){
+TVector2 MollerPolGEMModule::XYtoUV( TVector2 XY ){
   double Xtemp = XY.X();
   double Ytemp = XY.Y();
 
@@ -4938,10 +4938,10 @@ TVector2 MOLLERGEMModule::XYtoUV( TVector2 XY ){
   return TVector2(Utemp,Vtemp);
 }
 
-Int_t MOLLERGEMModule::GetStripNumber( UInt_t rawstrip, UInt_t pos, UInt_t invert ){
+Int_t MollerPolGEMModule::GetStripNumber( UInt_t rawstrip, UInt_t pos, UInt_t invert ){
   Int_t RstripNb = APVMAP[fAPVmapping][rawstrip];
   Int_t RstripPos=0;
-  if(fAPVmapping == MOLLERGEM::kUVA_MOLLER){
+  if(fAPVmapping == MollerPolGEM::kUVA_MollerPol){
   if(rawstrip<7) return RstripPos=640;//need to make it axis dependend - For moller GEM (for both U/V axis, 640 position would beyond its maximum strip pos;
   else{
   int count =0;
@@ -4964,16 +4964,16 @@ Int_t MOLLERGEMModule::GetStripNumber( UInt_t rawstrip, UInt_t pos, UInt_t inver
   return RstripPos;
 }
 
-void MOLLERGEMModule::filter_1Dhits(MOLLERGEM::GEMaxis_t axis){
+void MollerPolGEMModule::filter_1Dhits(MollerPolGEM::GEMaxis_t axis){
   
   if( fFiltering_flag1D < 0 ) return; //flag < 0 means don't filter 1D clusters at all
   // flag = 0 means use a "soft" filter (only reject if at least one other cluster passed)
   // flag > 0 means use a "hard" filter (reject failing clusters no matter what)
   //First filter on cluster ADC sum:
   int ngood = 0;
-  int nclust = (axis == MOLLERGEM::kUaxis) ? fNclustU : fNclustV; 
+  int nclust = (axis == MollerPolGEM::kUaxis) ? fNclustU : fNclustV; 
   
-  std::vector<mollergemcluster_t> &clusters =  (axis == MOLLERGEM::kUaxis) ? fUclusters : fVclusters;
+  std::vector<mollergemcluster_t> &clusters =  (axis == MollerPolGEM::kUaxis) ? fUclusters : fVclusters;
 
   double threshold = fThresholdClusterSum;
   if( fClusteringFlag == 1 ) threshold = fThresholdClusterSumDeconv;
@@ -5022,7 +5022,7 @@ void MOLLERGEMModule::filter_1Dhits(MOLLERGEM::GEMaxis_t axis){
   
 }
 
-void MOLLERGEMModule::filter_2Dhits(){
+void MollerPolGEMModule::filter_2Dhits(){
   //Here we will initially filter only based on time U/V time difference, ADC asymmetry, and perhaps correlation coefficient:
 
   if( fFiltering_flag2D < 0 ) return;
@@ -5099,7 +5099,7 @@ void MOLLERGEMModule::filter_2Dhits(){
 
 }
 
-double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t &apvinfo, UInt_t nhits ){ 
+double MollerPolGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t &apvinfo, UInt_t nhits ){ 
   if( isamp > fN_MPD_TIME_SAMP ) return 0;
 
   //unsigned int index = apvinfo.index;
@@ -5112,13 +5112,13 @@ double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t 
     
 
     if( nhits <(UInt_t)( fCommonModeNstripRejectLow + fCommonModeNstripRejectHigh + fCommonModeMinStripsInRange )){
-      Error(Here("MOLLERGEMModule::GetCommonMode()"), "Sorting-method common-mode calculation requested with nhits %d less than minimum %d required", nhits, fCommonModeNstripRejectLow + fCommonModeNstripRejectHigh + fCommonModeMinStripsInRange );
+      Error(Here("MollerPolGEMModule::GetCommonMode()"), "Sorting-method common-mode calculation requested with nhits %d less than minimum %d required", nhits, fCommonModeNstripRejectLow + fCommonModeNstripRejectHigh + fCommonModeMinStripsInRange );
 
       exit(-1);
     }
     
     for( int ihit=0; ihit<(int)(nhits); ihit++ ){
-      if(fAPVmapping == MOLLERGEM::kUVA_MOLLER && ihit<7) continue;
+      if(fAPVmapping == MollerPolGEM::kUVA_MollerPol && ihit<7) continue;
       int iraw = isamp + fN_MPD_TIME_SAMP * ihit;
 
       sortedADCs[ihit] = fPedSubADC_APV[ iraw ];
@@ -5140,8 +5140,8 @@ double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t 
   } else if( flag == 2 ) { //Histogramming method (experimental):
     
     int iAPV = apvinfo.pos;
-    double cm_mean = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fCommonModeMeanU[iAPV] : fCommonModeMeanV[iAPV];
-    double cm_rms = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fCommonModeRMSU[iAPV] : fCommonModeRMSV[iAPV];
+    double cm_mean = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fCommonModeMeanU[iAPV] : fCommonModeMeanV[iAPV];
+    double cm_rms = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fCommonModeRMSU[iAPV] : fCommonModeRMSV[iAPV];
 
     //for now these are unused. Comment out to suppress compiler warning.
     double DBmean = cm_mean;
@@ -5171,7 +5171,7 @@ double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t 
     //NOTE: The largest number of bins that could contain any given sample is binwidth/stepsize = 20 with default settings:
     
     if(stepsize == 0){
-	cout<<"MOLLERGEMModule::GetCommonMode() ERROR Histogramming has zeros"<<endl;
+	cout<<"MollerPolGEMModule::GetCommonMode() ERROR Histogramming has zeros"<<endl;
 	return GetCommonMode( isamp, 0, apvinfo );}
     
     //Construct std::vectors and explicitly zero-initialize them:
@@ -5184,7 +5184,7 @@ double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t 
     //Now loop on all the strips and fill the histogram: 
     //for( int ihit=0; ihit<fN_APV25_CHAN; ihit++ ){
     for( int ihit=0; ihit<(int)(nhits); ihit++ ){
-      if(fAPVmapping == MOLLERGEM::kUVA_MOLLER && ihit<7) continue;
+      if(fAPVmapping == MollerPolGEM::kUVA_MollerPol && ihit<7) continue;
       double ADC = fPedSubADC_APV[ isamp + fN_MPD_TIME_SAMP * ihit ];
       //calculate the lowest bin containing this ADC value. 
       int nearestbin = std::max(0,std::min(nbins-1, int(round( (ADC - scan_min)/stepsize ) ) ) );
@@ -5232,15 +5232,15 @@ double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t 
     
   } else if( flag == 3 ) { //Online Danning method with cm min set to 0 used during GMn
     int iAPV = apvinfo.pos;
-    double cm_mean = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fCommonModeMeanU[iAPV] : fCommonModeMeanV[iAPV];
-    double cm_rms = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fCommonModeRMSU[iAPV] : fCommonModeRMSV[iAPV];
+    double cm_mean = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fCommonModeMeanU[iAPV] : fCommonModeMeanV[iAPV];
+    double cm_rms = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fCommonModeRMSU[iAPV] : fCommonModeRMSV[iAPV];
     
     double CM_1 = 0;
     double CM_2 = 0;
     int n_keep = 0;
     
     for( int ihit=0; ihit<(int)(nhits); ihit++ ){
-      if(fAPVmapping == MOLLERGEM::kUVA_MOLLER && ihit<7) continue;
+      if(fAPVmapping == MollerPolGEM::kUVA_MollerPol && ihit<7) continue;
       int iraw=isamp + fN_MPD_TIME_SAMP * ihit;
       
       double ADCtemp = fPedSubADC_APV[iraw];
@@ -5256,11 +5256,11 @@ double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t 
     
     
     for( int ihit=0; ihit<(int)(nhits); ihit++ ){
-      if(fAPVmapping == MOLLERGEM::kUVA_MOLLER && ihit<7) continue;
+      if(fAPVmapping == MollerPolGEM::kUVA_MollerPol && ihit<7) continue;
       int iraw=isamp + fN_MPD_TIME_SAMP * ihit;
       
       double ADCtemp = fPedSubADC_APV[iraw];
-      double rmstemp = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fPedRMSU[fStripAPV[iraw]] : fPedRMSV[fStripAPV[iraw]];
+      double rmstemp = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fPedRMSU[fStripAPV[iraw]] : fPedRMSV[fStripAPV[iraw]];
       
       if(ADCtemp > 0 && ADCtemp < CM_1 + 3*rmstemp){
 	CM_2 += ADCtemp;
@@ -5273,8 +5273,8 @@ double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t 
     
   } else if( flag == 4 ) { //Online Danning method for GEn
     int iAPV = apvinfo.pos;
-    double cm_mean = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fCommonModeMeanU[iAPV] : fCommonModeMeanV[iAPV];
-    double cm_rms = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fCommonModeRMSU[iAPV] : fCommonModeRMSV[iAPV];
+    double cm_mean = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fCommonModeMeanU[iAPV] : fCommonModeMeanV[iAPV];
+    double cm_rms = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fCommonModeRMSU[iAPV] : fCommonModeRMSV[iAPV];
     
     
       
@@ -5291,11 +5291,11 @@ double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t 
 
       
       for( int ihit=0; ihit<(int)(nhits); ihit++ ){
-      if(fAPVmapping == MOLLERGEM::kUVA_MOLLER && ihit<7) continue;
+      if(fAPVmapping == MollerPolGEM::kUVA_MollerPol && ihit<7) continue;
 	int iraw=isamp + fN_MPD_TIME_SAMP * ihit;
 	
 	double ADCtemp = fPedSubADC_APV[iraw];
-	double rmstemp = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fPedRMSU[fStripAPV[iraw]] : fPedRMSV[fStripAPV[iraw]];
+	double rmstemp = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fPedRMSU[fStripAPV[iraw]] : fPedRMSV[fStripAPV[iraw]];
 	
 	if(iter != 0){
 	  cm_min = cm_temp - fCommonModeDanningMethod_NsigmaCut*2.5*rmstemp;
@@ -5317,8 +5317,8 @@ double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t 
             
     } else { //"offline" Danning method (default): requires apv info for cm-mean and cm-rms values:
     int iAPV = apvinfo.pos;
-    double cm_mean = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fCommonModeMeanU[iAPV] : fCommonModeMeanV[iAPV];
-    double cm_rms = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fCommonModeRMSU[iAPV] : fCommonModeRMSV[iAPV];
+    double cm_mean = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fCommonModeMeanU[iAPV] : fCommonModeMeanV[iAPV];
+    double cm_rms = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fCommonModeRMSU[iAPV] : fCommonModeRMSV[iAPV];
    
     // Not sure if we should update cm_mean and cm_rms in this context because then the logic can become somewhat circular/self-referential:
     if( fMeasureCommonMode && fNeventsRollingAverage_by_APV[apvinfo.index] >= std::min(UInt_t(100), fN_MPD_TIME_SAMP*fNeventsCommonModeLookBack ) ){
@@ -5340,13 +5340,13 @@ double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t 
       //double sum2ADCinrange=0.0;
       //for( int ihit=0; ihit<fN_APV25_CHAN; ihit++ ){
       for( int ihit=0; ihit<(int)(nhits); ihit++ ){
-        if(fAPVmapping == MOLLERGEM::kUVA_MOLLER && ihit<7) continue;
+        if(fAPVmapping == MollerPolGEM::kUVA_MollerPol && ihit<7) continue;
 	int iraw=isamp + fN_MPD_TIME_SAMP * ihit;
 	
 	double ADCtemp = fPedSubADC_APV[iraw];
 	
 	//on iterations after the first iteration, reject strips with signals above nsigma * pedrms:
-	double rmstemp = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fPedRMSU[fStripAPV[iraw]] : fPedRMSV[fStripAPV[iraw]];
+	double rmstemp = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fPedRMSU[fStripAPV[iraw]] : fPedRMSV[fStripAPV[iraw]];
 
 	// if(flag == 4){  //This is used for diagnostic plots where we "pretend" the data is zero suppressed //moving this to another method
 	//   double strip_sum = 0;
@@ -5400,7 +5400,7 @@ double MOLLERGEMModule::GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t 
   }
 }
 
-void MOLLERGEMModule::fill_ADCfrac_vs_time_sample_goodstrip( Int_t hitindex, bool ismax ){
+void MollerPolGEMModule::fill_ADCfrac_vs_time_sample_goodstrip( Int_t hitindex, bool ismax ){
   if( hitindex < 0 || hitindex >= fNstrips_hit ) return;
   if( hADCfrac_vs_timesample_goodstrips == NULL ) return;
   if( hADCfrac_vs_timesample_maxstrip == NULL ) return;
@@ -5414,12 +5414,12 @@ void MOLLERGEMModule::fill_ADCfrac_vs_time_sample_goodstrip( Int_t hitindex, boo
 }
 
 //This function calculates the chi2 of a vector of time samples with respect to the "Good Strip" averages:
-double MOLLERGEMModule::StripTSchi2( int hitindex ){
+double MollerPolGEMModule::StripTSchi2( int hitindex ){
   if( hitindex < 0 || hitindex > fNstrips_hit ) return -1.;
   double chi2 = 0.0;
   double t0 = fStripMaxTcut_central[fAxis[hitindex]] - fStripTau;
 
-  double sigma = (fAxis[hitindex] == MOLLERGEM::kUaxis) ? fPedRMSU[fStrip[hitindex]] : fPedRMSV[fStrip[hitindex]] * fRMS_ConversionFactor; 
+  double sigma = (fAxis[hitindex] == MollerPolGEM::kUaxis) ? fPedRMSU[fStrip[hitindex]] : fPedRMSV[fStrip[hitindex]] * fRMS_ConversionFactor; 
 
   //NOTE: the "ped RMS" is the RMS of the average of six time samples, so we multiply by "RMS conversion factor" (sqrt(6)) to get the sigma
   // for individual ADC samples
@@ -5433,7 +5433,7 @@ double MOLLERGEMModule::StripTSchi2( int hitindex ){
 }
 
 //Experimental, not used for now:
-double MOLLERGEMModule::FitStripTime( int striphitindex, double RMS ){
+double MollerPolGEMModule::FitStripTime( int striphitindex, double RMS ){
   if( striphitindex < 0 || striphitindex > fNstrips_hit ) return -1000.0;
 
   std::vector<Double_t> &ADC = fADCsamples[striphitindex];
@@ -5443,7 +5443,7 @@ double MOLLERGEMModule::FitStripTime( int striphitindex, double RMS ){
 }
 
 //common code for calculating strip and cluster fit times:
-double MOLLERGEMModule::CalcFitTime( const std::vector<Double_t> &ADC, double RMS ){
+double MollerPolGEMModule::CalcFitTime( const std::vector<Double_t> &ADC, double RMS ){
 
   double ndeconv[fN_MPD_TIME_SAMP-1];
   double dndeconv[fN_MPD_TIME_SAMP-1];
@@ -5453,7 +5453,7 @@ double MOLLERGEMModule::CalcFitTime( const std::vector<Double_t> &ADC, double RM
   
   //Grab pedestal RMS to estimate weights in strip mean time calculation:
   
-  //Double_t pedrms = ( fAxis[striphitindex] == MOLLERGEM::kUaxis ) ? fPedRMSU[fStrip[striphitindex]] : fPedRMSV[fStrip[striphitindex]];
+  //Double_t pedrms = ( fAxis[striphitindex] == MollerPolGEM::kUaxis ) ? fPedRMSU[fStrip[striphitindex]] : fPedRMSV[fStrip[striphitindex]];
 
   Double_t xdeconv = fSamplePeriod/fStripTau;
   Double_t exdeconv = exp(xdeconv);
@@ -5496,28 +5496,28 @@ double MOLLERGEMModule::CalcFitTime( const std::vector<Double_t> &ADC, double RM
   //} 
 }
 
-void MOLLERGEMModule::InitAPVMAP(){
-  APVMAP[MOLLERGEM::kINFN].resize(fN_APV25_CHAN);
-  APVMAP[MOLLERGEM::kUVA_XY].resize(fN_APV25_CHAN);
-  APVMAP[MOLLERGEM::kUVA_UV].resize(fN_APV25_CHAN);
-  APVMAP[MOLLERGEM::kUVA_MOLLER].resize(fN_APV25_CHAN);
-  APVMAP[MOLLERGEM::kMC].resize(fN_APV25_CHAN);
+void MollerPolGEMModule::InitAPVMAP(){
+  APVMAP[MollerPolGEM::kINFN].resize(fN_APV25_CHAN);
+  APVMAP[MollerPolGEM::kUVA_XY].resize(fN_APV25_CHAN);
+  APVMAP[MollerPolGEM::kUVA_UV].resize(fN_APV25_CHAN);
+  APVMAP[MollerPolGEM::kUVA_MollerPol].resize(fN_APV25_CHAN);
+  APVMAP[MollerPolGEM::kMC].resize(fN_APV25_CHAN);
 
   for( UInt_t i=0; i<fN_APV25_CHAN; i++ ){
     Int_t strip1 = 32*(i%4) + 8*(i/4) - 31*(i/16);
     Int_t strip2 = strip1 + 1 + strip1 % 4 - 5 * ( ( strip1/4 ) % 2 );
     Int_t strip3 = ( strip2 % 2 == 0 ) ? strip2/2 + 32 : ( (strip2<64) ? (63 - strip2)/2 : 127 + (65-strip2)/2 ); 
-    APVMAP[MOLLERGEM::kINFN][i] = strip1; 
-    APVMAP[MOLLERGEM::kUVA_XY][i] = strip2;
-    APVMAP[MOLLERGEM::kUVA_UV][i] = strip3;
-    APVMAP[MOLLERGEM::kUVA_MOLLER][i] = strip2;
-    APVMAP[MOLLERGEM::kMC][i] = i;
+    APVMAP[MollerPolGEM::kINFN][i] = strip1; 
+    APVMAP[MollerPolGEM::kUVA_XY][i] = strip2;
+    APVMAP[MollerPolGEM::kUVA_UV][i] = strip3;
+    APVMAP[MollerPolGEM::kUVA_MollerPol][i] = strip2;
+    APVMAP[MollerPolGEM::kMC][i] = i;
   }
 
   //Print out to test:
   // //std::cout << "INFN X/Y APV mapping: " << std::endl;
   // for( UInt_t i=0; i<fN_APV25_CHAN; i++ ){
-  //   std::cout << std::setw(8) << APVMAP[MOLLERGEM::kINFN][i] << ", ";
+  //   std::cout << std::setw(8) << APVMAP[MollerPolGEM::kINFN][i] << ", ";
   //   if( (i+1) % 10 == 0 ) std::cout << endl;
   // }
   // std::cout << endl;
@@ -5526,7 +5526,7 @@ void MOLLERGEMModule::InitAPVMAP(){
   // //Print out to test:
   // std::cout << "UVA X/Y APV mapping: " << std::endl;
   // for( UInt_t i=0; i<fN_APV25_CHAN; i++ ){
-  //   std::cout << std::setw(8) << APVMAP[MOLLERGEM::kUVA_XY][i] << ", ";
+  //   std::cout << std::setw(8) << APVMAP[MollerPolGEM::kUVA_XY][i] << ", ";
   //   if( (i+1) % 10 == 0 ) std::cout << endl;
   // }
   // std::cout << endl;
@@ -5534,14 +5534,14 @@ void MOLLERGEMModule::InitAPVMAP(){
   // //Print out to test:
   // std::cout << "UVA U/V APV mapping: " << std::endl;
   // for( UInt_t i=0; i<fN_APV25_CHAN; i++ ){
-  //   std::cout << std::setw(8) << APVMAP[MOLLERGEM::kUVA_UV][i] << ", ";
+  //   std::cout << std::setw(8) << APVMAP[MollerPolGEM::kUVA_UV][i] << ", ";
   //   if( (i+1) % 10 == 0 ) std::cout << endl;
   // }
   // std::cout << endl;
   
 }
 
-void MOLLERGEMModule::UpdateRollingCommonModeAverage( int iapv, double CM_sample ){
+void MollerPolGEMModule::UpdateRollingCommonModeAverage( int iapv, double CM_sample ){
   //This gets called for each time sample for each APV or each full readout event or whenever BUILD_ALL_SAMPLES is true and CM_ENABLED is false:
   //There are two cases to handle:
   // 1) before the container is full, meaning less than fN_MPD_TIME_SAMP*fNeventsCommonModeLookBack have been added. In this case we increment everything.
@@ -5557,8 +5557,8 @@ void MOLLERGEMModule::UpdateRollingCommonModeAverage( int iapv, double CM_sample
   // UInt_t axis = fMPDmap[iapv].axis;
 
   // For now these are unused. Comment out to suppress compiler warning:
-  // double cm_mean_from_DB = (axis == MOLLERGEM::kUaxis) ? fCommonModeMeanU[pos] : fCommonModeMeanV[pos];
-  // double cm_rms_from_DB = (axis == MOLLERGEM::kUaxis) ? fCommonModeRMSU[pos] : fCommonModeRMSV[pos];   
+  // double cm_mean_from_DB = (axis == MollerPolGEM::kUaxis) ? fCommonModeMeanU[pos] : fCommonModeMeanV[pos];
+  // double cm_rms_from_DB = (axis == MollerPolGEM::kUaxis) ? fCommonModeRMSU[pos] : fCommonModeRMSV[pos];   
   
   //std::cout << "Updating rolling average common mode from full readout events for module " << GetName() << " iapv = " << iapv << std::endl;
   
@@ -5626,7 +5626,7 @@ void MOLLERGEMModule::UpdateRollingCommonModeAverage( int iapv, double CM_sample
 }
 
 //This is a copy of the code for 
-void MOLLERGEMModule::UpdateRollingAverage( int iapv, double value, std::vector<std::deque<Double_t> > &ResultContainer, std::vector<Double_t> &RollingAverage, std::vector<Double_t> &RollingRMS, std::vector<UInt_t> &EventCounter ){
+void MollerPolGEMModule::UpdateRollingAverage( int iapv, double value, std::vector<std::deque<Double_t> > &ResultContainer, std::vector<Double_t> &RollingAverage, std::vector<Double_t> &RollingRMS, std::vector<UInt_t> &EventCounter ){
   
   UInt_t N, Nmax;
   
@@ -5682,7 +5682,7 @@ void MOLLERGEMModule::UpdateRollingAverage( int iapv, double value, std::vector<
 }
 
 //This routine attempts to calculate any necessary correction to the common-mode in a sample:
-double MOLLERGEMModule::GetCommonModeCorrection( UInt_t isamp, const mpdmap_t &apvinfo, UInt_t &ngoodhits, const UInt_t &nhits, bool fullreadout, Int_t flag ){
+double MollerPolGEMModule::GetCommonModeCorrection( UInt_t isamp, const mpdmap_t &apvinfo, UInt_t &ngoodhits, const UInt_t &nhits, bool fullreadout, Int_t flag ){
 
   if( !fCorrectCommonMode ){
     return 0.0;
@@ -5705,8 +5705,8 @@ double MOLLERGEMModule::GetCommonModeCorrection( UInt_t isamp, const mpdmap_t &a
   //double sumADCinrange=0.0;
 
   int iAPV = apvinfo.pos;
-  double cm_mean = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fCommonModeMeanU[iAPV] : fCommonModeMeanV[iAPV];
-  double cm_rms = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fCommonModeRMSU[iAPV] : fCommonModeRMSV[iAPV];
+  double cm_mean = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fCommonModeMeanU[iAPV] : fCommonModeMeanV[iAPV];
+  double cm_rms = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fCommonModeRMSU[iAPV] : fCommonModeRMSV[iAPV];
   
   double DBrms = cm_rms;
   
@@ -5728,7 +5728,7 @@ double MOLLERGEMModule::GetCommonModeCorrection( UInt_t isamp, const mpdmap_t &a
   //It seems the CM calculations below will take care of imposing any relevant upper limits.
   
   for( int ihit=0; ihit<(int)(nhits); ihit++ ){
-    if(fAPVmapping == MOLLERGEM::kUVA_MOLLER && ihit<7) continue;
+    if(fAPVmapping == MollerPolGEM::kUVA_MollerPol && ihit<7) continue;
     int iraw=isamp + fN_MPD_TIME_SAMP*ihit;
     
     //Subtract the "online" version of the common-mode for this full readout event.
@@ -5743,7 +5743,7 @@ double MOLLERGEMModule::GetCommonModeCorrection( UInt_t isamp, const mpdmap_t &a
 	ADCsumtemp += fPedSubADC_APV[jsamp + fN_MPD_TIME_SAMP*ihit] - fCM_online[jsamp];
       }
 
-      double RMS = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fPedRMSU[fStripAPV[iraw]] : fPedRMSV[fStripAPV[iraw]];
+      double RMS = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fPedRMSU[fStripAPV[iraw]] : fPedRMSV[fStripAPV[iraw]];
 
       //would this strip have passed online zero suppression?
       isgood = (ADCsumtemp >= fCommonModeDanningMethod_NsigmaCut * RMS * double(fN_MPD_TIME_SAMP) ); 
@@ -5816,7 +5816,7 @@ double MOLLERGEMModule::GetCommonModeCorrection( UInt_t isamp, const mpdmap_t &a
 	    
 	  if( !fullreadout ) ADCtemp += fCM_online[isamp];
 	    
-	  double rmstemp = ( apvinfo.axis == MOLLERGEM::kUaxis ) ? fPedRMSU[fStripAPV[iraw]] : fPedRMSV[fStripAPV[iraw]];
+	  double rmstemp = ( apvinfo.axis == MollerPolGEM::kUaxis ) ? fPedRMSU[fStripAPV[iraw]] : fPedRMSV[fStripAPV[iraw]];
 	    
 	  double mintemp = cm_min;
 	  double maxtemp = cm_max;
@@ -5898,7 +5898,7 @@ double MOLLERGEMModule::GetCommonModeCorrection( UInt_t isamp, const mpdmap_t &a
 
 //Helper routine to calculate deconvoluted ADC Samples from shaped samples for
 //arbitrary arrays of samples (size must equal fN_MPD_TIME_SAMP)
-void MOLLERGEMModule::CalcDeconvolutedSamples( const std::vector<Double_t> &ADC, std::vector<Double_t> &DeconvADC ){
+void MollerPolGEMModule::CalcDeconvolutedSamples( const std::vector<Double_t> &ADC, std::vector<Double_t> &DeconvADC ){
   if( ADC.size() != fN_MPD_TIME_SAMP ) return;
   if( DeconvADC.size() != fN_MPD_TIME_SAMP ) DeconvADC.resize( fN_MPD_TIME_SAMP );
   //The ONLY purpose of this method is to calculate deconvoluted ADCs from shaped ADCs
@@ -5988,13 +5988,13 @@ void MOLLERGEMModule::CalcDeconvolutedSamples( const std::vector<Double_t> &ADC,
   
 }
 
-void MOLLERGEMModule::SetTriggerTime( Double_t ttrig ){
+void MollerPolGEMModule::SetTriggerTime( Double_t ttrig ){
   fTrigTime = fabs( ttrig ) < fMaxTrigTimeCorrection ? ttrig : 0.0;
 }
 
 //This is duplicative with FitStripTime in terms of code, but 
 
-void MOLLERGEMModule::FitClusterTime( mollergemcluster_t &clust ){
+void MollerPolGEMModule::FitClusterTime( mollergemcluster_t &clust ){
   if( clust.ADCsamples.size() != fN_MPD_TIME_SAMP ) {
     clust.t_mean_fit = -1000.0;
     return;

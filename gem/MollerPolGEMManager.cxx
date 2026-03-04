@@ -3,22 +3,22 @@
 #include <ctime>
 
 
-MOLLERManager* MOLLERManager::fManager = 0;
-TString MOLLERManager::fCrateMapName = "cratemap";
+MollerPolManager* MollerPolManager::fManager = 0;
+TString MollerPolManager::fCrateMapName = "cratemap";
 
 ///////////////////////////////////////////////////////////////////////////////
 // Get an instance of the singleton
-MOLLERManager* MOLLERManager::GetInstance()
+MollerPolManager* MollerPolManager::GetInstance()
 {
   if(!fManager) {
-    fManager = new MOLLERManager();
+    fManager = new MollerPolManager();
   }
   return fManager;
 }
   
 ///////////////////////////////////////////////////////////////////////////////
 // Get the instance of the global crate map
-Decoder::THaCrateMap* MOLLERManager::GetCrateMap()
+Decoder::THaCrateMap* MollerPolManager::GetCrateMap()
 {
   if(!fCrateMap) {
     fCrateMap = new Decoder::THaCrateMap(fCrateMapName);
@@ -30,19 +30,19 @@ Decoder::THaCrateMap* MOLLERManager::GetCrateMap()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MOLLERManager::SetDefaultCrateMapName(const char* name)
+void MollerPolManager::SetDefaultCrateMapName(const char* name)
 {
   fCrateMapName = name;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Basic constructor
-MOLLERManager::MOLLERManager() : fCrateMap(0) {
+MollerPolManager::MollerPolManager() : fCrateMap(0) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Destructor
-MOLLERManager::~MOLLERManager() {
+MollerPolManager::~MollerPolManager() {
   if(fCrateMap)
     delete fCrateMap;
 };

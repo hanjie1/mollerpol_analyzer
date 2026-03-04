@@ -1,9 +1,9 @@
-#ifndef ROOT_MOLLERElement
-#define ROOT_MOLLERElement
+#ifndef ROOT_MollerPolElement
+#define ROOT_MollerPolElement
 
 ////////////////////////////////////////////////////////////////////////////
 //                                                                        //
-// MOLLERElement                                                       //
+// MollerPolElement                                                       //
 //                                                                        //
 ////////////////////////////////////////////////////////////////////////////
 
@@ -13,13 +13,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class MOLLERElement : public TObject {
+class MollerPolElement : public TObject {
 
 public:
-  MOLLERElement() : fADC(nullptr), fWaveform(nullptr) {};
-  MOLLERElement(Double_t x, Double_t y, Double_t z,
+  MollerPolElement() : fADC(nullptr), fWaveform(nullptr) {};
+  MollerPolElement(Double_t x, Double_t y, Double_t z,
       Int_t row, Int_t col, Int_t layer, Int_t id = 0);
-  virtual ~MOLLERElement();
+  virtual ~MollerPolElement();
 
   // Getters
   Double_t GetX()     const { return fX; }
@@ -33,8 +33,8 @@ public:
   Int_t   GetLayer() const { return fLayer; }
   Int_t   GetStat()  const { return fStat; }
   Int_t   GetID()    const { return fID; }
-  virtual MOLLERData::ADC* ADC()         { return fADC; }
-  virtual MOLLERData::Waveform* Waveform() { return fWaveform; }
+  virtual MollerPolData::ADC* ADC()         { return fADC; }
+  virtual MollerPolData::Waveform* Waveform() { return fWaveform; }
 
   // Setters
   void SetX(Double_t var)    { fX = var; }
@@ -73,10 +73,10 @@ protected:
   Int_t   fStat;    ///< Status: 0: not seen, 1: seen, 2: local max
   Int_t   fID;      ///< a logical number to this element
 
-  MOLLERData::ADC *fADC; //< All ADC hits
-  MOLLERData::Waveform *fWaveform;
+  MollerPolData::ADC *fADC; //< All ADC hits
+  MollerPolData::Waveform *fWaveform;
 
-  ClassDef(MOLLERElement,1) ///< Generic shower block class (no data)
+  ClassDef(MollerPolElement,1) ///< Generic shower block class (no data)
 };
 
 #endif

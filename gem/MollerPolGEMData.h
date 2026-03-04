@@ -1,10 +1,10 @@
-#ifndef MOLLERDATA_H
-#define MOLLERDATA_H
+#ifndef MollerPolDATA_H
+#define MollerPolDATA_H
 
 #include <vector>
 #include <Rtypes.h> // Include standard ROOT types
 
-namespace MOLLERData {
+namespace MollerPolData {
   ///////////////////////////////////////////////////////////////////////////////
   // Single valued data structure
   struct SingleData {
@@ -183,6 +183,6 @@ namespace MOLLERData {
   };
 
 
-} // end MOLLERData namespace
+} // end MollerPolData namespace
 
-#endif // MOLLERDATA_H
+#endif // MollerPolDATA_H

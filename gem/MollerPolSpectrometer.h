@@ -1,19 +1,19 @@
-#ifndef MOLLERSpectrometer_H
-#define MOLLERSpectrometer_H
+#ifndef MollerPolSpectrometer_H
+#define MollerPolSpectrometer_H
 
 #include "THaSpectrometer.h"
 
-class MOLLERSpectrometer : public THaSpectrometer {
+class MollerPolSpectrometer : public THaSpectrometer {
 
     public:
-    MOLLERSpectrometer( const char *name, const char *description );
-    virtual ~MOLLERSpectrometer();
+    MollerPolSpectrometer( const char *name, const char *description );
+    virtual ~MollerPolSpectrometer();
 
     virtual Int_t FindVertices( TClonesArray& tracks );
     virtual Int_t TrackCalc();
 
     protected:
-    ClassDef(MOLLERSpectrometer,0)
+    ClassDef(MollerPolSpectrometer,0)
 };
 
 #endif

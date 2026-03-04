@@ -13,7 +13,7 @@
 
 using namespace std;
 
-MOLLERGEMTrackerBase::MOLLERGEMTrackerBase(){ //Set default values of important parameters: 
+MollerPolGEMTrackerBase::MollerPolGEMTrackerBase(){ //Set default values of important parameters: 
   Clear();
 
   fPedestalMode = false;
@@ -122,12 +122,12 @@ MOLLERGEMTrackerBase::MOLLERGEMTrackerBase(){ //Set default values of important 
   
 }
 
-MOLLERGEMTrackerBase::~MOLLERGEMTrackerBase(){
+MollerPolGEMTrackerBase::~MollerPolGEMTrackerBase(){
   //This is best done here to ensure fModules still exists when it is cleared
   DeleteContainer(fModules);
 }
 
-void MOLLERGEMTrackerBase::Clear(){ //Clear out any event-specific stuff
+void MollerPolGEMTrackerBase::Clear(){ //Clear out any event-specific stuff
   //Also, when we construct the tracker, we want to clear out the modules:
   //fModules.clear(); we actually DON'T want to clear out the modules here, this gets called event-by-event
   fConstraintPoint_Front_IsInitialized = false;
@@ -312,7 +312,7 @@ void MOLLERGEMTrackerBase::Clear(){ //Clear out any event-specific stuff
 }
 
 //This is called by the Init() methods of derived classes:
-void MOLLERGEMTrackerBase::CompleteInitialization(){
+void MollerPolGEMTrackerBase::CompleteInitialization(){
   fLayers.clear();
   fLayerByIndex.clear();
   fNumModulesByLayer.clear();
@@ -487,9 +487,9 @@ void MOLLERGEMTrackerBase::CompleteInitialization(){
   
 }
 
-void MOLLERGEMTrackerBase::LoadPedestals( const char *fname ){
+void MollerPolGEMTrackerBase::LoadPedestals( const char *fname ){
 
-  std::cout << "[MOLLERGEMTrackerBase::LoadPedestals]: fname = " << fname << std::endl;
+  std::cout << "[MollerPolGEMTrackerBase::LoadPedestals]: fname = " << fname << std::endl;
 
   TString pedfilename = fname;
 
@@ -498,7 +498,7 @@ void MOLLERGEMTrackerBase::LoadPedestals( const char *fname ){
   
   if( gSystem->AccessPathName( fname ) ){ //
     
-    std::cout << "[MOLLERGEMTrackerBase::LoadPedestals]: could not find " << fname << " in working directory, looking in " << prefix << std::endl;
+    std::cout << "[MollerPolGEMTrackerBase::LoadPedestals]: could not find " << fname << " in working directory, looking in " << prefix << std::endl;
 
     pedfilename.Prepend(prefix);
     
@@ -585,10 +585,10 @@ void MOLLERGEMTrackerBase::LoadPedestals( const char *fname ){
 	  if( PedMean[this_crate][this_slot].find( this_index ) != PedMean[this_crate][this_slot].end() ){
 	    //std::cout << "found index " << this_index << std::endl;
 	    int eff_ch=128;
-	    //MOLLERGEM::APVmap_t testmap = fModules[module]
-	    //if(fModules[module]->fAPVmapping == MOLLERGEM::kUVA_MOLLER) eff_ch=121;
+	    //MollerPolGEM::APVmap_t testmap = fModules[module]
+	    //if(fModules[module]->fAPVmapping == MollerPolGEM::kUVA_MollerPol) eff_ch=121;
 	    //else eff_ch=128;
-	    //std::cout<<__func__<<"  fAPVmapping  "<<MOLLERGEM::fAPVmapping <<"  eff_ch  ="<<eff_ch <<std::endl; 
+	    //std::cout<<__func__<<"  fAPVmapping  "<<MollerPolGEM::fAPVmapping <<"  eff_ch  ="<<eff_ch <<std::endl; 
 	    for( int i=0; i<eff_ch; i++ ){
 	      int this_apvchan = APVChan[this_crate][this_slot][this_index][i];
 	      double this_mean = PedMean[this_crate][this_slot][this_index][i];
@@ -600,7 +600,7 @@ void MOLLERGEMTrackerBase::LoadPedestals( const char *fname ){
 	       	//	<< it->axis << ", " << this_strip << ", " << this_mean << ", " << this_rms
 	       	//	<< std::endl;
 	      
-	      if ( it->axis == MOLLERGEM::kUaxis ){
+	      if ( it->axis == MollerPolGEM::kUaxis ){
 		fModules[module]->fPedestalU[this_strip] = this_mean;
 		fModules[module]->fPedRMSU[this_strip] = this_rms; 
 	      } else {
@@ -623,9 +623,9 @@ std::cout<<"Pedestals are loaded successfully" << std::endl;
 
 
 
-void MOLLERGEMTrackerBase::LoadCM( const char *fname ){
+void MollerPolGEMTrackerBase::LoadCM( const char *fname ){
 
-  std::cout << "[MOLLERGEMTrackerBase::LoadCM]: fname = " << fname << std::endl;
+  std::cout << "[MollerPolGEMTrackerBase::LoadCM]: fname = " << fname << std::endl;
 
   TString cmfilename = fname;
 
@@ -634,7 +634,7 @@ void MOLLERGEMTrackerBase::LoadCM( const char *fname ){
   
   if( gSystem->AccessPathName( fname ) ){ //
     
-    std::cout << "[MOLLERGEMTrackerBase::LoadCM]: could not find " << fname << " in working directory, looking in " << prefix << std::endl;
+    std::cout << "[MollerPolGEMTrackerBase::LoadCM]: could not find " << fname << " in working directory, looking in " << prefix << std::endl;
 
     cmfilename.Prepend(prefix);
     
@@ -698,7 +698,7 @@ void MOLLERGEMTrackerBase::LoadCM( const char *fname ){
 	    double this_rms = CMRMS[this_crate][this_slot][this_index];
 	    	    
 	    //Set module APVs CM values from the arrays from the DB file
-	    if ( it->axis == MOLLERGEM::kUaxis ){
+	    if ( it->axis == MollerPolGEM::kUaxis ){
 	      fModules[module]->fCommonModeMeanU[this_apv] = this_mean;
 	      fModules[module]->fCommonModeRMSU[this_apv] = this_rms; 
 	    } else {
@@ -715,7 +715,7 @@ void MOLLERGEMTrackerBase::LoadCM( const char *fname ){
 std::cout<<"CMs are loaded successfully" << std::endl;  
 }
 
-void MOLLERGEMTrackerBase::InitEfficiencyHistos(const char *dname){
+void MollerPolGEMTrackerBase::InitEfficiencyHistos(const char *dname){
 
   if( fMakeEfficiencyPlots && !fEfficiencyInitialized ){
     //Here is the place to book efficiency histograms by layer:
@@ -806,7 +806,7 @@ void MOLLERGEMTrackerBase::InitEfficiencyHistos(const char *dname){
   }
 }
 
-void MOLLERGEMTrackerBase::CalcEfficiency(){
+void MollerPolGEMTrackerBase::CalcEfficiency(){
   if( !fMakeEfficiencyPlots ) return;
 
   TString histname;
@@ -820,7 +820,7 @@ void MOLLERGEMTrackerBase::CalcEfficiency(){
 }
 
 //This only needs to be done ONCE (after loading the geometry from the database!)
-void MOLLERGEMTrackerBase::InitLayerCombos() { //It is assumed that this will be called by the ReadDatabase/Init method of the derived classes after loading the necessary information from the database:
+void MollerPolGEMTrackerBase::InitLayerCombos() { //It is assumed that this will be called by the ReadDatabase/Init method of the derived classes after loading the necessary information from the database:
 
   //Just in case:
   fLayerCombinations.clear();
@@ -845,7 +845,7 @@ void MOLLERGEMTrackerBase::InitLayerCombos() { //It is assumed that this will be
   }
 }
 
-void MOLLERGEMTrackerBase::InitGridBins() {
+void MollerPolGEMTrackerBase::InitGridBins() {
   //we assume that the database has already been read and the module geometry is already specified here:
   //Loop over layers and modules within each layer, and set the size of the active area by layer:
 
@@ -877,7 +877,7 @@ void MOLLERGEMTrackerBase::InitGridBins() {
       
       int module = *imod; //if the database is sensibly constructed, this should refer to the index in the array of modules:
 
-      MOLLERGEMModule *mtemp = fModules[module];
+      MollerPolGEMModule *mtemp = fModules[module];
 
       //Get origin coordinates:
       TVector3 modpos = mtemp->GetOrigin();
@@ -889,7 +889,7 @@ void MOLLERGEMTrackerBase::InitGridBins() {
       double Lx_mod = mtemp->GetXSize()/2.0;
       double Ly_mod = mtemp->GetYSize()/2.0;
 
-      //get positions of the four corners of the active area (which is assumed rectangular for MOLLER GEMs):
+      //get positions of the four corners of the active area (which is assumed rectangular for MollerPol GEMs):
       TVector3 Corner1 = modpos - Lx_mod * mtemp->GetXax() - Ly_mod * mtemp->GetYax();
       TVector3 Corner2 = modpos + Lx_mod * mtemp->GetXax() - Ly_mod * mtemp->GetYax();
       TVector3 Corner3 = modpos - Lx_mod * mtemp->GetXax() + Ly_mod * mtemp->GetYax();
@@ -951,7 +951,7 @@ void MOLLERGEMTrackerBase::InitGridBins() {
 }
 
 //Initialize the "hit list" arrays that are used by the track-finding algorithm: these arrays are UNCHANGING throughout the iterations of track-finding:
-Double_t MOLLERGEMTrackerBase::InitHitList(){
+Double_t MollerPolGEMTrackerBase::InitHitList(){
   //clear out any old information:
   layers_with_2Dhits.clear();
   layerswithfreehits.clear();
@@ -1079,7 +1079,7 @@ Double_t MOLLERGEMTrackerBase::InitHitList(){
   
 }
 
-Double_t MOLLERGEMTrackerBase::InitFreeHitList(){
+Double_t MollerPolGEMTrackerBase::InitFreeHitList(){
   //We should clear these things out at the beginning of each iteration just in case:
   layerswithfreehits.clear();
   //freehitlist_layer.clear();
@@ -1123,7 +1123,7 @@ Double_t MOLLERGEMTrackerBase::InitFreeHitList(){
     
     int nbins_gridxy = fGridNbinsX_layer[layer]*fGridNbinsY_layer[layer];
 
-    //std::cout << "[MOLLERGEMTrackerBase::find_tracks]: layer, nbins_gridxy = " << layer << ", " << nbins_gridxy << std::endl;
+    //std::cout << "[MollerPolGEMTrackerBase::find_tracks]: layer, nbins_gridxy = " << layer << ", " << nbins_gridxy << std::endl;
     
     //resize the free hit counter and free hit list for the 2D grid bins to the number of grid bins:
     // Nfreehits_binxy_layer[layer].resize( nbins_gridxy );
@@ -1142,7 +1142,7 @@ Double_t MOLLERGEMTrackerBase::InitFreeHitList(){
     
     //Now loop over all the hits and fill up the free hit list arrays:
     for( int ihit=0; ihit<N2Dhits_layer[layer]; ihit++ ){
-      // std::cout << "[MOLLERGEMTrackerBase::find_tracks]: layer, N2Dhits_layer[layer] = " << layer << ", "
+      // std::cout << "[MollerPolGEMTrackerBase::find_tracks]: layer, N2Dhits_layer[layer] = " << layer << ", "
       // 		<< N2Dhits_layer[layer] << std::endl;
       
       //Make sure this hit is not already used in a track:
@@ -1179,7 +1179,7 @@ Double_t MOLLERGEMTrackerBase::InitFreeHitList(){
   return Ncombos;
 }
 
-void MOLLERGEMTrackerBase::hit_reconstruction(){
+void MollerPolGEMTrackerBase::hit_reconstruction(){
 
   fclustering_done = true;
 
@@ -1201,7 +1201,7 @@ void MOLLERGEMTrackerBase::hit_reconstruction(){
   }
   //Loop over all the GEM modules and invoke their cluster-finding methods with search region constraints:
   for( int imodule=0; imodule<fNmodules; imodule++ ){
-    MOLLERGEMModule *mod = fModules[imodule];
+    MollerPolGEMModule *mod = fModules[imodule];
 
     //std::cout << "Calling hit reconstruction for module " << mod->GetName() << std::endl;
     //Initialize numerator/denominator to zero for efficiency calculations:
@@ -1276,13 +1276,13 @@ void MOLLERGEMTrackerBase::hit_reconstruction(){
   // 	    << ", " << fNlayers_hitUV << std::endl;
 }
 
-// Standard "fast" track-finding algorithm (based on MOLLERGEM_standalone code by Andrew Puckett):
-void MOLLERGEMTrackerBase::find_tracks(){ 
+// Standard "fast" track-finding algorithm (based on MollerPolGEM_standalone code by Andrew Puckett):
+void MollerPolGEMTrackerBase::find_tracks(){ 
   
   //should this method invoke clear()? Yes: Clear() just clears out all the track arrays. It is assumed that this method will only be called once per event.
   //Although that is probably not correct; it might be called as many as two times or perhaps once per cluster (to be developed later). Anyway, for now, let's use it, might need to revisit later:
   Clear();
-  //std::cout << "[MOLLERGEMTrackerBase::find_tracks]: finished clearing track arrays..." << std::endl;
+  //std::cout << "[MollerPolGEMTrackerBase::find_tracks]: finished clearing track arrays..." << std::endl;
   
   fNtracks_found = 0;
   
@@ -1290,7 +1290,7 @@ void MOLLERGEMTrackerBase::find_tracks(){
     hit_reconstruction();
   }
 
-  //std::cout << "[MOLLERGEMTrackerBase::find_tracks]: finished hit reconstruction..." << std::endl;
+  //std::cout << "[MollerPolGEMTrackerBase::find_tracks]: finished hit reconstruction..." << std::endl;
   
   ftracking_done = true;
   //It is assumed that when we reach this stage, the hit reconstruction will have already been called. 
@@ -1302,7 +1302,7 @@ void MOLLERGEMTrackerBase::find_tracks(){
   
   //std::cout << 
   
-  //std::cout << "[MOLLERGEMTrackerBase::find_tracks]: initialized hit lists, number of layers fired = "
+  //std::cout << "[MollerPolGEMTrackerBase::find_tracks]: initialized hit lists, number of layers fired = "
   // 	    << layers_with_2Dhits.size() << ", total hit combinations = " << Ncombos_allhits_all_layers << std::endl;
   //At this stage the static "hit lists" that we need for the tracking are initialized. Let's get started:
   
@@ -1310,7 +1310,7 @@ void MOLLERGEMTrackerBase::find_tracks(){
     //bool foundtrack = true; rendered unnecessary by the removal of the outermost, redundant while loop:
       
     int nhitsrequired = layers_with_2Dhits.size(); //initially we favor tracks with the largest possible number of hits; if we fail to find a track at this hit requirement, we decrement the number of required hits as long as it exceeds the minimum
-    //std::cout << "[MOLLERGEMTrackerBase::find_tracks]: nhitsrequired = " << nhitsrequired << endl;
+    //std::cout << "[MollerPolGEMTrackerBase::find_tracks]: nhitsrequired = " << nhitsrequired << endl;
 
     bool foundtrack = false;
     
@@ -1330,13 +1330,13 @@ void MOLLERGEMTrackerBase::find_tracks(){
       Double_t Ncombos_free = InitFreeHitList(); 
 
       if( Ncombos_free > fMaxHitCombinations_Total ){
-      	std::cout << "Warning in [MOLLERGEMTrackerBase::find_tracks]: total potential hit combinations = "
+      	std::cout << "Warning in [MollerPolGEMTrackerBase::find_tracks]: total potential hit combinations = "
       		  << Ncombos_free << ", exceeds user maximum of " << fMaxHitCombinations_Total
       		  << ", skipping tracking..." << std::endl;
       	break;
       }
       
-      // std::cout << "[MOLLERGEMTrackerBase::find_tracks]: initialized 'free hit list', nhitsrequired = " << nhitsrequired 
+      // std::cout << "[MollerPolGEMTrackerBase::find_tracks]: initialized 'free hit list', nhitsrequired = " << nhitsrequired 
       // 		<< ", number of layers with unused hits, ntracks = " 
       // 		<< layerswithfreehits.size() << ", " << fNtracks_found << ", free hit combinations = " << Ncombos_free << std::endl;
 
@@ -1593,7 +1593,7 @@ void MOLLERGEMTrackerBase::find_tracks(){
 	      // If the number of hit combinations in the current pair of grid bins in the two outermost layers exceeds the maximum, try to find an alternate pair of layers
 	      // with hit combinations below the maximum:
 	      if( ncombos_minmax > fMaxHitCombinations ){ //this should not happen under sane conditions
-		std::cout << "Warning in [MOLLERGEMTrackerBase::find_tracks]: skipping bin combination of layer " << minlayer << ", bin " << ibin <<" with layer " << maxlayer << ", bin " << jbin << " (this should not happen under sane analysis config and/or experiment conditions)" << std::endl;
+		std::cout << "Warning in [MollerPolGEMTrackerBase::find_tracks]: skipping bin combination of layer " << minlayer << ", bin " << ibin <<" with layer " << maxlayer << ", bin " << jbin << " (this should not happen under sane analysis config and/or experiment conditions)" << std::endl;
 		continue; 
 	      }
 	      //   // if ( false ){
@@ -1625,7 +1625,7 @@ void MOLLERGEMTrackerBase::find_tracks(){
 	      //If the number of hit combinations STILL exceeds the maximum, skip this layer combination:
 	      // if( ncombos_minmax > fMaxHitCombinations ){
 	      //   //  if( false ){
-	      //   std::cout << "Warning in [MOLLERGEMTrackerBase::find_tracks]: no combination of two layers found with hit combinations less than maximum of "
+	      //   std::cout << "Warning in [MollerPolGEMTrackerBase::find_tracks]: no combination of two layers found with hit combinations less than maximum of "
 	      // 	      << fMaxHitCombinations << ", for current layer combination " << icombo << ", nhitsrequired = " << nhitsrequired << ", tracking for this combination skipped" << std::endl;
 	      //   continue;
 	      // }
@@ -1832,7 +1832,7 @@ void MOLLERGEMTrackerBase::find_tracks(){
 		    
 		  } //end loop on layers other than minlayer and maxlayer
 		  
-		  // std::cout << "[MOLLERGEMTrackerBase::find_tracks]: finished loop on layers other than minlayer and maxlayer, minlayer, maxlayer, ihit, jhit, ncombos (intermediate layers) = "
+		  // std::cout << "[MollerPolGEMTrackerBase::find_tracks]: finished loop on layers other than minlayer and maxlayer, minlayer, maxlayer, ihit, jhit, ncombos (intermediate layers) = "
 		  //  		<< minlayer << ", " << maxlayer << ", " << ihit << ", " << jhit << ", " << ncombos_otherlayers << std::endl;
 	      
 		  //Next, we will loop on all possible combinations of one hit from each of the layers other than minlayer and maxlayer:
@@ -1962,7 +1962,7 @@ void MOLLERGEMTrackerBase::find_tracks(){
 		      } //end while( nextcomboexists )
 		      
 		    } else if( fTryFastTrack ){
-			std::cout << "Warning in [MOLLERGEMTrackerBase::find_tracks()]... number of hit combos for inner layers = " << ncombos
+			std::cout << "Warning in [MollerPolGEMTrackerBase::find_tracks()]... number of hit combos for inner layers = " << ncombos
 				<< ", exceeds user maximum of " << fMaxHitCombinations_InnerLayers
 				<< ", trying \"fast\" hit association into tracks, may be less accurate" << std::endl;
 			
@@ -2156,7 +2156,7 @@ void MOLLERGEMTrackerBase::find_tracks(){
 
 }
 
-void MOLLERGEMTrackerBase::fill_good_hit_arrays() {
+void MollerPolGEMTrackerBase::fill_good_hit_arrays() {
   // fill information that will be written to the ROOT tree: this should never be called directly, but check whether tracking is already done
   // anyway, and if NOT, do the tracking:
   if( !ftracking_done ) find_tracks();
@@ -2583,7 +2583,7 @@ void MOLLERGEMTrackerBase::fill_good_hit_arrays() {
 		  Double_t offset;
 		  
 		  //Check if it is the U-Axis
-		  if(fModules[module]->fAxis[istrip] == MOLLERGEM::kUaxis){
+		  if(fModules[module]->fAxis[istrip] == MollerPolGEM::kUaxis){
 		    
 		    Nstrips = fModules[module]->fNstripsU;
 		    pitch = fModules[module]->fUStripPitch; 
@@ -2601,7 +2601,7 @@ void MOLLERGEMTrackerBase::fill_good_hit_arrays() {
 		    }
 		  }
 		  //Check if it is V-axis
-		  if(fModules[module]->fAxis[istrip] == MOLLERGEM::kVaxis){
+		  if(fModules[module]->fAxis[istrip] == MollerPolGEM::kVaxis){
 
 		    Nstrips = fModules[module]->fNstripsV;
 		    pitch = fModules[module]->fVStripPitch; 
@@ -2780,7 +2780,7 @@ void MOLLERGEMTrackerBase::fill_good_hit_arrays() {
 
 //The next function determines the line of best fit through a combination of hits, without calculating residuals or chi2.
 // Note that these equations assume all hits are to be given equal weights. You will need a different function if you want to use different weights for different hits:
-void MOLLERGEMTrackerBase::CalcLineOfBestFit( const std::map<int,int> &hitcombo, double &xtrack, double &ytrack, double &xptrack, double &yptrack ){
+void MollerPolGEMTrackerBase::CalcLineOfBestFit( const std::map<int,int> &hitcombo, double &xtrack, double &ytrack, double &xptrack, double &yptrack ){
   double sumx = 0.0, sumy = 0.0, sumz = 0.0, sumxz = 0.0, sumyz = 0.0, sumz2 = 0.0;
   
   int nhits = 0;
@@ -2818,7 +2818,7 @@ void MOLLERGEMTrackerBase::CalcLineOfBestFit( const std::map<int,int> &hitcombo,
   ytrack = (sumy * sumz2 - sumyz * sumz)/denom;
 }
 
-void MOLLERGEMTrackerBase::FitTrack( const std::map<int,int> &hitcombo, double &xtrack, double &ytrack, double &xptrack, double &yptrack, double &chi2ndf, vector<double> &uresid, vector<double> &vresid ){
+void MollerPolGEMTrackerBase::FitTrack( const std::map<int,int> &hitcombo, double &xtrack, double &ytrack, double &xptrack, double &yptrack, double &chi2ndf, vector<double> &uresid, vector<double> &vresid ){
 
   //calculation of the best-fit line through the points was moved to its own function, since sometimes we want to perform ONLY that step; e.g.,
   //when calculating "exclusive" residuals:
@@ -2862,7 +2862,7 @@ void MOLLERGEMTrackerBase::FitTrack( const std::map<int,int> &hitcombo, double &
   
 }
 
-Double_t MOLLERGEMTrackerBase::CalcTrackT0( const std::map<int,int> &hitcombo ){
+Double_t MollerPolGEMTrackerBase::CalcTrackT0( const std::map<int,int> &hitcombo ){
 
   double sumt = 0.0, sumw = 0.0;
   
@@ -2902,7 +2902,7 @@ Double_t MOLLERGEMTrackerBase::CalcTrackT0( const std::map<int,int> &hitcombo ){
   return sumt/sumw;
 }
 
-Double_t MOLLERGEMTrackerBase::CalcTrackChi2HitQuality( const std::map<int,int> &hitcombo, Double_t &t0track ){
+Double_t MollerPolGEMTrackerBase::CalcTrackChi2HitQuality( const std::map<int,int> &hitcombo, Double_t &t0track ){
 
   t0track = CalcTrackT0( hitcombo );
   
@@ -2979,7 +2979,7 @@ Double_t MOLLERGEMTrackerBase::CalcTrackChi2HitQuality( const std::map<int,int> 
   
 }
 
-Int_t MOLLERGEMTrackerBase::CountHighQualityHits( const std::map<int,int> &hitcombo ){
+Int_t MollerPolGEMTrackerBase::CountHighQualityHits( const std::map<int,int> &hitcombo ){
 
   Int_t nHighQualityHits = 0;
   //For three-hit tracks, we require ALL three hits to be "high-quality" hits: 
@@ -3000,7 +3000,7 @@ Int_t MOLLERGEMTrackerBase::CountHighQualityHits( const std::map<int,int> &hitco
 }
 
 // "Odometer" algorithm for looping over possible combinations of one hit per layer:
-bool MOLLERGEMTrackerBase::GetNextCombo( const std::set<int> &layers, std::map<int,int> &hitcounter, std::map<int,int> &hitcombo, bool &firstcombo ){
+bool MollerPolGEMTrackerBase::GetNextCombo( const std::set<int> &layers, std::map<int,int> &hitcounter, std::map<int,int> &hitcombo, bool &firstcombo ){
   std::set<int>::iterator nextlayercounter = layers.begin(); //we always start by checking available hits in the first layer
 
   bool comboexists = true;
@@ -3039,7 +3039,7 @@ bool MOLLERGEMTrackerBase::GetNextCombo( const std::set<int> &layers, std::map<i
   return comboexists;
 }
 
-TVector3 MOLLERGEMTrackerBase::GetHitPosGlobal( int module, int clustindex ){
+TVector3 MollerPolGEMTrackerBase::GetHitPosGlobal( int module, int clustindex ){
   
   //check that module and cluster are in range: these conditions should never evaluate to true, but we want to prevent
   // seg. faults anyway
@@ -3051,7 +3051,7 @@ TVector3 MOLLERGEMTrackerBase::GetHitPosGlobal( int module, int clustindex ){
 		   fModules[module]->fHits[clustindex].zghit );
 }
 
-int MOLLERGEMTrackerBase::GetGridBin( int module, int hitindex ){
+int MollerPolGEMTrackerBase::GetGridBin( int module, int hitindex ){
   if( module < 0 || module >= (int)fModules.size() ){ return -1; }
   if( hitindex < 0 || hitindex >= (int) fModules[module]->fHits.size() ){ return -1; }
   double xtemp = fModules[module]->fHits[hitindex].xghit;
@@ -3069,7 +3069,7 @@ int MOLLERGEMTrackerBase::GetGridBin( int module, int hitindex ){
   }
 }
 
-void MOLLERGEMTrackerBase::AddNewTrack( const std::map<int,int> &hitcombo, const vector<double> &BestTrack, double chi2ndf, const std::vector<double> &uresidbest, const std::vector<double> &vresidbest ){
+void MollerPolGEMTrackerBase::AddNewTrack( const std::map<int,int> &hitcombo, const vector<double> &BestTrack, double chi2ndf, const std::vector<double> &uresidbest, const std::vector<double> &vresidbest ){
   //AddTrack stores the best track found on each track-finding iteration in the appropriate data members of the class. It also takes care of
   //marking the hits on the track as used, and also marking all the 2D hits as used that contain any of the same 1D clusters as the found track:
   
@@ -3151,7 +3151,7 @@ void MOLLERGEMTrackerBase::AddNewTrack( const std::map<int,int> &hitcombo, const
 //This routine accesses both the module hit arrays and the "hit list" arrays used by the track-finding. The loop over the entire 2D hit list in each layer
 //on the track at the end of each track-finding iteration is maybe a bit expensive, but still probably cheap compared to the alternative (and will lead to fewer false tracks)
 // The routine is designed to prevent re-use of the same 1D cluster in multiple tracks:
-void MOLLERGEMTrackerBase::PurgeHits( int itrack ){
+void MollerPolGEMTrackerBase::PurgeHits( int itrack ){
   for( int ihit=0; ihit<fNhitsOnTrack[itrack]; ihit++ ){
     int module = fModListTrack[itrack][ihit];
     int cluster = fHitListTrack[itrack][ihit];
@@ -3178,7 +3178,7 @@ void MOLLERGEMTrackerBase::PurgeHits( int itrack ){
   }
 }
 
-TVector3 MOLLERGEMTrackerBase::TrackIntersect( int module, TVector3 track_origin, TVector3 track_direction, double &sintersect ){
+TVector3 MollerPolGEMTrackerBase::TrackIntersect( int module, TVector3 track_origin, TVector3 track_direction, double &sintersect ){
   TVector3 modpos = fModules[module]->GetOrigin();
   TVector3 modzaxis = fModules[module]->GetZax();
 
@@ -3187,7 +3187,7 @@ TVector3 MOLLERGEMTrackerBase::TrackIntersect( int module, TVector3 track_origin
   return track_origin + sintersect * track_direction;
 }
 
-TVector2 MOLLERGEMTrackerBase::GetUVTrack( int module, TVector3 track_origin, TVector3 track_direction ){
+TVector2 MollerPolGEMTrackerBase::GetUVTrack( int module, TVector3 track_origin, TVector3 track_direction ){
 
   double sdummy; //we have to pass a double argument to hold the distance from origin to intersection:
   TVector3 TrackIntersect_Global = TrackIntersect( module, track_origin, track_direction, sdummy );
@@ -3197,7 +3197,7 @@ TVector2 MOLLERGEMTrackerBase::GetUVTrack( int module, TVector3 track_origin, TV
   return fModules[module]->XYtoUV( XYtrack );
 }
 
-int MOLLERGEMTrackerBase::GetNearestModule( int layer, TVector3 track_origin, TVector3 track_direction, TVector3 &track_intersect ){
+int MollerPolGEMTrackerBase::GetNearestModule( int layer, TVector3 track_origin, TVector3 track_direction, TVector3 &track_intersect ){
 
   int nearestmod = -1;
   double mindist = 0.0;
@@ -3218,7 +3218,7 @@ int MOLLERGEMTrackerBase::GetNearestModule( int layer, TVector3 track_origin, TV
   return nearestmod;
 }
 
-void MOLLERGEMTrackerBase::PrintNegEvents( const char *fname ){
+void MollerPolGEMTrackerBase::PrintNegEvents( const char *fname ){
 
   std::ofstream outfile( fname );
   
@@ -3230,7 +3230,7 @@ void MOLLERGEMTrackerBase::PrintNegEvents( const char *fname ){
 }
 
 
-void MOLLERGEMTrackerBase::PrintGeometry( const char *fname ){
+void MollerPolGEMTrackerBase::PrintGeometry( const char *fname ){
   std::ofstream outfile( fname );
   
   std::vector<double> mod_x0(fNmodules), mod_y0(fNmodules), mod_z0(fNmodules);
@@ -3307,12 +3307,12 @@ void MOLLERGEMTrackerBase::PrintGeometry( const char *fname ){
   outfile.close();
 }
  
- bool MOLLERGEMTrackerBase::PassedOpticsConstraint( TVector3 TrackOrigin, TVector3 TrackDirection, bool coarsecheck ){
+ bool MollerPolGEMTrackerBase::PassedOpticsConstraint( TVector3 TrackOrigin, TVector3 TrackDirection, bool coarsecheck ){
   // for now, do nothing
   return true;
 }
 
-bool MOLLERGEMTrackerBase::CheckConstraint( double xtr, double ytr, double xptr, double yptr, bool coarsecheck ){ //later we should really pass an error matrix of the four track parameters to this routine
+bool MollerPolGEMTrackerBase::CheckConstraint( double xtr, double ytr, double xptr, double yptr, bool coarsecheck ){ //later we should really pass an error matrix of the four track parameters to this routine
    // to better optimize the cuts:
   double xproject_bcp = xtr + xptr * fConstraintPoint_Back.Z();
   double yproject_bcp = ytr + yptr * fConstraintPoint_Back.Z();

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// Bare-bones MOLLERSpectrometer class 
+// Bare-bones MollerPolSpectrometer class 
 // Used for testing.
 //
 //////////////////////////////////////////////////////////////////////////
@@ -9,11 +9,11 @@
 
 using namespace std;
 
-ClassImp(MOLLERSpectrometer)
+ClassImp(MollerPolSpectrometer)
 
 
 //_____________________________________________________________________________
-MOLLERSpectrometer::MOLLERSpectrometer( const char* name, const char* description ) :
+MollerPolSpectrometer::MollerPolSpectrometer( const char* name, const char* description ) :
   THaSpectrometer( name, description )
 {
   // Constructor. Defines standard detectors
@@ -21,13 +21,13 @@ MOLLERSpectrometer::MOLLERSpectrometer( const char* name, const char* descriptio
 }
 
 //_____________________________________________________________________________
-MOLLERSpectrometer::~MOLLERSpectrometer()
+MollerPolSpectrometer::~MollerPolSpectrometer()
 {
   // Destructor
 }
 
 //_____________________________________________________________________________
-  Int_t MOLLERSpectrometer::FindVertices( TClonesArray& /* tracks */ )
+  Int_t MollerPolSpectrometer::FindVertices( TClonesArray& /* tracks */ )
 {
   // Reconstruct target coordinates for all tracks found.
 
@@ -37,7 +37,7 @@ MOLLERSpectrometer::~MOLLERSpectrometer()
 }
 
 //_____________________________________________________________________________
-Int_t MOLLERSpectrometer::TrackCalc()
+Int_t MollerPolSpectrometer::TrackCalc()
 {
   // Additioal track calculations
 

@@ -1,5 +1,5 @@
-#ifndef MOLLER_Helper_h
-#define MOLLER_Helper_h
+#ifndef MollerPol_Helper_h
+#define MollerPol_Helper_h
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //
