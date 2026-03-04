@@ -30,25 +30,6 @@
 #include <sstream>
 #include <stdexcept>
 
-#include <vector>
-#include "TArrayD.h"
-#include "TArrayI.h"
-
-static void PrintArray(const TArrayD& a){
-  for(int i=0; i<a.GetSize(); i++) std::cout << a[i] << " ";
-  std::cout << std::endl;
-}
-static void PrintArray(const TArrayI& a){
-  for(int i=0; i<a.GetSize(); i++) std::cout << a[i] << " ";
-  std::cout << std::endl;
-}
-template<class T>
-static void PrintArray(const std::vector<T>& v){
-  for(const auto& x : v) std::cout << x << " ";
-  std::cout << std::endl;
-}
-
-
 using namespace std;
 using namespace Podd;
 
