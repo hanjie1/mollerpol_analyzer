@@ -19,6 +19,8 @@ set(src
   MollerPolCalorimeter.cxx
   MollerPolApparatus.cxx
   Scaler9250.cxx
+  ScalerTI.cxx
+  Scaler3820.cxx
   MollerPolScalerEvtHandler.cxx
   MollerPolHelicityDecoderBoard.cxx
 
@@ -27,8 +29,6 @@ set(src
   gem/MollerPolGEMData.cxx
   gem/MollerPolGEMElement.cxx
   gem/MollerPolGEMManager.cxx
-  gem/MollerPolGenericDetector.cxx
-  gem/MollerPolSpectrometer.cxx
   gem/MollerPolGEMModule.cxx
   gem/MollerPolGEMTrackerBase.cxx
   gem/MollerPolGEMSpectrometerTracker.cxx

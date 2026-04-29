@@ -32,8 +32,10 @@
 
 #include "MollerPolScalerEvtHandler.h"
 #include "Scaler9250.h"
+#include "ScalerTI.h"
 #include "Scaler3800.h"
 #include "Scaler3801.h"
+#include "Scaler3820.h"
 #include "Scaler1151.h"
 #include "Scaler560.h"
 #include "THaEvData.h"
@@ -287,8 +289,15 @@ void MollerPolScalerEvtHandler::ParseMap( const char* cbuf, const vector<string>
     case 3801:
       scalers.push_back(new Scaler3801(icrate, islot));
       break;
+    case 3820:
+      scalers.push_back(new Scaler3820(icrate, islot));
+      break;
     case 9250:
       scalers.push_back(new Scaler9250(icrate, islot));
+      break;
+    case 9001:
+      scalers.push_back(new ScalerTI(icrate, islot));
+      break;
     default:
       break;
   }

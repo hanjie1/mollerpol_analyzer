@@ -9,15 +9,15 @@
 #pragma link C++ class MollerPolScalerEvtHandler+;
 #pragma link C++ class MollerPolHelicityDecoderBoard+;
 #pragma link C++ class Decoder::Scaler9250+;
+#pragma link C++ class Decoder::ScalerTI+;
+#pragma link C++ class Decoder::Scaler3820+;
 
 #pragma link C++ class Decoder::MPDModule+;
 #pragma link C++ class MollerPolGEMTrackerBase+;
 #pragma link C++ class MollerPolGEMModule+;
-#pragma link C++ class MollerPolSpectrometer+;
 #pragma link C++ class MollerPolGEMSpectrometerTracker+;
-#pragma link C++ class MollerPolGenericDetector+;
-#pragma link C++ class MollerPolElement+;
-#pragma link C++ class MollerPolData+;
-#pragma link C++ class MollerPolManager+;
+#pragma link C++ class MollerPolGEMElement+;
+#pragma link C++ class MollerPolGEMData+;
+#pragma link C++ class MollerPolGEMManager+;
 
 #endif
