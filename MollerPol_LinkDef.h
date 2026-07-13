@@ -15,6 +15,7 @@
 #pragma link C++ class Decoder::MPDModule+;
 #pragma link C++ class MollerPolGEMTrackerBase+;
 #pragma link C++ class MollerPolGEMModule+;
+#pragma link C++ class MollerPolGEMSpectrometer+;
 #pragma link C++ class MollerPolGEMSpectrometerTracker+;
 #pragma link C++ class MollerPolGEMElement+;
 #pragma link C++ class MollerPolGEMData+;
