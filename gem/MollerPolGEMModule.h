@@ -195,9 +195,12 @@ class MollerPolGEMModule : public THaSubDetector {
 
   //function to convert from APV channel number to strip number ordered by position:
   Int_t GetStripNumber( UInt_t rawstrip, UInt_t pos, UInt_t invert );
+  //Adding following lines for PolGEM to make it active for renumbering
+  bool IsStripActive( MollerPolGEM::GEMaxis_t axis, Int_t strip ) const;
+  Int_t ToLocalStrip( MollerPolGEM::GEMaxis_t axis, Int_t strip ) const;
 
   void PrintPedestals( std::ofstream &dbfile_CM, std::ofstream &daqfile_ped, std::ofstream &daqfile_CM );
-  
+
   double GetCommonMode( UInt_t isamp, Int_t flag, const mpdmap_t &apvinfo, UInt_t nhits=128 ); //default to "sorting" method:
 
   //Simulation of common-mode correction algorithm as applied to full readout events:
@@ -507,6 +510,13 @@ class MollerPolGEMModule : public THaSubDetector {
 
   UInt_t fNstripsU; // Total number of strips in this module along the generic "U" axis
   UInt_t fNstripsV; // Total number of strips in this module along the generic "V" axis
+  //Adding following 6 lines for PolGEM to renumber the strips 
+  Int_t  fUActiveFirst;
+  Int_t  fUActiveLast;
+  Int_t  fVActiveFirst;
+  Int_t  fVActiveLast;
+  Bool_t fReindexU;
+  Bool_t fReindexV;
 
   //Pedestal means and RMS values for all channels:
   std::vector<Double_t> fPedestalU, fPedRMSU; 
