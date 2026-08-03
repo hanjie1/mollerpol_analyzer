@@ -32,6 +32,7 @@ set(src
   gem/MollerPolGEMModule.cxx
   gem/MollerPolGEMTrackerBase.cxx
   gem/MollerPolGEMSpectrometerTracker.cxx
+  gem/MollerPolGEMSpectrometer.cxx
   )
 
 # Headers.

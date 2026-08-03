@@ -108,7 +108,14 @@ MollerPolGEMModule::MollerPolGEMModule( const char *name, const char *descriptio
   // default these offsets to zero: 
   fUStripOffset = 0.0;
   fVStripOffset = 0.0;
-  
+  //Added following 6 lines for PolGEM to make strips active and renumber
+  fUActiveFirst = 0;
+  fUActiveLast  = -1;
+  fVActiveFirst = 0;
+  fVActiveLast  = -1;
+  fReindexU = true;
+  fReindexV = true;
+
   fMakeEfficiencyPlots = true;
   fEfficiencyInitialized = false;
 
@@ -249,6 +256,21 @@ MollerPolGEMModule::~MollerPolGEMModule() {
   delete fStripTimeFunc;
 
 }
+//Added following block for PolGEM
+bool MollerPolGEMModule::IsStripActive( MollerPolGEM::GEMaxis_t axis, Int_t strip ) const {
+  if( axis == MollerPolGEM::kUaxis )
+    return strip >= fUActiveFirst && strip <= fUActiveLast;
+  else
+    return strip >= fVActiveFirst && strip <= fVActiveLast;
+}
+
+Int_t MollerPolGEMModule::ToLocalStrip( MollerPolGEM::GEMaxis_t axis, Int_t strip ) const {
+  if( axis == MollerPolGEM::kUaxis )
+    return fReindexU ? strip - fUActiveFirst : strip;
+  else
+    return fReindexV ? strip - fVActiveFirst : strip;
+}
+//-------------------
 
 Int_t MollerPolGEMModule::ReadDatabase( const TDatime& date ){
   
@@ -309,7 +331,11 @@ Int_t MollerPolGEMModule::ReadDatabase( const TDatime& date ){
   std::vector<double> t0hit_temp, tsigmahit_temp;
   std::vector<double> t0hit_deconv_temp, tsigmahit_deconv_temp;
   std::vector<double> t0hit_fit_temp, tsigmahit_fit_temp;
-  
+  //Added following 3 lines for PolGEM
+  std::vector<int> ustrip_range_temp, vstrip_range_temp;
+  int reindex_u = 1;
+  int reindex_v = 1;
+
   const DBRequest request[] = {
     { "chanmap",        &fChanMapData,        kIntV, 0, 0, 0}, // mandatory: decode map info
     { "apvmap",         &fAPVmapping,    kUInt, 0, 1, 1}, //optional, allow search up the tree if all modules in a setup have the same APV mapping
@@ -320,6 +346,11 @@ Int_t MollerPolGEMModule::ReadDatabase( const TDatime& date ){
     { "layer",          &fLayer,         kUShort, 0, 0, 0}, // mandatory: logical tracking layer must be specified for every module:
     { "nstripsu",       &fNstripsU,     kUInt, 0, 0, 1}, //mandatory: number of strips in module along U axis
     { "nstripsv",       &fNstripsV,     kUInt, 0, 0, 1}, //mandatory: number of strips in module along V axis
+    //Added following 4 lines for PolGEM
+    { "ustrip_range", &ustrip_range_temp, kIntV, 0, 1, 0},
+    { "vstrip_range", &vstrip_range_temp, kIntV, 0, 1, 0},
+    { "reindex_u",    &reindex_u,         kInt,  0, 1, 1},
+    { "reindex_v",    &reindex_v,         kInt,  0, 1, 1},
     { "uangle",         &fUAngle,       kDouble, 0, 0, 1}, //mandatory: Angle of "U" strips wrt X axis
     { "vangle",         &fVAngle,       kDouble, 0, 0, 1}, //mandatory: Angle of "V" strips wrt X axis
     { "uoffset",        &fUStripOffset, kDouble, 0, 1, 1}, //optional: position of first U strip
@@ -422,12 +453,36 @@ Int_t MollerPolGEMModule::ReadDatabase( const TDatime& date ){
   status = LoadDB( file, date, request, fPrefix, 1 ); //The "1" after fPrefix means search up the tree
 
   if( status != 0 ){
-    fclose(file);
-    return status;
+      fclose(file);
+      return status;
+  }
+  //Added following block for PolGEM
+  fReindexU = (reindex_u != 0);
+  fReindexV = (reindex_v != 0);
+
+  fUActiveFirst = 0;
+  fUActiveLast  = int(fNstripsU) - 1;
+  if( ustrip_range_temp.size() == 2 ){
+      fUActiveFirst = std::min( ustrip_range_temp[0], ustrip_range_temp[1] );
+      fUActiveLast  = std::max( ustrip_range_temp[0], ustrip_range_temp[1] );
+
+     // UInt_t nlocal = fUActiveLast - fUActiveFirst + 1;
+     // fNstripsU = nlocal;
   }
 
+  fVActiveFirst = 0;
+  fVActiveLast  = int(fNstripsV) - 1;
+  if( vstrip_range_temp.size() == 2 ){
+      fVActiveFirst = std::min( vstrip_range_temp[0], vstrip_range_temp[1] );
+      fVActiveLast  = std::max( vstrip_range_temp[0], vstrip_range_temp[1] );
+
+     // UInt_t nlocal = fVActiveLast - fVActiveFirst + 1;
+     // fNstripsV = nlocal;
+  }
+  //------------------------------  
+
   if(fAPVmapping == MollerPolGEM::kUVA_MollerPol)
-    effN_APV25_CHAN =121;
+      effN_APV25_CHAN =121;
   else 
     effN_APV25_CHAN =128;
 
@@ -1655,6 +1710,8 @@ Int_t   MollerPolGEMModule::Decode( const THaEvData& evdata ){
       // to populate the local arrays; otherwise this code is getting too confusing and bug-prone:
       // First loop over the hits: populate strip, raw strip, raw ADC, ped sub ADC and common-mode-subtracted aDC:
       for( int iraw=0; iraw<nsamp; iraw++ ){ //NOTE: iraw = isamp + fN_MPD_TIME_SAMP * istrip
+            // Default: mark this time-sample slot invalid.
+  // If the strip survives all cuts below, we overwrite these.
 	int strip = evdata.GetRawData( it->crate, it->slot, effChan, iraw );
 	if(fAPVmapping == MollerPolGEM::kUVA_MollerPol && strip<7)
 	   continue;
@@ -1662,13 +1719,12 @@ Int_t   MollerPolGEMModule::Decode( const THaEvData& evdata ){
 
 	int isamp = iraw%fN_MPD_TIME_SAMP;
 	  
-	Int_t ADC = Int_t( decoded_rawADC );
-	
-	rawStrip[iraw] = strip;
+    Int_t ADC = Int_t( decoded_rawADC );
 
-	Strip[iraw] = GetStripNumber( strip, it->pos, it->invert );
+    rawStrip[iraw] = strip;
 
-	rawADC[iraw] = ADC;
+    Strip[iraw] = GetStripNumber( strip, it->pos, it->invert );
+     rawADC[iraw] = ADC;
 	//std::cout<<"iraw = "<<iraw<<" ; isamp = "<<isamp<<" ; strip = "<<strip<<" ; StripPos = "<<Strip[iraw]<< "; Raw ADC = "
 	//<<ADC<<" ; effChan = "<<effChan<<" ; APVmapping = "<< int(fAPVmapping)<< std::endl;	
 	double ped = (axis == MollerPolGEM::kUaxis ) ? fPedestalU[Strip[iraw]] : fPedestalV[Strip[iraw]];
@@ -1977,16 +2033,37 @@ Int_t   MollerPolGEMModule::Decode( const THaEvData& evdata ){
 
 	//grab decoded strip number directly:
 	int strip = Strip[fN_MPD_TIME_SAMP * istrip];
-      
-	//Pedestal has already been subtracted by the time we get herre, but let's grab anyway in case it's needed:
+    //Added the following block for PolGEM
+    // grab decoded strip number directly:
+    int strip_global = strip;
+
+    // In pedestal mode, keep the full physical APV/module view.
+    // Only apply logical split for normal replay.
+    if( !fPedestalMode ){
+        if( !IsStripActive(axis, strip_global) )
+            continue;
+
+        strip = ToLocalStrip(axis, strip_global);
+    }
+
+    double pedtemp = ( axis == MollerPolGEM::kUaxis ) ? fPedestalU[strip_global]
+        : fPedestalV[strip_global];
+    double rmstemp = ( axis == MollerPolGEM::kUaxis ) ? fPedRMSU[strip_global]
+        : fPedRMSV[strip_global];
+    double gaintemp = ( axis == MollerPolGEM::kUaxis ) ? fUgain[strip_global / effN_APV25_CHAN]
+        : fVgain[strip_global / effN_APV25_CHAN];
+    //----------------------------
+
+
+    //Pedestal has already been subtracted by the time we get herre, but let's grab anyway in case it's needed:
 	
 	//"pedtemp" is only used to fill pedestal histograms as of now:
-	double pedtemp = ( axis == MollerPolGEM::kUaxis ) ? fPedestalU[strip] : fPedestalV[strip];
+//	double pedtemp = ( axis == MollerPolGEM::kUaxis ) ? fPedestalU[strip] : fPedestalV[strip];
 
 	if( fPedSubFlag != 0 && !fIsMC && !fPedestalMode ) pedtemp = 0.0;
 
-	double rmstemp = ( axis == MollerPolGEM::kUaxis ) ? fPedRMSU[strip] : fPedRMSV[strip];
-	double gaintemp = ( axis == MollerPolGEM::kUaxis ) ? fUgain[strip/double(effN_APV25_CHAN)] : fVgain[strip/double(effN_APV25_CHAN)]; //should probably not hard-code 128 here
+//	double rmstemp = ( axis == MollerPolGEM::kUaxis ) ? fPedRMSU[strip] : fPedRMSV[strip];
+//	double gaintemp = ( axis == MollerPolGEM::kUaxis ) ? fUgain[strip/double(effN_APV25_CHAN)] : fVgain[strip/double(effN_APV25_CHAN)]; //should probably not hard-code 128 here
 
 	// std::cout << "pedestal temp, rms temp, nsigma cut, threshold, zero suppress, pedestal mode = " << pedtemp << ", " << rmstemp << ", " << fZeroSuppressRMS
 	//   	  << ", " << fZeroSuppressRMS * rmstemp << ", " << fZeroSuppress << ", " << fPedestalMode << std::endl;
